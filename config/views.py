@@ -5,7 +5,7 @@ from django.http import HttpResponse, JsonResponse
 
 def health_check(request):
     """
-    Healthcheck endpoint for Coolify (Zero-Downtime deployment).
+    Healthcheck endpoint for zero-downtime container deployments.
     Checks DB and Cache connections.
     """
     health_status = {"status": "ok", "database": "ok", "cache": "ok"}

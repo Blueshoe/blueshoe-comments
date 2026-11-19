@@ -19,7 +19,7 @@ Static site generators (Astro, Sphinx, Hugo, Next) are fast, secure, and peacefu
 ### 🌪️ Powered by `django-hurricane`
 Forget slow WSGI setups. We run on <a href="https://django-hurricane.io/" target="_blank" rel="noopener noreferrer"><strong>Django Hurricane</strong></a>, Blueshoe’s own cloud-native Granian-powered ASGI runner.
 - High-performance asynchronous execution.
-- Built-in zero-downtime Kubernetes & Coolify probes: `/alive`, `/ready`, `/startup`, and Prometheus `/metrics`.
+- Built-in zero-downtime Kubernetes & container probes: `/alive`, `/ready`, `/startup`, and Prometheus `/metrics`.
 - Auto-runs migrations on container startup (`--check-migrations-apply`).
 
 ### 🥷 Typed & Fast with `django-ninja`
@@ -70,7 +70,7 @@ No DRF bloatware here! Built with <a href="https://django-ninja.dev/" target="_b
 | **Bot Protection** | ALTCHA (WASM Proof-of-Work), Honeypot |
 | **Markdown & HTML** | `mistune` 3, `nh3` (strict HTML sanitizer, `nofollow ugc`) |
 | **Frontend Widget** | Lit, Vite (Library Mode), Web Components |
-| **Deployment** | Coolify, Docker Compose |
+| **Deployment** | Docker Compose, Container Orchestration |
 
 ---
 
@@ -110,7 +110,7 @@ Available endpoints:
 
 ---
 
-## 🐳 Production Deployment (Coolify / Docker Compose)
+## 🐳 Production Deployment (Docker Compose)
 
 Our production setup runs cleanly with Docker Compose and is configured entirely through environment variables.
 
@@ -122,9 +122,9 @@ docker compose config
 docker compose up -d
 ```
 
-### Coolify Zero-Downtime Settings
+### Zero-Downtime & Production Settings
 - **Healthcheck Path:** `/alive` or `/healthz/`
-- **Domains:** Coolify Traefik handles Let's Encrypt certificates for:
+- **Domains:** Reverse proxy / Traefik handles Let's Encrypt certificates for:
   - `community.blueshoe.de`
   - `community.blueshoe.io`
   - `community.django-hurricane.io`
