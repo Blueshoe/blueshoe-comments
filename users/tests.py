@@ -74,7 +74,7 @@ class TestUsersAPI:
         assert comment.ip_hash == ""
 
     def test_dynamic_cookie_domain_middleware(self, client):
-        res = client.get("/healthz/", HTTP_HOST="community.blueshoe.de")
+        res = client.get("/docs/", HTTP_HOST="community.blueshoe.de")
         assert "community_vid" in res.cookies
         assert res.cookies["community_vid"]["domain"] == ".blueshoe.de"
 

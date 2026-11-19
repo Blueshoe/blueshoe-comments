@@ -104,8 +104,8 @@ uv run python manage.py serve
 Available endpoints:
 - 📖 **Interactive API Docs:** <a href="/docs" target="_blank" rel="noopener noreferrer"><code>/docs</code></a>
 - ⚙️ **Django Admin:** <a href="/admin/" target="_blank" rel="noopener noreferrer"><code>/admin/</code></a>
-- 🩺 **Healthcheck:** <a href="/healthz/" target="_blank" rel="noopener noreferrer"><code>/healthz/</code></a>
 - 💓 **Hurricane Liveness Probe:** <a href="/alive" target="_blank" rel="noopener noreferrer"><code>/alive</code></a>
+- 🩺 **Hurricane Readiness Probe:** <a href="/ready" target="_blank" rel="noopener noreferrer"><code>/ready</code></a>
 - 📊 **Prometheus Metrics:** <a href="/metrics" target="_blank" rel="noopener noreferrer"><code>/metrics</code></a>
 
 ---
@@ -123,7 +123,7 @@ docker compose up -d
 ```
 
 ### Zero-Downtime & Production Settings
-- **Healthcheck Path:** `/alive` or `/healthz/`
+- **Healthcheck Path:** `/ready` (or `/alive`)
 - **Domains:** Reverse proxy / Traefik handles Let's Encrypt certificates for:
   - `community.blueshoe.de`
   - `community.blueshoe.io`

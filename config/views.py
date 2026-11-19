@@ -1,34 +1,4 @@
-from django.core.cache import cache
-from django.db import connections
-from django.http import HttpResponse, JsonResponse
-
-
-def health_check(request):
-    """
-    Healthcheck endpoint for zero-downtime container deployments.
-    Checks DB and Cache connections.
-    """
-    health_status = {"status": "ok", "database": "ok", "cache": "ok"}
-    status_code = 200
-
-    try:
-        connection = connections["default"]
-        connection.ensure_connection()
-    except Exception:
-        health_status["database"] = "error"
-        health_status["status"] = "error"
-        status_code = 503
-
-    try:
-        cache.set("health_check", "1", timeout=1)
-        if cache.get("health_check") != "1":
-            raise ValueError("Cache not working")
-    except Exception:
-        health_status["cache"] = "error"
-        health_status["status"] = "error"
-        status_code = 503
-
-    return JsonResponse(health_status, status=status_code)
+from django.http import HttpResponse
 
 
 def api_docs_view(request):
