@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "lit": "^3.1.2",
-    "altcha": "^2.0.0"
+    "altcha": "^3.6.0"
   },
   "devDependencies": {
     "typescript": "^5.2.2",
