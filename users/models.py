@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractUser
+from django.utils.translation import gettext_lazy as _
 
 
 class User(AbstractUser):
-    # Add any custom fields here if needed
-    pass
+    class Meta:
+        verbose_name = _("User Account")
+        verbose_name_plural = _("User Accounts")

@@ -1,0 +1,152 @@
+/* ==========================================================================
+   Blueshoe Django Admin Theme
+   ========================================================================== */
+
+:root {
+  --bs-primary: #0284c7;
+  --bs-primary-dark: #0369a1;
+  --bs-primary-light: #38bdf8;
+  --bs-navy-900: #0f172a;
+  --bs-navy-800: #1e293b;
+  --bs-accent: #0ea5e9;
+
+  /* Overriding Django Admin CSS variables */
+  --primary: #0284c7;
+  --secondary: #0369a1;
+  --accent: #38bdf8;
+  --primary-fg: #ffffff;
+  --header-bg: #0f172a;
+  --header-color: #ffffff;
+  --breadcrumbs-bg: #1e293b;
+  --breadcrumbs-fg: #e2e8f0;
+  --link-fg: #0284c7;
+  --link-selected-fg: #0369a1;
+}
+
+/* Custom Header with Gradient and Shadow */
+#header {
+  background: linear-gradient(135deg, #09172e 0%, #03487c 50%, #0284c7 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.15);
+  padding: 12px 24px;
+}
+
+#header #branding {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+#header #branding h1 {
+  margin: 0;
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: -0.025em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#header #branding h1 a:link,
+#header #branding h1 a:visited {
+  color: #ffffff !important;
+  text-decoration: none;
+}
+
+.blueshoe-logo-icon {
+  width: 30px;
+  height: 30px;
+  vertical-align: middle;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.blueshoe-header-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: 20px;
+}
+
+.blueshoe-nav-badge {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff !important;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.2s ease;
+}
+
+.blueshoe-nav-badge:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Breadcrumbs */
+div.breadcrumbs {
+  background: #1e293b !important;
+  color: #94a3b8 !important;
+  padding: 10px 24px;
+  font-size: 0.85rem;
+  border-bottom: 1px solid #334155;
+}
+
+div.breadcrumbs a {
+  color: #38bdf8 !important;
+}
+
+/* Buttons & Actions */
+.button,
+input[type=submit],
+input[type=button],
+.submit-row input,
+a.button {
+  background: #0284c7 !important;
+  border-radius: 6px !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  border: none !important;
+  padding: 8px 16px !important;
+  transition: all 0.15s ease-in-out;
+}
+
+.button:hover,
+input[type=submit]:hover,
+input[type=button]:hover,
+.submit-row input:hover,
+a.button:hover {
+  background: #0369a1 !important;
+  box-shadow: 0 2px 6px rgba(2, 132, 199, 0.3);
+}
+
+/* Tables & Modules */
+.module caption,
+.inline-group h2 {
+  background: #0369a1 !important;
+  color: #ffffff !important;
+  font-weight: 700;
+  border-radius: 6px 6px 0 0;
+}
+
+#changelist table thead th {
+  background: #f1f5f9;
+  color: #1e293b;
+  font-weight: 700;
+  border-bottom: 2px solid #cbd5e1;
+}
+
+/* Clean cards on index page */
+.dashboard .module table th a {
+  font-weight: 600;
+  color: #0284c7;
+}
+
+/* Object tools */
+ul.object-tools a.viewsitelink,
+ul.object-tools a.addlink {
+  background: #0284c7 !important;
+  border-radius: 6px;
+}

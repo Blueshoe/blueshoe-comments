@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 from comments.models import Comment
 
@@ -26,6 +27,8 @@ class Reaction(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        verbose_name = _("Reaction")
+        verbose_name_plural = _("Reactions")
         indexes = [
             models.Index(fields=["site_host", "thread_slug"]),
             models.Index(fields=["comment"]),

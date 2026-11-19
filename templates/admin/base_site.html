@@ -1,0 +1,31 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block extrahead %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'admin/css/blueshoe-admin.css' %}">
+{% endblock %}
+
+{% block branding %}
+<div id="site-name">
+  <a href="{% url 'admin:index' %}">
+    <!-- Blueshoe Brand SVG Logo Icon -->
+    <svg class="blueshoe-logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="40" height="40" rx="10" fill="#0284C7"/>
+      <path d="M10 24C10 21 14 14 20 14C24 14 28 17 28 20C28 23 25 26 22 26H13C11.3431 26 10 24.6569 10 23V24Z" fill="#38BDF8"/>
+      <path d="M12 28C10.8954 28 10 27.1046 10 26C10 24.8954 10.8954 24 12 24H28C29.1046 24 30 24.8954 30 26C30 27.1046 29.1046 28 28 28H12Z" fill="#FFFFFF"/>
+      <circle cx="20" cy="18" r="2" fill="#0F172A"/>
+    </svg>
+    <span style="font-weight: 800; letter-spacing: -0.03em; font-size: 1.25rem;">Blueshoe</span>
+    <span style="font-weight: 400; opacity: 0.85; font-size: 1.05rem;">Community Hub</span>
+  </a>
+  <div class="blueshoe-header-nav">
+    <a href="/docs" target="_blank" class="blueshoe-nav-badge">📖 API Docs</a>
+    <a href="/ready" target="_blank" class="blueshoe-nav-badge">💓 Hurricane Status</a>
+  </div>
+</div>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}

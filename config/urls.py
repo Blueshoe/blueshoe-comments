@@ -11,3 +11,8 @@ urlpatterns = [
     path("api/", api.urls),
     path("_allauth/", include("allauth.headless.urls")),  # Allauth headless routing
 ]
+
+# Blueshoe Admin Customization
+admin.site.site_header = "Blueshoe Community Hub"
+admin.site.site_title = "Blueshoe Admin"
+admin.site.index_title = "Discussion & Moderation Management"

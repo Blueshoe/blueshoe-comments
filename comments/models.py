@@ -52,6 +52,8 @@ class Comment(models.Model):
 
     class Meta:
         ordering = ["created_at"]
+        verbose_name = _("Comment")
+        verbose_name_plural = _("Comments")
         indexes = [
             models.Index(fields=["site_host", "thread_slug"]),
         ]
