@@ -1,6 +1,6 @@
 {
   "name": "@blueshoe/community-widget",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "type": "module",
   "description": "API-First Blueshoe Community-System Web Components",
   "main": "./dist/community-widget.umd.cjs",
@@ -18,6 +18,15 @@
   ],
   "bin": {
     "blueshoe-community-init": "bin/init.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Blueshoe/blueshoe-comments.git",
+    "directory": "frontend"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
     "dev": "vite",
