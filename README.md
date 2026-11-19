@@ -1,42 +1,40 @@
 # 👟 Blueshoe Community Hub & Comment System 💬🚀
 
-> **Where static sites get a real voice, trolls meet Gemini AI, and hurricanes power our servers instead of breaking them.**
+> **Where static sites get a real voice, conversations thrive, and hurricanes power our servers instead of breaking them.**
 
-[![Python](https://img.shields.io/badge/Python-3.12-blue.svg)](https://www.python.org/)
-[![Tooling](https://img.shields.io/badge/Package_Manager-Astral_uv-blueviolet.svg)](https://astral.sh/uv)
-[![Server](https://img.shields.io/badge/ASGI_Runner-Django_Hurricane-orange.svg)](https://django-hurricane.io/)
-[![API](https://img.shields.io/badge/API-Django_Ninja-brightgreen.svg)](https://django-ninja.dev/)
-[![AI Moderation](https://img.shields.io/badge/AI_Moderation-Gemini_2.5_Flash-ff69b4.svg)](https://deepmind.google/technologies/gemini/)
-[![Coverage](https://img.shields.io/badge/Test_Coverage-96%25-success.svg)](pytest.ini)
-[![Port](https://img.shields.io/badge/Default_Port-8079-yellow.svg)](docker-compose.yml)
+<a href="https://www.python.org/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/Python-3.12-blue.svg" alt="Python" /></a>
+<a href="https://astral.sh/uv" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/Package_Manager-Astral_uv-blueviolet.svg" alt="Tooling" /></a>
+<a href="https://django-hurricane.io/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/ASGI_Runner-Django_Hurricane-orange.svg" alt="Server" /></a>
+<a href="https://django-ninja.dev/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/API-Django_Ninja-brightgreen.svg" alt="API" /></a>
+<a href="pytest.ini" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/Test_Coverage-96%25-success.svg" alt="Coverage" /></a>
 
-Welcome to the headless community powerhouse serving [`blueshoe.de`](https://blueshoe.de), [`blueshoe.io`](https://blueshoe.io), and [`django-hurricane.io`](https://django-hurricane.io).
+Welcome to the headless community powerhouse serving <a href="https://blueshoe.de" target="_blank" rel="noopener noreferrer"><code>blueshoe.de</code></a>, <a href="https://blueshoe.io" target="_blank" rel="noopener noreferrer"><code>blueshoe.io</code></a>, and <a href="https://django-hurricane.io" target="_blank" rel="noopener noreferrer"><code>django-hurricane.io</code></a>.
 
-Static site generators (Astro, Sphinx, Hugo, Next) are fast, secure, and peaceful... until someone wants to leave a comment. Rather than selling your readers' souls to ad-tracking third-party widgets, **Blueshoe Community Hub** gives you a self-hosted, multi-tenant, privacy-first, lightning-fast commenting and reaction platform with synchronous AI moderation!
+Static site generators (Astro, Sphinx, Hugo, Next) are fast, secure, and peaceful... until someone wants to leave a comment. Rather than selling your readers' souls to ad-tracking third-party widgets, **Blueshoe Community Hub** gives you a self-hosted, multi-tenant, privacy-first, lightning-fast commenting and reaction platform with built-in moderation guardrails!
 
 ---
 
 ## ⚡ Superpowers & Highlights
 
-### 🌪️ Powered by `django-hurricane` (Port 8079)
-Forget slow WSGI setups. We run on **[Django Hurricane](https://django-hurricane.io/)**, Blueshoe’s own cloud-native Granian-powered ASGI runner.
-- **Port `8079`** by default (because 8000 was way too crowded).
+### 🌪️ Powered by `django-hurricane`
+Forget slow WSGI setups. We run on <a href="https://django-hurricane.io/" target="_blank" rel="noopener noreferrer"><strong>Django Hurricane</strong></a>, Blueshoe’s own cloud-native Granian-powered ASGI runner.
+- High-performance asynchronous execution.
 - Built-in zero-downtime Kubernetes & Coolify probes: `/alive`, `/ready`, `/startup`, and Prometheus `/metrics`.
 - Auto-runs migrations on container startup (`--check-migrations-apply`).
 
 ### 🥷 Typed & Fast with `django-ninja`
-No DRF bloatware here! Built with **Django Ninja** and Pydantic schemas:
+No DRF bloatware here! Built with <a href="https://django-ninja.dev/" target="_blank" rel="noopener noreferrer"><strong>Django Ninja</strong></a> and Pydantic schemas:
 - Fully typed request/response models.
-- Interactive, eye-candy API documentation at **[`/docs`](http://localhost:8079/docs)** powered by **Scalar** (with a Swagger fallback at `/api/docs`).
+- Interactive, eye-candy API documentation at <a href="/docs" target="_blank" rel="noopener noreferrer"><strong><code>/docs</code></strong></a> powered by **Scalar** (with a Swagger fallback at <a href="/api/docs" target="_blank" rel="noopener noreferrer"><code>/api/docs</code></a>).
 
-### 🤖 Gemini 2.5 Flash Guardrail (Publish-by-Default)
-- Every single comment (from guests or logged-in users) is checked synchronously in < 4 seconds by **Gemini 2.5 Flash**.
+### 🛡️ Smart Content Guardrails & Review Queue
+- Every single comment (from guests or logged-in users) is screened through real-time moderation guardrails.
 - **Clean?** Instant publish (`approved`)! 🎉
-- **Spam or hate speech?** Flagged (`spam` / `illegal`), put in a review queue, and triggers a non-blocking notification webhook for moderators.
-- **Privacy & Prompt Injection Defense:** Text is isolated with XML delimiters without leaking user identifiers (IP, email, or user IDs) to Google.
+- **Spam or abusive content?** Flagged, held back in a dedicated Django Admin review queue, and triggers an alert webhook for moderators.
+- **Privacy First:** User identifiers (IP, email, or user IDs) are never exposed.
 
 ### 🛡️ Troll & Bot Kryptonite
-- **Invisible Honeypot:** Dummy fields catch dumb bots before spending CPU cycles on AI.
+- **Invisible Honeypot:** Dummy fields catch dumb bots before spending server resources.
 - **ALTCHA Proof-of-Work:** Privacy-friendly WASM CAPTCHAs for guest commenters without annoying "click all traffic lights" puzzles.
 - **Replay Protection:** One-time cryptographic challenge nonces cached with SHA-256 hashes.
 
@@ -55,7 +53,7 @@ No DRF bloatware here! Built with **Django Ninja** and Pydantic schemas:
 - Regular readers enjoy **180-day sliding sessions**; staff sessions are safely capped at 12 hours.
 
 ### ☕ Resilient Frontend Widget (`@blueshoe/community-widget`)
-- Tiny standalone Web Component (~26 KB, ~8 KB gzipped) built with **Lit** and **TypeScript**.
+- Standalone Web Component built with **Lit** and **TypeScript**.
 - **Graceful degradation:** If the backend ever takes a coffee break ☕ or a hurricane sweeps through the server, teaser badges silently hide, while comment sections show a humorous status card with zero text loss (drafts stay safe in `localStorage`!).
 
 ---
@@ -65,10 +63,9 @@ No DRF bloatware here! Built with **Django Ninja** and Pydantic schemas:
 | Category | Tools & Libraries |
 | :--- | :--- |
 | **Language & Runtime** | Python 3.12, Node.js 20 |
-| **Package Tooling** | [Astral `uv`](https://astral.sh/uv) (blazing fast) |
-| **Server Engine** | `django-hurricane` (Granian / Rust ASGI) |
-| **API Framework** | `django-ninja` (Pydantic v2) |
-| **AI Moderation** | Google Gemini 2.5 Flash (`google-genai`) |
+| **Package Tooling** | <a href="https://astral.sh/uv" target="_blank" rel="noopener noreferrer">Astral <code>uv</code></a> (blazing fast) |
+| **Server Engine** | <a href="https://django-hurricane.io/" target="_blank" rel="noopener noreferrer"><code>django-hurricane</code></a> (Granian / Rust ASGI) |
+| **API Framework** | <a href="https://django-ninja.dev/" target="_blank" rel="noopener noreferrer"><code>django-ninja</code></a> (Pydantic v2) |
 | **Database & Cache** | PostgreSQL 15, Redis / Local Cache |
 | **Bot Protection** | ALTCHA (WASM Proof-of-Work), Honeypot |
 | **Markdown & HTML** | `mistune` 3, `nh3` (strict HTML sanitizer, `nofollow ugc`) |
@@ -79,7 +76,7 @@ No DRF bloatware here! Built with **Django Ninja** and Pydantic schemas:
 
 ## 🚀 Quickstart (Local Development)
 
-We manage everything using Astral's `uv`. If you don't have it yet:
+We manage everything using <a href="https://astral.sh/uv" target="_blank" rel="noopener noreferrer">Astral's <code>uv</code></a>. If you don't have it yet:
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
@@ -97,26 +94,25 @@ uv sync
 ```bash
 cp .env.example .env
 ```
-*(Optionally add your `GEMINI_API_KEY` for live AI moderation testing!)*
 
 ### 3. Run Migrations & Start Hurricane
 ```bash
 uv run python manage.py migrate
-uv run python manage.py serve --port 8079
+uv run python manage.py serve
 ```
 
-Visit the services:
-- 📖 **Interactive API Docs:** [http://localhost:8079/docs](http://localhost:8079/docs)
-- ⚙️ **Django Admin:** [http://localhost:8079/admin/](http://localhost:8079/admin/)
-- 🩺 **Healthcheck:** [http://localhost:8079/healthz/](http://localhost:8079/healthz/)
-- 💓 **Hurricane Liveness Probe:** [http://localhost:8079/alive](http://localhost:8079/alive)
-- 📊 **Prometheus Metrics:** [http://localhost:8079/metrics](http://localhost:8079/metrics)
+Available endpoints:
+- 📖 **Interactive API Docs:** <a href="/docs" target="_blank" rel="noopener noreferrer"><code>/docs</code></a>
+- ⚙️ **Django Admin:** <a href="/admin/" target="_blank" rel="noopener noreferrer"><code>/admin/</code></a>
+- 🩺 **Healthcheck:** <a href="/healthz/" target="_blank" rel="noopener noreferrer"><code>/healthz/</code></a>
+- 💓 **Hurricane Liveness Probe:** <a href="/alive" target="_blank" rel="noopener noreferrer"><code>/alive</code></a>
+- 📊 **Prometheus Metrics:** <a href="/metrics" target="_blank" rel="noopener noreferrer"><code>/metrics</code></a>
 
 ---
 
 ## 🐳 Production Deployment (Coolify / Docker Compose)
 
-Our production setup runs cleanly with Docker Compose, binding to port **`8079`** by default.
+Our production setup runs cleanly with Docker Compose and is configured entirely through environment variables.
 
 ```bash
 # Validate your compose setup
@@ -127,7 +123,6 @@ docker compose up -d
 ```
 
 ### Coolify Zero-Downtime Settings
-- **Port:** `8079`
 - **Healthcheck Path:** `/alive` or `/healthz/`
 - **Domains:** Coolify Traefik handles Let's Encrypt certificates for:
   - `community.blueshoe.de`
@@ -197,11 +192,11 @@ Dependabot is configured in `.github/dependabot.yml` to keep Python dependencies
 This software includes and enforces a comprehensive set of community guidelines governing **commenting, reactions, and public interactions** across websites powered by this platform.
 
 - **Shipped with the Frontend Widget:** Readers can review the rules in-place via an interactive modal dialog directly in the editor while writing comments.
-- **Enforced by AI Moderation:** Comments violating these guidelines (hate speech, harassment, threats, or spam) are automatically intercepted by our synchronous Gemini 2.5 Flash guardrail.
-- Review the full text in [Community Discussion Guidelines (CODE_OF_CONDUCT.md)](CODE_OF_CONDUCT.md).
+- **Moderation Guardrails:** Comments violating these guidelines (hate speech, harassment, threats, or spam) are automatically intercepted and held for review.
+- Review the full text in <a href="CODE_OF_CONDUCT.md" target="_blank" rel="noopener noreferrer"><strong>Community Discussion Guidelines (CODE_OF_CONDUCT.md)</strong></a>.
 
 ---
 
 ## 📜 License
 
-Created with ❤️ by **[Blueshoe](https://blueshoe.de)**. Licensed under the MIT License.
+Created with ❤️ by <a href="https://blueshoe.de" target="_blank" rel="noopener noreferrer"><strong>Blueshoe</strong></a>. Licensed under the MIT License.

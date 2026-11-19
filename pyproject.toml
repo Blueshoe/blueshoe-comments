@@ -26,6 +26,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "polib>=1.2.0",
+    "ruff>=0.17.5",
 ]
 
 [tool.ruff]
