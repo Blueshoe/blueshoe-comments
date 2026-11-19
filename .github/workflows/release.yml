@@ -8,7 +8,7 @@ on:
 permissions:
   contents: write
   packages: write
-  id-token: write # Required for npm Trusted Publishing (OIDC) and Provenance
+  id-token: write # Required for npm Trusted Publishing (OIDC) and Sigstore Provenance
 
 jobs:
   release-widget:
@@ -25,7 +25,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          registry-url: "https://registry.npmjs.org"
           cache: "npm"
           cache-dependency-path: frontend/package-lock.json
 
@@ -36,12 +35,7 @@ jobs:
         run: npm run build
 
       - name: Publish to npm (via Trusted Publishing & Provenance)
-        run: |
-          npm publish --access public --provenance
-        env:
-          # If Trusted Publishing is configured, OIDC authenticates automatically.
-          # If a legacy token is present in secrets, it acts as a fallback.
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public --provenance
 
       - name: Create GitHub Release and upload Assets
         uses: softprops/action-gh-release@v2

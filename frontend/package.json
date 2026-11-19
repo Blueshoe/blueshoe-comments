@@ -16,7 +16,7 @@
     "bin"
   ],
   "bin": {
-    "blueshoe-community-init": "./bin/init.js"
+    "blueshoe-community-init": "bin/init.js"
   },
   "scripts": {
     "dev": "vite",
