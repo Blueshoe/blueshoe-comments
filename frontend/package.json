@@ -1,0 +1,36 @@
+{
+  "name": "@blueshoe/community-widget",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "API-First Community-System Web Components",
+  "main": "./dist/community-widget.umd.cjs",
+  "module": "./dist/community-widget.js",
+  "exports": {
+    ".": {
+      "import": "./dist/community-widget.js",
+      "require": "./dist/community-widget.umd.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "bin"
+  ],
+  "bin": {
+    "blueshoe-community-init": "./bin/init.js"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "lit": "^3.1.2",
+    "altcha": "^2.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2",
+    "vite": "^5.1.0"
+  },
+  "author": "Blueshoe",
+  "license": "MIT"
+}

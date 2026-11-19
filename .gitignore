@@ -1,0 +1,23 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+.coverage
+.pytest_cache/
+
+# Databases
+db.sqlite3
+*.sqlite3
+
+# Static files & environments
+staticfiles/
+.venv
+.env
+
+# Node / Frontend
+node_modules/
+frontend/node_modules/
+frontend/dist/

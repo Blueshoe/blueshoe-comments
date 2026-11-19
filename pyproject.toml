@@ -1,0 +1,37 @@
+[project]
+name = "blueshoe-comments"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "altcha>=2.4.0",
+    "django>=6.1.3",
+    "django-allauth>=65.22.1",
+    "django-cors-headers>=4.9.0",
+    "django-environ>=0.14.0",
+    "django-hurricane>=2.0.0",
+    "django-ninja>=1.8.0",
+    "google-genai>=3.6.1",
+    "mistune>=3.4.0",
+    "nh3>=0.3.8",
+    "psycopg[binary]>=3.3.9",
+    "pytest>=9.2.0",
+    "pytest-cov>=7.1.0",
+    "pytest-django>=4.14.0",
+    "python-dotenv>=1.2.4",
+    "tldextract>=5.4.0",
+]
+
+[dependency-groups]
+dev = [
+    "polib>=1.2.0",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+ignore = ["E501"]

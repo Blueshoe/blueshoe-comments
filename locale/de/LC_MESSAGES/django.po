@@ -1,0 +1,127 @@
+# German translations for blueshoe-comments.
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-19 14:00+0000\n"
+"PO-Revision-Date: 2026-11-19 14:00+0000\n"
+"Last-Translator: Blueshoe <dev@blueshoe.de>\n"
+"Language-Team: German\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Approved"
+msgstr "Freigegeben"
+
+msgid "Pending"
+msgstr "Ausstehend"
+
+msgid "Rejected"
+msgstr "Abgelehnt"
+
+msgid "Spam"
+msgstr "Spam"
+
+msgid "Clean"
+msgstr "Sauber"
+
+msgid "Illegal"
+msgstr "Rechtswidrig"
+
+msgid "Deleted User"
+msgstr "Gelöschter Nutzer"
+
+msgid "Guest"
+msgstr "Gast"
+
+msgid "Anonymous"
+msgstr "Anonym"
+
+msgid "View Live"
+msgstr "Live ansehen"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "AI Flag"
+msgstr "KI-Flag"
+
+msgid "Author"
+msgstr "Autor"
+
+msgid "Content"
+msgstr "Inhalt"
+
+msgid "Live Link"
+msgstr "Live-Link"
+
+msgid "HTML Preview"
+msgstr "HTML-Vorschau"
+
+msgid "Moderation & Review"
+msgstr "Moderation & Prüfung"
+
+msgid "Content & Preview"
+msgstr "Inhalt & Vorschau"
+
+msgid "Tenant & Thread Context"
+msgstr "Mandant & Thread-Kontext"
+
+msgid "Author & Tracking"
+msgstr "Autor & Tracking"
+
+msgid "Reaction"
+msgstr "Reaktion"
+
+msgid "Target"
+msgstr "Ziel"
+
+msgid "Comment"
+msgstr "Kommentar"
+
+msgid "Page"
+msgstr "Seite"
+
+msgid "User / Anon"
+msgstr "Nutzer / Anon"
+
+msgid "Approve selected comments"
+msgstr "Ausgewählte Kommentare freigeben"
+
+msgid "Reject selected comments"
+msgstr "Ausgewählte Kommentare ablehnen"
+
+msgid "Mark selected comments as spam"
+msgstr "Ausgewählte Kommentare als Spam markieren"
+
+msgid "{count} comment(s) successfully approved."
+msgstr "{count} Kommentar(e) erfolgreich freigegeben."
+
+msgid "{count} comment(s) rejected."
+msgstr "{count} Kommentar(e) abgelehnt."
+
+msgid "{count} comment(s) marked as spam."
+msgstr "{count} Kommentar(e) als Spam markiert."
+
+msgid "New reply to your comment ({slug})"
+msgstr "Neue Antwort auf deinen Kommentar ({slug})"
+
+msgid ""
+"Hello {name},\n\n"
+"Someone replied to your comment on {host}:\n\n"
+"\"{snippet}...\"\n\n"
+"View the comment here:\n"
+"{comment_url}\n\n"
+"If you no longer wish to receive notifications for this thread, click here to unsubscribe:\n"
+"{unsubscribe_url}\n"
+msgstr ""
+"Hallo {name},\n\n"
+"jemand hat auf deinen Kommentar auf {host} geantwortet:\n\n"
+"\"{snippet}...\"\n\n"
+"Den Kommentar hier ansehen:\n"
+"{comment_url}\n\n"
+"Wenn du keine Benachrichtigungen mehr zu diesem Thread erhalten möchtest, klicke hier zum Abmelden:\n"
+"{unsubscribe_url}\n"

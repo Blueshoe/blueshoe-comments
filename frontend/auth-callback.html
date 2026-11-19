@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Authenticating...</title>
+    <script>
+        // Check if there is an error in URL params
+        const urlParams = new URLSearchParams(window.location.search);
+        const error = urlParams.get('error');
+        
+        if (window.opener) {
+            if (error) {
+                window.opener.postMessage({ type: 'oauth_error', error }, '*');
+            } else {
+                window.opener.postMessage({ type: 'oauth_success' }, '*');
+            }
+            window.close();
+        } else {
+            document.write('Authentication complete. You can close this window.');
+        }
+    </script>
+</head>
+<body>
+    Authenticating...
+</body>
+</html>
