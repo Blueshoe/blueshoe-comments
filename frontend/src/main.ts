@@ -1173,12 +1173,10 @@ export class CommunityComments extends LitElement {
                     @input=${(e: any) => (this.replyGuestName = e.target.value)}
                   />
                   <altcha-widget
-                    challengeurl="${this.resolvedApiBase}/api/captcha/challenge/"
+                    challenge="${this.resolvedApiBase}/api/captcha/challenge/"
                     auto="onload"
                     spamfilter="false"
                     display="invisible"
-                    hidefooter
-                    hidelogo
                     @statechange=${(e: CustomEvent) => {
                       if (e.detail?.state === 'verified') {
                         this.replyAltchaPayload = e.detail?.payload || '';
@@ -1346,7 +1344,7 @@ export class CommunityComments extends LitElement {
                       @input=${(e: any) => (this.guestName = e.target.value)}
                     />
                     <altcha-widget
-                      challengeurl="${this.resolvedApiBase}/api/captcha/challenge/"
+                      challenge="${this.resolvedApiBase}/api/captcha/challenge/"
                       auto="onload"
                       spamfilter="false"
                       display="invisible"
