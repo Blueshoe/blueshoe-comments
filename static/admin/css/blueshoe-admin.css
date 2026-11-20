@@ -69,9 +69,12 @@ body {
 }
 
 .blueshoe-brand-logo {
-  height: 28px;
+  height: 32px;
+  max-height: 36px;
   width: auto;
   vertical-align: middle;
+  object-fit: contain;
+  display: inline-block;
 }
 
 .blueshoe-portal-title {
