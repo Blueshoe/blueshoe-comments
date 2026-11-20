@@ -152,9 +152,9 @@ class TestCommentsAPI:
         assert "Hello world" in data["body_html"]
 
     @patch("comments.api.moderate_comment")
-    @patch("comments.api.verify_solution")
+    @patch("comments.api.verify_solution_v1")
     def test_create_comment_guest_with_altcha(self, mock_verify, mock_mod, client):
-        mock_verify.return_value = True
+        mock_verify.return_value = (True, None)
         mock_mod.return_value = ("approved", "clean", "")
 
         res = client.post(

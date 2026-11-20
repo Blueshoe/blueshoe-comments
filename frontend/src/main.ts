@@ -1,3 +1,4 @@
+import 'altcha';
 import { LitElement, html, css, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CODE_OF_CONDUCT_I18N, CodeOfConductContent } from './code-of-conduct';
@@ -572,6 +573,9 @@ export class CommunityComments extends LitElement {
   @state()
   private blockedProviderId: string | null = null;
 
+  @state()
+  private altchaPayload = '';
+
   private t(key: string): string {
     const dict = I18N[this.lang] || I18N.en;
     return dict[key] || I18N.en[key] || key;
@@ -720,7 +724,7 @@ export class CommunityComments extends LitElement {
         thread_slug: this.threadSlug,
         body_markdown: this.commentBody,
         guest_name: this.guestName || undefined,
-        altcha: 'dummy_bypass',
+        altcha: this.currentUser ? undefined : this.altchaPayload || undefined,
       };
 
       const res = await fetch(`${this.apiBase}/api/comments/`, {
@@ -732,10 +736,25 @@ export class CommunityComments extends LitElement {
 
       if (res.ok) {
         this.commentBody = '';
+        this.altchaPayload = '';
+        const altchaEl = this.shadowRoot?.querySelector('altcha-widget') as any;
+        if (altchaEl?.reset) {
+          altchaEl.reset();
+        }
         try {
           localStorage.removeItem(`comment-draft:${this.threadSlug}`);
         } catch (_) {}
         await this.fetchComments();
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        if (errData?.error) {
+          alert(`Error: ${errData.error}`);
+        }
+        const altchaEl = this.shadowRoot?.querySelector('altcha-widget') as any;
+        if (altchaEl?.reset) {
+          altchaEl.reset();
+        }
+        this.altchaPayload = '';
       }
     } catch (err) {
       console.error('Submit comment error', err);
@@ -938,6 +957,19 @@ export class CommunityComments extends LitElement {
                       .value=${this.guestName}
                       @input=${(e: any) => (this.guestName = e.target.value)}
                     />
+                    <altcha-widget
+                      challengeurl="${this.apiBase}/api/captcha/challenge/"
+                      auto="onload"
+                      hidefooter
+                      hidelogo
+                      @statechange=${(e: CustomEvent) => {
+                        if (e.detail?.state === 'verified') {
+                          this.altchaPayload = e.detail?.payload || '';
+                        } else if (e.detail?.state === 'expired' || e.detail?.state === 'error') {
+                          this.altchaPayload = '';
+                        }
+                      }}
+                    ></altcha-widget>
                   `
                 : nothing}
               <span>${this.commentBody.length} / 5,000 ${this.t('charLimit')}</span>
@@ -950,7 +982,7 @@ export class CommunityComments extends LitElement {
 
             <button
               class="submit-btn"
-              ?disabled=${!this.commentBody.trim() || this.isSubmitting}
+              ?disabled=${!this.commentBody.trim() || this.isSubmitting || (!this.currentUser && !this.altchaPayload)}
               @click=${this.handlePostComment}
             >
               ${this.isSubmitting ? this.t('submittingBtn') : this.t('submitBtn')}

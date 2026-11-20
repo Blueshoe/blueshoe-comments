@@ -2,7 +2,7 @@ import datetime
 import hashlib
 import logging
 
-from altcha import ChallengeOptionsV1, verify_solution
+from altcha import ChallengeOptionsV1, verify_solution_v1
 from altcha import create_challenge_v1 as create_challenge
 from django.conf import settings
 from django.core.cache import cache
@@ -209,7 +209,7 @@ def create_comment(request: HttpRequest, payload: CreateCommentIn):
             return Response({"error": "Captcha required"}, status=400)
 
         try:
-            is_valid = verify_solution(payload.altcha, ALTCHA_HMAC_KEY)
+            is_valid, _err = verify_solution_v1(payload.altcha, ALTCHA_HMAC_KEY)
             if not is_valid:
                 return Response({"error": "Invalid Captcha solution"}, status=400)
 
