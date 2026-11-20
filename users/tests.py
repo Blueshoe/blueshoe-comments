@@ -136,3 +136,24 @@ class TestUsersAPI:
         # Verify session is cleared
         session_res = client.get("/api/auth/session/")
         assert session_res.json()["is_authenticated"] is False
+
+    def test_oauth_error_page_domain_sensitive(self, client):
+        site = Site.objects.get_current()
+        app = SocialApp.objects.create(provider="github", name="GitHub", client_id="test_client_id")
+        app.sites.add(site)
+
+        # 1. IO Domain
+        res_io = client.get("/accounts/github/login/callback/", HTTP_HOST="community.blueshoe.io")
+        assert res_io.status_code == 401
+        content_io = res_io.content.decode()
+        assert "Blue_Logo_H_white.png" in content_io
+        assert "We're sorry!" in content_io
+        assert "https://www.blueshoe.io/blog" in content_io
+        assert "Return to blueshoe.io Blog" in content_io
+
+        # 2. DE Domain
+        res_de = client.get("/accounts/github/login/callback/", HTTP_HOST="community.blueshoe.de")
+        assert res_de.status_code == 401
+        content_de = res_de.content.decode()
+        assert "https://www.blueshoe.de/blog" in content_de
+        assert "Zum blueshoe.de Blog" in content_de

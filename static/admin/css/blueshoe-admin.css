@@ -7,9 +7,10 @@
   --bs-blue-primary: #00458b;
   --bs-blue-hover: #003366;
   --bs-blue-accent: #007bff;
-  --bs-dark: #212529;
-  --bs-gray-bg: #f8f9fa;
-  --bs-border: #dee2e6;
+  --bs-dark: #1e293b;
+  --bs-gray-bg: #f1f5f9;
+  --bs-gray-card: #f8fafc;
+  --bs-border: #e2e8f0;
 
   /* Overriding Django Admin Standard CSS variables */
   --primary: #00458b;
@@ -18,11 +19,13 @@
   --primary-fg: #ffffff;
   --header-bg: #00458b;
   --header-color: #ffffff;
-  --breadcrumbs-bg: #f8f9fa;
-  --breadcrumbs-fg: #495057;
+  --breadcrumbs-bg: #ffffff;
+  --breadcrumbs-fg: #64748b;
   --breadcrumbs-link-fg: #00458b;
   --link-fg: #00458b;
   --link-selected-fg: #003366;
+  --body-bg: #f1f5f9;
+  --darkened-bg: #e2e8f0;
   --font-family-primary: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 
   /* Django Admin Messages Variable Overrides */
@@ -32,18 +35,29 @@
   --message-error-bg: #fef2f2;
 }
 
+/* Background canvas: gentle soft slate gray instead of blinding flat white */
+html,
 body {
   font-family: var(--font-family-primary);
-  color: #212529;
-  background-color: #ffffff;
+  color: #1e293b;
+  background-color: #f1f5f9 !important;
+}
+
+#container {
+  background-color: transparent !important;
+}
+
+#content {
+  background: #f1f5f9 !important;
+  padding: 24px 32px !important;
 }
 
 /* Header styled with Blueshoe.io signature color */
 #header {
   background: #00458b !important;
   color: #ffffff !important;
-  box-shadow: 0 2px 8px rgba(0, 69, 139, 0.2);
-  padding: 14px 24px;
+  box-shadow: 0 2px 8px rgba(0, 69, 139, 0.25);
+  padding: 14px 28px;
 }
 
 #header #branding {
@@ -66,6 +80,7 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 12px;
+  white-space: nowrap;
 }
 
 .blueshoe-brand-logo {
@@ -80,23 +95,24 @@ body {
 .blueshoe-portal-title {
   font-size: 1rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.9);
-  padding-left: 12px;
-  border-left: 1px solid rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.95);
+  padding-left: 14px;
+  border-left: 1px solid rgba(255, 255, 255, 0.35);
   letter-spacing: -0.01em;
+  white-space: nowrap;
 }
 
 .blueshoe-header-nav {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  margin-left: 16px;
+  margin-left: 20px;
 }
 
 .blueshoe-nav-badge {
   background: rgba(255, 255, 255, 0.15);
   color: #ffffff !important;
-  padding: 4px 12px;
+  padding: 5px 14px;
   border-radius: 4px;
   font-size: 0.8rem;
   font-weight: 600;
@@ -111,33 +127,91 @@ body {
   border-color: #ffffff;
 }
 
-/* Breadcrumbs styled cleanly */
+/* Breadcrumbs bar */
 div.breadcrumbs {
-  background: #f8f9fa !important;
-  color: #6c757d !important;
-  padding: 10px 24px;
+  background: #ffffff !important;
+  color: #64748b !important;
+  padding: 10px 28px;
   font-size: 0.85rem;
-  border-bottom: 1px solid #dee2e6;
+  border-bottom: 1px solid #e2e8f0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
 }
 
 div.breadcrumbs a {
   color: #00458b !important;
-  font-weight: 500;
+  font-weight: 600;
 }
 
-/* Primary Buttons matching Blueshoe.io */
+/* Modules & Dashboard Cards */
+.module,
+.inline-group {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+  margin-bottom: 24px !important;
+  overflow: hidden !important;
+}
+
+.module caption,
+.inline-group h2 {
+  background: #00458b !important;
+  color: #ffffff !important;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 10px 16px;
+  letter-spacing: -0.01em;
+}
+
+/* Changelist Table */
+#changelist {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+  overflow: hidden !important;
+}
+
+#changelist table thead th {
+  background: #f8fafc;
+  color: #1e293b;
+  font-weight: 700;
+  border-bottom: 2px solid #e2e8f0;
+  padding: 10px 12px;
+}
+
+#changelist table tbody tr:nth-child(even) {
+  background: #f8fafc;
+}
+
+#changelist table tbody tr:hover {
+  background: #e0f2fe !important;
+}
+
+#changelist-filter {
+  background: #f8fafc !important;
+  border-left: 1px solid #e2e8f0 !important;
+}
+
+#changelist-filter h2 {
+  background: #00458b !important;
+  color: #ffffff !important;
+}
+
+/* Buttons matching Blueshoe.io */
 .button,
 input[type=submit],
 input[type=button],
 .submit-row input,
 a.button {
   background: #00458b !important;
-  border-radius: 4px !important;
+  border-radius: 5px !important;
   color: #ffffff !important;
   font-weight: 600 !important;
   border: 1px solid #00458b !important;
-  padding: 8px 16px !important;
-  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+  padding: 8px 18px !important;
+  transition: all 0.15s ease-in-out;
+  cursor: pointer;
 }
 
 .button:hover,
@@ -147,6 +221,7 @@ input[type=button]:hover,
 a.button:hover {
   background: #003366 !important;
   border-color: #003366 !important;
+  box-shadow: 0 2px 4px rgba(0, 69, 139, 0.25);
 }
 
 .button.default,
@@ -154,37 +229,117 @@ input[type=submit].default {
   background: #00458b !important;
 }
 
-/* Modules & Tables */
-.module caption,
-.inline-group h2 {
+.submit-row {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  padding: 14px 18px !important;
+}
+
+/* Form fields & inputs */
+input[type=text],
+input[type=password],
+input[type=email],
+input[type=url],
+input[type=number],
+textarea,
+select {
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 5px !important;
+  padding: 6px 10px !important;
+  font-size: 0.9rem !important;
+}
+
+input[type=text]:focus,
+input[type=password]:focus,
+input[type=email]:focus,
+textarea:focus,
+select:focus {
+  border-color: #00458b !important;
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(0, 69, 139, 0.15) !important;
+}
+
+/* ==========================================================================
+   Login Page Styling (Wider Modal, Single-Line Header)
+   ========================================================================== */
+.login {
+  background: #f1f5f9 !important;
+}
+
+.login #container {
+  width: 38em !important;
+  max-width: 580px !important;
+  min-width: 460px !important;
+  margin: 90px auto !important;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 12px 30px -5px rgba(0, 69, 139, 0.12), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+  overflow: hidden !important;
+}
+
+.login #header {
   background: #00458b !important;
-  color: #ffffff !important;
-  font-weight: 600;
-  padding: 8px 12px;
-  border-radius: 4px 4px 0 0;
+  padding: 20px 28px !important;
+  border-radius: 12px 12px 0 0 !important;
 }
 
-#changelist table thead th {
-  background: #f8f9fa;
-  color: #212529;
-  font-weight: 700;
-  border-bottom: 2px solid #dee2e6;
+.login #header #branding {
+  width: 100% !important;
+  justify-content: center !important;
 }
 
-.dashboard .module table th a {
-  font-weight: 600;
-  color: #00458b;
+.login #header #branding h1 {
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+  margin: 0 !important;
 }
 
-/* Change list link colors */
-#changelist table tbody tr:hover {
-  background: #f1f5f9;
+.login #header #branding h1 a {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+  gap: 14px !important;
 }
 
-ul.object-tools a.viewsitelink,
-ul.object-tools a.addlink {
-  background: #00458b !important;
-  border-radius: 4px;
+.login .blueshoe-brand-logo {
+  height: 34px !important;
+  max-height: 38px !important;
+  width: auto !important;
+}
+
+.login .blueshoe-portal-title {
+  font-size: 1.15rem !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+  letter-spacing: -0.01em;
+}
+
+.login .blueshoe-header-nav {
+  display: none !important; /* Keep the login header clean and focused */
+}
+
+.login #content {
+  background: #ffffff !important;
+  padding: 28px 36px 36px !important;
+}
+
+.login .form-row {
+  padding: 10px 0 !important;
+  border-bottom: none !important;
+}
+
+.login .submit-row {
+  background: transparent !important;
+  border: none !important;
+  padding: 16px 0 0 !important;
+  margin: 0 !important;
+  text-align: right !important;
 }
 
 /* ==========================================================================
@@ -192,7 +347,7 @@ ul.object-tools a.addlink {
    ========================================================================== */
 ul.messagelist {
   padding: 0 !important;
-  margin: 16px 24px !important;
+  margin: 16px 0 20px !important;
 }
 
 ul.messagelist li {
@@ -202,7 +357,7 @@ ul.messagelist li {
   padding: 12px 18px 12px 46px !important;
   margin: 0 0 10px 0 !important;
   border-radius: 6px !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
   position: relative !important;
   background-position: 16px center !important;
   background-size: 18px 18px !important;

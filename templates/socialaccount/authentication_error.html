@@ -1,0 +1,281 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Authentication Notice | Blueshoe Community</title>
+  <link rel="icon" type="image/x-icon" href="https://www.blueshoe.io/favicon.ico">
+  <style>
+    :root {
+      --bs-primary: #00458b;
+      --bs-primary-hover: #003366;
+      --bs-text: #1e293b;
+      --bs-muted: #64748b;
+      --bs-bg: #f1f5f9;
+      --bs-card: #ffffff;
+      --bs-border: #e2e8f0;
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bs-bg);
+      color: var(--bs-text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .brand-header {
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .brand-logo-container {
+      background: var(--bs-primary);
+      padding: 14px 28px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 4px 12px rgba(0, 69, 139, 0.25);
+    }
+
+    .brand-logo {
+      height: 32px;
+      width: auto;
+      vertical-align: middle;
+    }
+
+    .brand-sub {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.95rem;
+      font-weight: 500;
+      border-left: 1px solid rgba(255, 255, 255, 0.35);
+      padding-left: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    .error-card {
+      background: var(--bs-card);
+      border: 1px solid var(--bs-border);
+      border-radius: 16px;
+      max-width: 560px;
+      width: 100%;
+      padding: 40px 36px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+      text-align: center;
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .status-icon-wrap {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: #eff6ff;
+      border: 2px solid #bfdbfe;
+      color: var(--bs-primary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .status-icon-wrap svg {
+      width: 32px;
+      height: 32px;
+    }
+
+    h1 {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 12px;
+      line-height: 1.3;
+      letter-spacing: -0.02em;
+    }
+
+    p.apology {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--bs-muted);
+      margin-bottom: 20px;
+    }
+
+    .details-box {
+      background: #f8fafc;
+      border: 1px solid var(--bs-border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 0.85rem;
+      color: #475569;
+      margin-bottom: 28px;
+      text-align: left;
+    }
+
+    .details-box div {
+      margin-bottom: 4px;
+    }
+
+    .details-box div:last-child {
+      margin-bottom: 0;
+    }
+
+    .details-box strong {
+      color: #0f172a;
+    }
+
+    .action-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn-primary {
+      background: var(--bs-primary);
+      color: #ffffff !important;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 14px 28px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      transition: all 0.15s ease-in-out;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 6px -1px rgba(0, 69, 139, 0.25);
+    }
+
+    .btn-primary:hover {
+      background: var(--bs-primary-hover);
+      box-shadow: 0 6px 12px -2px rgba(0, 69, 139, 0.35);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--bs-muted);
+      font-size: 0.9rem;
+      text-decoration: none;
+      padding: 6px 12px;
+      cursor: pointer;
+      border: none;
+      font-weight: 500;
+    }
+
+    .btn-secondary:hover {
+      color: #0f172a;
+      text-decoration: underline;
+    }
+
+    .footer-note {
+      margin-top: 24px;
+      font-size: 0.8rem;
+      color: #94a3b8;
+    }
+
+    .footer-note a {
+      color: var(--bs-primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .footer-note a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="brand-header">
+    <div class="brand-logo-container">
+      <img src="{% static 'admin/img/Blue_Logo_H_white.png' %}" alt="Blueshoe" class="brand-logo">
+      <span class="brand-sub">Community</span>
+    </div>
+  </div>
+
+  <div class="error-card">
+    <div class="status-icon-wrap">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+      </svg>
+    </div>
+
+    <h1>We're sorry!</h1>
+    <p class="apology">
+      The authentication attempt could not be completed. This usually happens if the sign-in was cancelled, timed out, or the callback was requested directly without an active login session. We apologize for the inconvenience!
+    </p>
+
+    <div class="details-box">
+      {% if auth_error.provider %}
+        <div><strong>Provider:</strong> {{ auth_error.provider.name|default:auth_error.provider }}</div>
+      {% endif %}
+      <div><strong>Domain:</strong> {{ request.get_host }}</div>
+      <div><strong>Notice:</strong> No active OAuth state or authorization grant found.</div>
+    </div>
+
+    <div class="action-group">
+      <!-- Domain-sensitive prominent blog link -->
+      {% if "blueshoe.de" in request.get_host %}
+        <a href="https://www.blueshoe.de/blog" class="btn-primary">
+          <span>📖</span> Zum blueshoe.de Blog
+        </a>
+      {% elif "gefyra.dev" in request.get_host %}
+        <a href="https://gefyra.dev" class="btn-primary">
+          <span>📖</span> Zur Gefyra Dokumentation
+        </a>
+      {% elif "django-hurricane.io" in request.get_host %}
+        <a href="https://django-hurricane.io" class="btn-primary">
+          <span>📖</span> Visit django-hurricane.io
+        </a>
+      {% else %}
+        <a href="https://www.blueshoe.io/blog" class="btn-primary">
+          <span>📖</span> Return to blueshoe.io Blog
+        </a>
+      {% endif %}
+
+      <button id="close-popup-btn" class="btn-secondary" style="display: none;" onclick="window.close();">
+        ✕ Close Window
+      </button>
+    </div>
+
+    <div class="footer-note">
+      Need assistance? Contact us at <a href="mailto:blog@blueshoe.io">blog@blueshoe.io</a>
+    </div>
+  </div>
+
+  <script>
+    // If opened as an OAuth popup by the comments widget, notify the parent opener
+    if (window.opener) {
+      document.getElementById('close-popup-btn').style.display = 'inline-block';
+      try {
+        window.opener.postMessage({
+          type: 'oauth_error',
+          error: '{{ auth_error.code|default:"callback_failed" }}'
+        }, '*');
+      } catch (e) {
+        // Opener might be cross-origin
+      }
+    }
+  </script>
+</body>
+</html>
