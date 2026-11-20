@@ -169,6 +169,8 @@ class TestUsersAPI:
         res = client.get(
             "/_allauth/browser/v1/auth/provider/redirect?provider=github&callback_url=https://www.blueshoe.io/auth-callback.html",
             HTTP_HOST="community.blueshoe.io",
+            HTTP_X_FORWARDED_PROTO="https",
         )
         assert res.status_code == 302
         assert "github.com/login/oauth/authorize" in res.headers["Location"]
+        assert "redirect_uri=https%3A%2F%2Fcommunity.blueshoe.io" in res.headers["Location"]

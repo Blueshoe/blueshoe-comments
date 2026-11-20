@@ -185,8 +185,13 @@ CSRF_TRUSTED_ORIGINS = env.list(
     ],
 )
 
+# --- Reverse Proxy SSL & HTTPS ---
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+USE_X_FORWARDED_HOST = True
+
 # --- Allauth Headless Setup ---
 HEADLESS_ONLY = True
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = env("ACCOUNT_DEFAULT_HTTP_PROTOCOL", default="https" if not DEBUG else "http")
 ACCOUNT_LOGIN_METHODS = {"email"}
 ACCOUNT_SIGNUP_FIELDS = ["email*"]
 ACCOUNT_EMAIL_VERIFICATION = "none"  # Social login primarily, bypass email verification for now or configure as needed

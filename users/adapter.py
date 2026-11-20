@@ -6,6 +6,7 @@ from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from allauth.socialaccount.models import SocialApp
 from django.conf import settings
 from django.db.models import Q
+from django.http import HttpRequest
 
 
 class CustomAccountAdapter(DefaultAccountAdapter):
@@ -39,26 +40,39 @@ class CustomAccountAdapter(DefaultAccountAdapter):
 
 class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
     """
-    Robust multi-tenant social app lookup with graceful fallback.
+    Robust multi-tenant social app lookup matching request host without MultipleObjectsReturned.
     """
 
-    def list_apps(self, request, provider=None, client_id=None):
-        apps = super().list_apps(request, provider=provider, client_id=client_id)
-        if apps:
-            return apps
-
-        # If not linked to the current site ID, search by host domain
-        qs = SocialApp.objects.all()
-        if provider:
-            qs = qs.filter(Q(provider=provider) | Q(provider_id=provider))
+    def get_app(self, request: HttpRequest, provider: str, client_id: str | None = None) -> SocialApp:
         if client_id:
-            qs = qs.filter(client_id=client_id)
+            return SocialApp.objects.get(provider=provider, client_id=client_id)
+
+        qs = SocialApp.objects.filter(Q(provider=provider) | Q(provider_id=provider))
+        if not qs.exists():
+            raise SocialApp.DoesNotExist(f"No SocialApp found for provider '{provider}'.")
 
         if request:
             host = request.get_host().split(":")[0].lower()
-            matched_by_host = list(qs.filter(sites__domain__iexact=host))
-            if matched_by_host:
-                return matched_by_host
+            # 1. Direct host match on site domain (e.g. community.blueshoe.io)
+            direct = qs.filter(sites__domain__iexact=host).first()
+            if direct:
+                return direct
 
-        # Fallback to any app registered for this provider
-        return list(qs)
+            # 2. Match root domain (e.g. blueshoe.io from community.blueshoe.io)
+            clean_host = host.removeprefix("community.")
+            root = qs.filter(sites__domain__icontains=clean_host).first()
+            if root:
+                return root
+
+        # 3. Fallback to first available app for this provider
+        return qs.first()
+
+    def list_apps(
+        self, request: HttpRequest, provider: str | None = None, client_id: str | None = None
+    ) -> list[SocialApp]:
+        if not provider:
+            return super().list_apps(request, provider=provider, client_id=client_id)
+        try:
+            return [self.get_app(request, provider, client_id=client_id)]
+        except SocialApp.DoesNotExist:
+            return []
