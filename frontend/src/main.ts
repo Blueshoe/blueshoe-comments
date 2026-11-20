@@ -1,11 +1,7 @@
 import 'altcha';
-import altchaCss from 'altcha/altcha.css?inline';
-
-import { LitElement, html, css, nothing, unsafeCSS } from 'lit';
+import { LitElement, html, css, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CODE_OF_CONDUCT_I18N, CodeOfConductContent } from './code-of-conduct';
-
-const altchaStyles = unsafeCSS(altchaCss);
 
 const I18N: Record<string, Record<string, string>> = {
   en: {
@@ -28,6 +24,11 @@ const I18N: Record<string, Record<string, string>> = {
     editBtn: "Edit",
     editedLabel: "✎ edited",
     replyBtn: "Reply",
+    cancelBtn: "Cancel",
+    postReplyBtn: "Post Reply",
+    replyPlaceholder: "Write a constructive reply...",
+    pageReactionsTitle: "Article Reactions",
+    replyingTo: "Replying to",
     loggedInAs: "Logged in as",
     logoutBtn: "Log out",
     orSignInWith: "Or sign in with:",
@@ -55,6 +56,11 @@ const I18N: Record<string, Record<string, string>> = {
     editBtn: "Bearbeiten",
     editedLabel: "✎ editiert",
     replyBtn: "Antworten",
+    cancelBtn: "Abbrechen",
+    postReplyBtn: "Antwort senden",
+    replyPlaceholder: "Schreibe eine konstruktive Antwort...",
+    pageReactionsTitle: "Artikel-Reaktionen",
+    replyingTo: "Antwort an",
     loggedInAs: "Angemeldet als",
     logoutBtn: "Abmelden",
     orSignInWith: "Oder anmelden mit:",
@@ -73,11 +79,17 @@ const FORMATS = {
   quote: ['> ', '', 'quote'],
 } as const;
 
+const REACTION_KINDS = [
+  { kind: 'like', emoji: '👍' },
+  { kind: 'love', emoji: '❤️' },
+  { kind: 'rocket', emoji: '🚀' },
+  { kind: 'celebrate', emoji: '🎉' },
+  { kind: 'insightful', emoji: '💡' },
+];
+
 @customElement('community-comments')
 export class CommunityComments extends LitElement {
-  static styles = [
-    altchaStyles,
-    css`
+  static styles = css`
     :host {
       display: block;
       font-family: var(--community-font, system-ui, sans-serif);
@@ -108,6 +120,28 @@ export class CommunityComments extends LitElement {
       margin: 0;
       font-size: 1.25rem;
       font-weight: 700;
+    }
+
+    /* Page Reactions Bar */
+    .page-reactions-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 0.5rem 0.85rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .page-reactions-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #475569;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
     }
 
     /* Auth Banner */
@@ -384,21 +418,11 @@ export class CommunityComments extends LitElement {
       line-height: 1.6;
     }
 
-    .replies-list {
-      margin-top: 1rem;
-      margin-left: 1.5rem;
-      padding-left: 1rem;
-      border-left: 2px solid #e2e8f0;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-
     /* Reactions Bar */
     .reactions-bar {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.4rem;
       margin-top: 0.75rem;
       flex-wrap: wrap;
     }
@@ -414,6 +438,7 @@ export class CommunityComments extends LitElement {
       font-size: 0.8rem;
       cursor: pointer;
       color: #334155;
+      transition: all 0.15s ease-in-out;
     }
 
     .reaction-pill:hover,
@@ -421,6 +446,119 @@ export class CommunityComments extends LitElement {
       background: #e0f2fe;
       border-color: #38bdf8;
       color: #0369a1;
+      transform: scale(1.05);
+    }
+
+    .reply-action-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: #64748b;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-left: 0.4rem;
+      transition: all 0.15s ease-in-out;
+    }
+
+    .reply-action-btn:hover {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+      color: #00458b;
+    }
+
+    /* 1-Level Replies Container */
+    .replies-list {
+      margin-top: 0.85rem;
+      margin-left: 1.5rem;
+      padding-left: 1rem;
+      border-left: 2px solid #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .reply-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 0.75rem;
+    }
+
+    /* Inline Reply Form */
+    .inline-reply-box {
+      margin-top: 0.85rem;
+      margin-left: 1.5rem;
+      padding: 0.85rem;
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      animation: replyFadeIn 0.15s ease-out;
+    }
+
+    @keyframes replyFadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .inline-reply-box h6 {
+      margin: 0;
+      font-size: 0.85rem;
+      color: #475569;
+    }
+
+    .reply-textarea {
+      width: 100%;
+      min-height: 75px;
+      padding: 0.6rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      resize: vertical;
+      background: #ffffff;
+    }
+
+    .reply-textarea:focus {
+      outline: none;
+      border-color: #00458b;
+    }
+
+    .reply-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+
+    .reply-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .cancel-btn {
+      background: transparent;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 0.4rem 0.85rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      color: #64748b;
+    }
+
+    .cancel-btn:hover {
+      background: #e2e8f0;
+      color: #1e293b;
     }
 
     /* Modal for Code of Conduct */
@@ -535,8 +673,7 @@ export class CommunityComments extends LitElement {
       text-align: center;
       background: #f8fafc;
     }
-  `,
-  ];
+  `;
 
   @property({ type: String, attribute: 'api-base' })
   apiBase = '';
@@ -568,10 +705,28 @@ export class CommunityComments extends LitElement {
   private comments: any[] = [];
 
   @state()
+  private pageReactions: { counts: Record<string, number>; active: string[] } = { counts: {}, active: [] };
+
+  @state()
   private isOffline = false;
 
   @state()
   private isSubmitting = false;
+
+  @state()
+  private isSubmittingReply = false;
+
+  @state()
+  private activeReplyParentId: number | null = null;
+
+  @state()
+  private replyBody = '';
+
+  @state()
+  private replyGuestName = '';
+
+  @state()
+  private replyAltchaPayload = '';
 
   @state()
   private activeTab: 'write' | 'preview' = 'write';
@@ -613,11 +768,13 @@ export class CommunityComments extends LitElement {
     super.connectedCallback();
     this.loadDraft();
     this.fetchComments();
+    this.fetchPageReactions();
     this.fetchAuth();
 
     window.addEventListener('keydown', (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && this.showCocModal) {
-        this.showCocModal = false;
+      if (e.key === 'Escape') {
+        if (this.showCocModal) this.showCocModal = false;
+        if (this.activeReplyParentId !== null) this.activeReplyParentId = null;
       }
     });
 
@@ -627,6 +784,7 @@ export class CommunityComments extends LitElement {
         this.blockedProviderId = null;
         this.fetchAuth();
         this.fetchComments();
+        this.fetchPageReactions();
       }
     });
   }
@@ -652,7 +810,7 @@ export class CommunityComments extends LitElement {
     this.blockedProviderId = null;
     const callbackUrl = encodeURIComponent(`${window.location.origin}/auth-callback.html`);
     const authUrl = `${this.resolvedApiBase}/_allauth/browser/v1/auth/provider/redirect?provider=${providerId}&callback_url=${callbackUrl}`;
-    
+
     // Direct synchronous call on click event
     const popup = window.open(authUrl, 'auth-popup', 'width=600,height=700,scrollbars=yes');
 
@@ -664,9 +822,7 @@ export class CommunityComments extends LitElement {
   }
 
   loginWithRedirect(providerId: string) {
-    // Preserve whatever draft the user typed
     this.saveDraft(this.commentBody);
-    // Callback directly to the current article URL
     const directCallback = encodeURIComponent(window.location.href);
     window.location.href = `${this.resolvedApiBase}/_allauth/browser/v1/auth/provider/redirect?provider=${providerId}&callback_url=${directCallback}`;
   }
@@ -679,6 +835,7 @@ export class CommunityComments extends LitElement {
       });
       this.currentUser = null;
       this.fetchComments();
+      this.fetchPageReactions();
     } catch (_) {}
   }
 
@@ -695,6 +852,18 @@ export class CommunityComments extends LitElement {
     this.commentBody = text;
     try {
       localStorage.setItem(`comment-draft:${this.threadSlug}`, text);
+    } catch (_) {}
+  }
+
+  async fetchPageReactions() {
+    if (!this.threadSlug) return;
+    try {
+      const res = await fetch(`${this.resolvedApiBase}/api/reactions/?thread_slug=${this.threadSlug}`, {
+        credentials: 'include',
+      });
+      if (res.ok) {
+        this.pageReactions = await res.json();
+      }
     } catch (_) {}
   }
 
@@ -720,7 +889,7 @@ export class CommunityComments extends LitElement {
   }
 
   private insertFormat(before: string, after: string = before, placeholder: string = '') {
-    const textarea = this.shadowRoot?.querySelector('textarea');
+    const textarea = this.shadowRoot?.querySelector('textarea.editor-textarea') as HTMLTextAreaElement | null;
     if (!textarea) return;
 
     const start = textarea.selectionStart;
@@ -787,6 +956,54 @@ export class CommunityComments extends LitElement {
     }
   }
 
+  toggleReplyBox(parentId: number) {
+    if (this.activeReplyParentId === parentId) {
+      this.activeReplyParentId = null;
+    } else {
+      this.activeReplyParentId = parentId;
+      this.replyBody = '';
+      this.replyAltchaPayload = '';
+    }
+  }
+
+  async handlePostReply(parentId: number) {
+    if (!this.replyBody.trim() || this.isSubmittingReply) return;
+
+    this.isSubmittingReply = true;
+    try {
+      const payload: Record<string, any> = {
+        thread_slug: this.threadSlug,
+        parent_id: parentId,
+        body_markdown: this.replyBody,
+        guest_name: this.replyGuestName || undefined,
+        altcha: this.currentUser ? undefined : this.replyAltchaPayload || undefined,
+      };
+
+      const res = await fetch(`${this.resolvedApiBase}/api/comments/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        this.replyBody = '';
+        this.replyAltchaPayload = '';
+        this.activeReplyParentId = null;
+        await this.fetchComments();
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        if (errData?.error) {
+          alert(`Error: ${errData.error}`);
+        }
+      }
+    } catch (err) {
+      console.error('Submit reply error', err);
+    } finally {
+      this.isSubmittingReply = false;
+    }
+  }
+
   async toggleReaction(commentId: number | null, kind: string) {
     try {
       const res = await fetch(`${this.resolvedApiBase}/api/reactions/`, {
@@ -800,7 +1017,11 @@ export class CommunityComments extends LitElement {
         }),
       });
       if (res.ok) {
-        await this.fetchComments();
+        if (commentId === null) {
+          await this.fetchPageReactions();
+        } else {
+          await this.fetchComments();
+        }
       }
     } catch (err) {
       console.error('Failed to toggle reaction', err);
@@ -850,6 +1071,98 @@ export class CommunityComments extends LitElement {
     `;
   }
 
+  renderReactionsBar(reactions: { counts?: Record<string, number>; active?: string[] } | undefined, commentId: number | null, allowReply = false) {
+    const counts = reactions?.counts || {};
+    const active = reactions?.active || [];
+
+    return html`
+      <div class="reactions-bar">
+        ${REACTION_KINDS.map(({ kind, emoji }) => {
+          const count = counts[kind] || 0;
+          const isActive = active.includes(kind);
+          return html`
+            <button
+              class="reaction-pill ${isActive ? 'active' : ''}"
+              @click=${() => this.toggleReaction(commentId, kind)}
+            >
+              ${emoji} ${count > 0 ? count : ''}
+            </button>
+          `;
+        })}
+        ${allowReply && commentId !== null
+          ? html`
+              <button class="reply-action-btn" @click=${() => this.toggleReplyBox(commentId)}>
+                💬 ${this.t('replyBtn')}
+              </button>
+            `
+          : nothing}
+      </div>
+    `;
+  }
+
+  renderInlineReplyBox(parentComment: any) {
+    if (this.activeReplyParentId !== parentComment.id) return nothing;
+
+    return html`
+      <div class="inline-reply-box">
+        <h6>💬 ${this.t('replyingTo')} <strong>${parentComment.author_name}</strong></h6>
+        <textarea
+          class="reply-textarea"
+          placeholder=${this.t('replyPlaceholder')}
+          .value=${this.replyBody}
+          @input=${(e: any) => (this.replyBody = e.target.value)}
+          @keydown=${(e: KeyboardEvent) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+              this.handlePostReply(parentComment.id);
+            }
+          }}
+        ></textarea>
+
+        <div class="reply-footer">
+          <div class="editor-meta">
+            ${!this.currentUser
+              ? html`
+                  <input
+                    type="text"
+                    class="name-input"
+                    placeholder=${this.t('guestNamePlaceholder')}
+                    .value=${this.replyGuestName}
+                    @input=${(e: any) => (this.replyGuestName = e.target.value)}
+                  />
+                  <altcha-widget
+                    challengeurl="${this.resolvedApiBase}/api/captcha/challenge/"
+                    auto="onload"
+                    hidefooter
+                    hidelogo
+                    @statechange=${(e: CustomEvent) => {
+                      if (e.detail?.state === 'verified') {
+                        this.replyAltchaPayload = e.detail?.payload || '';
+                      } else if (e.detail?.state === 'expired' || e.detail?.state === 'error') {
+                        this.replyAltchaPayload = '';
+                      }
+                    }}
+                  ></altcha-widget>
+                `
+              : nothing}
+          </div>
+
+          <div class="reply-actions">
+            <button class="cancel-btn" @click=${() => (this.activeReplyParentId = null)}>
+              ${this.t('cancelBtn')}
+            </button>
+            <button
+              class="submit-btn"
+              ?disabled=${!this.replyBody.trim() || this.isSubmittingReply || (!this.currentUser && !this.replyAltchaPayload)}
+              @click=${() => this.handlePostReply(parentComment.id)}
+            >
+              ${this.isSubmittingReply ? this.t('submittingBtn') : this.t('postReplyBtn')}
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
   render() {
     if (this.isOffline) {
       return html`
@@ -868,6 +1181,12 @@ export class CommunityComments extends LitElement {
             ${this.t('cocNotice')}
             <button class="coc-link" @click=${() => (this.showCocModal = true)}>${this.t('cocLink')}</button>
           </span>
+        </div>
+
+        <!-- Page Reactions Bar (Reacting to the article itself) -->
+        <div class="page-reactions-container">
+          <span class="page-reactions-label">⭐ ${this.t('pageReactionsTitle')}:</span>
+          ${this.renderReactionsBar(this.pageReactions, null, false)}
         </div>
 
         <!-- Auth Status Bar -->
@@ -982,9 +1301,10 @@ export class CommunityComments extends LitElement {
                       @input=${(e: any) => (this.guestName = e.target.value)}
                     />
                     <altcha-widget
-                      challenge="${this.resolvedApiBase}/api/captcha/challenge/"
+                      challengeurl="${this.resolvedApiBase}/api/captcha/challenge/"
                       auto="onload"
-                      display="invisible"
+                      hidefooter
+                      hidelogo
                       @statechange=${(e: CustomEvent) => {
                         if (e.detail?.state === 'verified') {
                           this.altchaPayload = e.detail?.payload || '';
@@ -1017,7 +1337,7 @@ export class CommunityComments extends LitElement {
         <div class="comment-list">
           ${this.comments.map(
             (c) => html`
-              <div class="comment-card">
+              <div class="comment-card" id="comment-${c.id}">
                 <div class="comment-header">
                   <span class="comment-author">${c.author_name}</span>
                   ${c.is_team ? html`<span class="team-badge">${this.t('teamBadge')}</span>` : nothing}
@@ -1027,28 +1347,11 @@ export class CommunityComments extends LitElement {
 
                 <div class="comment-body" .innerHTML=${c.body_html}></div>
 
-                <!-- Comment Reactions -->
-                <div class="reactions-bar">
-                  ${['like', 'love', 'rocket', 'celebrate', 'insightful'].map((kind) => {
-                    const count = c.reactions?.counts?.[kind] || 0;
-                    const isActive = c.reactions?.active?.includes(kind);
-                    const emojiMap: Record<string, string> = {
-                      like: '👍',
-                      love: '❤️',
-                      rocket: '🚀',
-                      celebrate: '🎉',
-                      insightful: '💡',
-                    };
-                    return html`
-                      <button
-                        class="reaction-pill ${isActive ? 'active' : ''}"
-                        @click=${() => this.toggleReaction(c.id, kind)}
-                      >
-                        ${emojiMap[kind]} ${count > 0 ? count : ''}
-                      </button>
-                    `;
-                  })}
-                </div>
+                <!-- Top-Level Comment Reactions & Reply Button -->
+                ${this.renderReactionsBar(c.reactions, c.id, true)}
+
+                <!-- Inline Reply Form for this comment -->
+                ${this.renderInlineReplyBox(c)}
 
                 <!-- 1-Level Replies -->
                 ${c.replies && c.replies.length > 0
@@ -1056,13 +1359,16 @@ export class CommunityComments extends LitElement {
                       <div class="replies-list">
                         ${c.replies.map(
                           (r: any) => html`
-                            <div class="comment-card reply-card">
+                            <div class="comment-card reply-card" id="comment-${r.id}">
                               <div class="comment-header">
                                 <span class="comment-author">${r.author_name}</span>
                                 ${r.is_team ? html`<span class="team-badge">${this.t('teamBadge')}</span>` : nothing}
                                 <span class="comment-date">• ${new Date(r.created_at).toLocaleDateString()}</span>
                               </div>
                               <div class="comment-body" .innerHTML=${r.body_html}></div>
+
+                              <!-- Reply-Level Reactions -->
+                              ${this.renderReactionsBar(r.reactions, r.id, false)}
                             </div>
                           `
                         )}
