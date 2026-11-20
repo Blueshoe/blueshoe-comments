@@ -109,3 +109,49 @@ class TestReactionsAPI:
     def test_batch_reactions_missing_slug(self, client):
         res = client.get("/api/reactions/batch/", HTTP_HOST="blueshoe.de")
         assert res.status_code == 422
+
+    def test_toggle_page_reaction_anonymous_with_visitor_header(self, client):
+        headers = {"HTTP_X_VISITOR_ID": "stable-visitor-uuid-12345", "HTTP_HOST": "blueshoe.de"}
+        # 1. First click: adds reaction
+        res1 = client.post(
+            "/api/reactions/",
+            data={"thread_slug": "article-toggle", "kind": "like"},
+            content_type="application/json",
+            **headers,
+        )
+        assert res1.status_code == 200
+        assert res1.json() == {"action": "added"}
+        assert Reaction.objects.filter(thread_slug="article-toggle", kind="like").count() == 1
+
+        # 2. Second click: removes/toggles off reaction
+        res2 = client.post(
+            "/api/reactions/",
+            data={"thread_slug": "article-toggle", "kind": "like"},
+            content_type="application/json",
+            **headers,
+        )
+        assert res2.status_code == 200
+        assert res2.json() == {"action": "removed"}
+        assert Reaction.objects.filter(thread_slug="article-toggle", kind="like").count() == 0
+
+    def test_reaction_anti_flooding_shelter(self, client):
+        headers = {"HTTP_X_VISITOR_ID": "spammer-uuid-99999", "HTTP_HOST": "blueshoe.de"}
+        # 10 reactions within short window succeed
+        for i in range(10):
+            res = client.post(
+                "/api/reactions/",
+                data={"thread_slug": f"flood-{i}", "kind": "like"},
+                content_type="application/json",
+                **headers,
+            )
+            assert res.status_code == 200
+
+        # 11th reaction is sheltered/rate-limited with 429
+        res_flood = client.post(
+            "/api/reactions/",
+            data={"thread_slug": "flood-extra", "kind": "like"},
+            content_type="application/json",
+            **headers,
+        )
+        assert res_flood.status_code == 429
+        assert "Too many reactions" in res_flood.json()["error"]

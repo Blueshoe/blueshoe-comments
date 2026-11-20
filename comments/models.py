@@ -84,7 +84,26 @@ class Comment(models.Model):
     def get_absolute_url(self):
         if not self.site_host:
             return f"/{self.thread_slug}#comment-{self.id}"
-        protocol = "http" if "localhost" in self.site_host or "127.0.0.1" in self.site_host else "https"
-        slug = self.thread_slug.lstrip("/")
+
+        host = self.site_host.lower().split(":")[0]
+        protocol = "http" if host in ("localhost", "127.0.0.1") else "https"
+
+        # Translate backend API community hosts to public frontend website hosts
+        if host.startswith("community."):
+            clean_host = host.removeprefix("community.")
+            if clean_host in ("blueshoe.io", "blueshoe.de"):
+                live_host = f"www.{clean_host}"
+            else:
+                live_host = clean_host
+        elif host in ("blueshoe.io", "blueshoe.de"):
+            live_host = f"www.{host}"
+        else:
+            live_host = host
+
+        slug = self.thread_slug.strip().lstrip("/")
+        # Ensure Blueshoe blog paths start with blog/
+        if live_host in ("www.blueshoe.io", "www.blueshoe.de") and not slug.startswith("blog"):
+            slug = f"blog/{slug}"
+
         path = slug if slug.endswith("/") else f"{slug}/"
-        return f"{protocol}://{self.site_host}/{path}#comment-{self.id}"
+        return f"{protocol}://{live_host}/{path}#comment-{self.id}"

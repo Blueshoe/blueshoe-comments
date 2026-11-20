@@ -764,6 +764,29 @@ export class CommunityComments extends LitElement {
     return CODE_OF_CONDUCT_I18N[this.lang] || CODE_OF_CONDUCT_I18N.en;
   }
 
+  private getVisitorId(): string {
+    let vid = '';
+    try {
+      vid = localStorage.getItem('community_vid') || '';
+      if (!vid) {
+        vid = typeof crypto !== 'undefined' && crypto.randomUUID
+          ? crypto.randomUUID()
+          : 'vid_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
+        localStorage.setItem('community_vid', vid);
+      }
+    } catch (_) {
+      vid = 'fallback_vid';
+    }
+    return vid;
+  }
+
+  private getHeaders(extra: Record<string, string> = {}): Record<string, string> {
+    return {
+      'X-Visitor-Id': this.getVisitorId(),
+      ...extra,
+    };
+  }
+
   async connectedCallback() {
     super.connectedCallback();
     this.loadDraft();
@@ -859,6 +882,7 @@ export class CommunityComments extends LitElement {
     if (!this.threadSlug) return;
     try {
       const res = await fetch(`${this.resolvedApiBase}/api/reactions/?thread_slug=${this.threadSlug}`, {
+        headers: this.getHeaders(),
         credentials: 'include',
       });
       if (res.ok) {
@@ -874,6 +898,7 @@ export class CommunityComments extends LitElement {
 
       const response = await fetch(`${this.resolvedApiBase}/api/comments/?thread_slug=${this.threadSlug}`, {
         signal: controller.signal,
+        headers: this.getHeaders(),
         credentials: 'include',
       });
 
@@ -922,7 +947,7 @@ export class CommunityComments extends LitElement {
 
       const res = await fetch(`${this.resolvedApiBase}/api/comments/`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: this.getHeaders({ 'Content-Type': 'application/json' }),
         credentials: 'include',
         body: JSON.stringify(payload),
       });
@@ -981,7 +1006,7 @@ export class CommunityComments extends LitElement {
 
       const res = await fetch(`${this.resolvedApiBase}/api/comments/`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: this.getHeaders({ 'Content-Type': 'application/json' }),
         credentials: 'include',
         body: JSON.stringify(payload),
       });
@@ -1008,7 +1033,7 @@ export class CommunityComments extends LitElement {
     try {
       const res = await fetch(`${this.resolvedApiBase}/api/reactions/`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: this.getHeaders({ 'Content-Type': 'application/json' }),
         credentials: 'include',
         body: JSON.stringify({
           thread_slug: this.threadSlug,
@@ -1016,6 +1041,11 @@ export class CommunityComments extends LitElement {
           kind: kind,
         }),
       });
+      if (res.status === 429) {
+        const data = await res.json().catch(() => ({}));
+        alert(data?.error || 'Too many reactions. Please slow down.');
+        return;
+      }
       if (res.ok) {
         if (commentId === null) {
           await this.fetchPageReactions();

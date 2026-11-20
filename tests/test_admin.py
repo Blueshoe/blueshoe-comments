@@ -54,7 +54,7 @@ class TestAdminModerationAndObservability:
         assert "First **markdown** comment" in snippet
 
         source_link = admin_instance.source_url_link(c)
-        assert "https://blueshoe.de/blog/post-1/#comment-" in source_link
+        assert "https://www.blueshoe.de/blog/post-1/#comment-" in source_link
 
         preview = admin_instance.body_html_preview(c)
         assert "First" in preview

@@ -79,8 +79,8 @@ def _get_author_name(comment: Comment) -> str:
 
 
 def _get_anon_hash(request: HttpRequest, site_host: str) -> str:
-    vid = request.COOKIES.get("community_vid", "")
-    ip = request.META.get("REMOTE_ADDR", "")
+    vid = request.headers.get("X-Visitor-Id") or request.COOKIES.get("community_vid", "")
+    ip = request.META.get("HTTP_X_FORWARDED_FOR", "").split(",")[0].strip() or request.META.get("REMOTE_ADDR", "")
     raw = f"{site_host}:{ip}:{vid}:{ALTCHA_HMAC_KEY}"
     return hashlib.sha256(raw.encode()).hexdigest()
 

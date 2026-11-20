@@ -1,6 +1,7 @@
 import hashlib
 
 from django.conf import settings
+from django.core.cache import cache
 from django.db.models import Count
 from django.http import HttpRequest
 from ninja import Router, Schema
@@ -33,13 +34,13 @@ class TeaserBatchItemOut(Schema):
 
 
 def get_anon_hash(request: HttpRequest, site_host: str) -> str:
-    vid = request.COOKIES.get("community_vid", "")
-    ip = request.META.get("REMOTE_ADDR", "")
+    vid = request.headers.get("X-Visitor-Id") or request.COOKIES.get("community_vid", "")
+    ip = request.META.get("HTTP_X_FORWARDED_FOR", "").split(",")[0].strip() or request.META.get("REMOTE_ADDR", "")
     raw = f"{site_host}:{ip}:{vid}:{getattr(settings, 'SECRET_KEY', '')}"
     return hashlib.sha256(raw.encode()).hexdigest()
 
 
-@router.post("/reactions/", response={200: dict, 400: dict})
+@router.post("/reactions/", response={200: dict, 400: dict, 429: dict})
 def toggle_reaction(request: HttpRequest, payload: ToggleReactionIn):
     if payload.kind not in ALLOWED_KINDS:
         return Response(
@@ -52,6 +53,17 @@ def toggle_reaction(request: HttpRequest, payload: ToggleReactionIn):
     site_host = request.get_host().split(":")[0]
     user = request.user if request.user.is_authenticated else None
     anon_hash = "" if user else get_anon_hash(request, site_host)
+
+    # Anti-flooding shelter: max 10 reaction operations per 10 seconds per visitor
+    flood_identifier = anon_hash or (str(user.id) if user else "anon")
+    flood_key = f"reaction_flood:{flood_identifier}"
+    recent_count = cache.get(flood_key, 0)
+    if recent_count >= 10:
+        return Response(
+            {"error": "Too many reactions in a short time. Please slow down."},
+            status=429,
+        )
+    cache.set(flood_key, recent_count + 1, timeout=10)
 
     filter_kwargs = {
         "site_host": site_host,
