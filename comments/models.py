@@ -80,3 +80,11 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"Comment {self.id} on {self.thread_slug}"
+
+    def get_absolute_url(self):
+        if not self.site_host:
+            return f"/{self.thread_slug}#comment-{self.id}"
+        protocol = "http" if "localhost" in self.site_host or "127.0.0.1" in self.site_host else "https"
+        slug = self.thread_slug.lstrip("/")
+        path = slug if slug.endswith("/") else f"{slug}/"
+        return f"{protocol}://{self.site_host}/{path}#comment-{self.id}"

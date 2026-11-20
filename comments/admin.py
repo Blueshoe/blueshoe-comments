@@ -5,6 +5,7 @@ from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy as _l
 
 from .models import Comment
+from .utils import moderate_comment
 
 
 class CommentReplyInline(admin.TabularInline):
@@ -29,13 +30,17 @@ class CommentAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "status_badge",
-        "moderation_flag_badge",
         "site_host",
         "thread_slug",
         "author_display",
         "content_snippet",
         "source_url_link",
         "created_at",
+    )
+    list_display_links = (
+        "id",
+        "author_display",
+        "content_snippet",
     )
     list_filter = (
         "status",
@@ -65,7 +70,7 @@ class CommentAdmin(admin.ModelAdmin):
         "updated_at",
     )
     inlines = (CommentReplyInline,)
-    actions = ("approve_comments", "reject_comments", "mark_as_spam")
+    actions = ("approve_comments", "reject_comments", "mark_as_spam", "rerun_ai_moderation")
 
     fieldsets = (
         (
@@ -113,29 +118,43 @@ class CommentAdmin(admin.ModelAdmin):
         ),
     )
 
+    def view_on_site(self, obj):
+        return obj.get_absolute_url()
+
     @admin.display(description=_l("Status"))
     def status_badge(self, obj):
-        colors = {
-            "approved": "#28a745",
-            "pending": "#fd7e14",
-            "rejected": "#dc3545",
-            "spam": "#6c757d",
-        }
-        color = colors.get(obj.status, "#333")
-        return format_html(
-            '<span style="background-color: {}; color: #fff; padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 11px;">{}</span>',
-            color,
-            obj.get_status_display(),
-        )
+        if obj.status == "approved":
+            return format_html(
+                '<span style="background-color: #16a34a; color: #fff; padding: 2px 7px; border-radius: 4px; font-weight: 600; font-size: 11px;">✅ {}</span>',
+                _("Approved"),
+            )
+        elif obj.status == "rejected":
+            flag_info = f" ({obj.moderation_flag.upper()})" if obj.moderation_flag else ""
+            return format_html(
+                '<span style="background-color: #dc2626; color: #fff; padding: 2px 7px; border-radius: 4px; font-weight: 600; font-size: 11px;" title="{}">⛔ {}{}</span>',
+                obj.moderation_reason or "",
+                _("Rejected"),
+                flag_info,
+            )
+        else:
+            flag_info = (
+                f" ({obj.moderation_flag.upper()})" if obj.moderation_flag and obj.moderation_flag != "clean" else ""
+            )
+            return format_html(
+                '<span style="background-color: #d97706; color: #fff; padding: 2px 7px; border-radius: 4px; font-weight: 600; font-size: 11px;" title="{}">⏳ {}{}</span>',
+                obj.moderation_reason or "",
+                _("Pending"),
+                flag_info,
+            )
 
     @admin.display(description=_l("AI Flag"))
     def moderation_flag_badge(self, obj):
         if not obj.moderation_flag:
             return "-"
         colors = {
-            "clean": "#28a745",
-            "spam": "#6c757d",
-            "illegal": "#721c24",
+            "clean": "#16a34a",
+            "spam": "#d97706",
+            "illegal": "#dc2626",
         }
         color = colors.get(obj.moderation_flag, "#333")
         return format_html(
@@ -160,12 +179,17 @@ class CommentAdmin(admin.ModelAdmin):
 
     @admin.display(description=_l("Content"))
     def content_snippet(self, obj):
-        text = obj.body_markdown.replace("\n", " ")
-        return (text[:60] + "...") if len(text) > 60 else text
+        text = obj.body_markdown.replace("\n", " ").strip()
+        truncated = (text[:75] + "…") if len(text) > 75 else text
+        return format_html(
+            '<span title="{}" style="display: inline-block; max-width: 340px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: middle;">{}</span>',
+            obj.body_markdown,
+            truncated,
+        )
 
     @admin.display(description=_l("Live Link"))
     def source_url_link(self, obj):
-        url = f"https://{obj.site_host}/{obj.thread_slug.lstrip('/')}/#comment-{obj.id}"
+        url = obj.get_absolute_url()
         return format_html('<a href="{}" target="_blank" rel="noopener noreferrer">↗ {}</a>', url, _("View Live"))
 
     @admin.display(description=_l("HTML Preview"))
@@ -193,3 +217,36 @@ class CommentAdmin(admin.ModelAdmin):
             status="spam", moderation_flag="spam", moderated_by=request.user, moderated_at=timezone.now()
         )
         self.message_user(request, _("{count} comment(s) marked as spam.").format(count=count))
+
+    @admin.action(description=_l("Re-run AI moderation (and auto-publish clean comments)"))
+    def rerun_ai_moderation(self, request, queryset):
+        approved_count = 0
+        flagged_count = 0
+        now = timezone.now()
+
+        for comment in queryset:
+            status, flag, reason = moderate_comment(comment.body_markdown)
+            comment.moderation_flag = flag
+            comment.moderation_reason = reason
+            comment.moderated_at = now
+            comment.moderated_by = request.user
+
+            if flag == "clean":
+                comment.status = "approved"
+                approved_count += 1
+            else:
+                comment.status = status
+                flagged_count += 1
+
+            comment.save(
+                update_fields=["status", "moderation_flag", "moderation_reason", "moderated_at", "moderated_by"]
+            )
+
+        self.message_user(
+            request,
+            _("{total} comment(s) re-moderated: {approved} auto-published, {flagged} pending/rejected.").format(
+                total=queryset.count(),
+                approved=approved_count,
+                flagged=flagged_count,
+            ),
+        )

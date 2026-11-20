@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 import pytest
 from django.contrib.admin.sites import AdminSite
 from django.contrib.auth import get_user_model
@@ -96,6 +98,23 @@ class TestAdminModerationAndObservability:
         c.refresh_from_db()
         assert c.status == "spam"
         assert c.moderation_flag == "spam"
+
+        # Re-run AI moderation: clean -> auto-publish
+        with patch("comments.admin.moderate_comment") as mock_mod:
+            mock_mod.return_value = ("approved", "clean", "")
+            admin_instance.rerun_ai_moderation(request, qs)
+            c.refresh_from_db()
+            assert c.status == "approved"
+            assert c.moderation_flag == "clean"
+
+        # Re-run AI moderation: spam -> pending with reason
+        with patch("comments.admin.moderate_comment") as mock_mod:
+            mock_mod.return_value = ("pending", "spam", "Flagged as advertising")
+            admin_instance.rerun_ai_moderation(request, qs)
+            c.refresh_from_db()
+            assert c.status == "pending"
+            assert c.moderation_flag == "spam"
+            assert c.moderation_reason == "Flagged as advertising"
 
     def test_reaction_admin_observability(self, rf):
         user = User.objects.create_user(username="fan", email="fan@test.com")
