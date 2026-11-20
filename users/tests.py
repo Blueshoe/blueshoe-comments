@@ -1,8 +1,10 @@
 from datetime import timedelta
 
 import pytest
+from allauth.socialaccount.models import SocialApp
 from django.contrib.auth import get_user_model
 from django.contrib.auth.signals import user_logged_in
+from django.contrib.sites.models import Site
 from django.utils import timezone
 
 from comments.models import Comment
@@ -87,3 +89,49 @@ class TestUsersAPI:
         request.session = SessionStore()
         user_logged_in.send(sender=User, request=request, user=staff_user)
         assert request.session.get_expiry_age() == 12 * 60 * 60
+
+    def test_list_auth_providers(self, client):
+        site = Site.objects.get_current()
+        app = SocialApp.objects.create(provider="github", name="GitHub", client_id="test_gh_client_id")
+        app.sites.add(site)
+
+        res = client.get("/api/auth/providers/")
+        assert res.status_code == 200
+        data = res.json()
+        assert len(data) >= 1
+        assert any(p["id"] == "github" and p["name"] == "GitHub" for p in data)
+
+    def test_get_auth_session(self, client):
+        # 1. Unauthenticated
+        res1 = client.get("/api/auth/session/")
+        assert res1.status_code == 200
+        assert res1.json() == {"is_authenticated": False, "user": None}
+
+        # 2. Authenticated team user
+        user = User.objects.create_user(
+            username="teamdev",
+            email="dev@blueshoe.de",
+            first_name="Dev",
+            last_name="Blueshoe",
+        )
+        client.force_login(user)
+
+        res2 = client.get("/api/auth/session/")
+        assert res2.status_code == 200
+        data = res2.json()
+        assert data["is_authenticated"] is True
+        assert data["user"]["username"] == "teamdev"
+        assert data["user"]["is_team"] is True
+        assert data["user"]["name"] == "Dev Blueshoe"
+
+    def test_logout(self, client):
+        user = User.objects.create_user(username="logoutuser", email="logout@example.com")
+        client.force_login(user)
+
+        res = client.post("/api/auth/logout/")
+        assert res.status_code == 200
+        assert res.json() == {"status": "logged_out"}
+
+        # Verify session is cleared
+        session_res = client.get("/api/auth/session/")
+        assert session_res.json()["is_authenticated"] is False

@@ -23,3 +23,5 @@ class TestApiDocs:
         assert "/api/comments/" in data["paths"]
         assert "/api/reactions/" in data["paths"]
         assert "/api/me/" in data["paths"]
+        assert "/api/auth/providers/" in data["paths"]
+        assert "/api/auth/session/" in data["paths"]

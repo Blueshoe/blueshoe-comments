@@ -23,6 +23,9 @@ const I18N: Record<string, Record<string, string>> = {
     editBtn: "Edit",
     editedLabel: "✎ edited",
     replyBtn: "Reply",
+    loggedInAs: "Logged in as",
+    logoutBtn: "Log out",
+    orSignInWith: "Or sign in with:",
   },
   de: {
     offlineMessage: "Unser Kommentar-Server macht gerade Kaffeepause ☕",
@@ -44,6 +47,9 @@ const I18N: Record<string, Record<string, string>> = {
     editBtn: "Bearbeiten",
     editedLabel: "✎ editiert",
     replyBtn: "Antworten",
+    loggedInAs: "Angemeldet als",
+    logoutBtn: "Abmelden",
+    orSignInWith: "Oder anmelden mit:",
   },
 };
 
@@ -89,6 +95,55 @@ export class CommunityComments extends LitElement {
       margin: 0;
       font-size: 1.25rem;
       font-weight: 700;
+    }
+
+    /* Auth Banner */
+    .auth-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: #64748b;
+      background: #f8fafc;
+      padding: 0.4rem 0.75rem;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .social-buttons {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .social-btn {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: #334155;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .social-btn:hover {
+      background: #e2e8f0;
+    }
+
+    .logout-btn {
+      background: transparent;
+      border: none;
+      color: #ef4444;
+      cursor: pointer;
+      font-size: 0.8rem;
+      text-decoration: underline;
+      padding: 0;
     }
 
     /* Editor */
@@ -468,6 +523,12 @@ export class CommunityComments extends LitElement {
   @state()
   private showCocModal = false;
 
+  @state()
+  private authProviders: { id: string; name: string }[] = [];
+
+  @state()
+  private currentUser: { id: number; name: string; email: string; is_team: boolean } | null = null;
+
   private t(key: string): string {
     const dict = I18N[this.lang] || I18N.en;
     return dict[key] || I18N.en[key] || key;
@@ -481,12 +542,53 @@ export class CommunityComments extends LitElement {
     super.connectedCallback();
     this.loadDraft();
     this.fetchComments();
+    this.fetchAuth();
 
     window.addEventListener('keydown', (e: KeyboardEvent) => {
       if (e.key === 'Escape' && this.showCocModal) {
         this.showCocModal = false;
       }
     });
+
+    window.addEventListener('message', (event: MessageEvent) => {
+      if (event.data?.type === 'oauth_success') {
+        this.fetchAuth();
+        this.fetchComments();
+      }
+    });
+  }
+
+  async fetchAuth() {
+    try {
+      const [provRes, sessRes] = await Promise.all([
+        fetch(`${this.apiBase}/api/auth/providers/`),
+        fetch(`${this.apiBase}/api/auth/session/`, { credentials: 'include' }),
+      ]);
+      if (provRes.ok) {
+        this.authProviders = await provRes.json();
+      }
+      if (sessRes.ok) {
+        const data = await sessRes.json();
+        this.currentUser = data.is_authenticated ? data.user : null;
+      }
+    } catch (_) {}
+  }
+
+  loginWith(providerId: string) {
+    const callbackUrl = encodeURIComponent(`${window.location.origin}/auth-callback.html`);
+    const authUrl = `${this.apiBase}/_allauth/browser/v1/auth/provider/redirect?provider=${providerId}&callback_url=${callbackUrl}`;
+    window.open(authUrl, 'auth-popup', 'width=600,height=700,scrollbars=yes');
+  }
+
+  async handleLogout() {
+    try {
+      await fetch(`${this.apiBase}/api/auth/logout/`, {
+        method: 'POST',
+        credentials: 'include',
+      });
+      this.currentUser = null;
+      this.fetchComments();
+    } catch (_) {}
   }
 
   private loadDraft() {
@@ -512,6 +614,7 @@ export class CommunityComments extends LitElement {
 
       const response = await fetch(`${this.apiBase}/api/comments/?thread_slug=${this.threadSlug}`, {
         signal: controller.signal,
+        credentials: 'include',
       });
 
       clearTimeout(timeoutId);
@@ -560,6 +663,7 @@ export class CommunityComments extends LitElement {
       const res = await fetch(`${this.apiBase}/api/comments/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(payload),
       });
 
@@ -582,6 +686,7 @@ export class CommunityComments extends LitElement {
       const res = await fetch(`${this.apiBase}/api/reactions/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({
           thread_slug: this.threadSlug,
           comment_id: commentId,
@@ -659,6 +764,30 @@ export class CommunityComments extends LitElement {
           </span>
         </div>
 
+        <!-- Auth Status Bar -->
+        <div class="auth-bar">
+          ${this.currentUser
+            ? html`
+                <span>
+                  ${this.t('loggedInAs')} <strong>${this.currentUser.name}</strong>
+                  ${this.currentUser.is_team ? html`<span class="team-badge">${this.t('teamBadge')}</span>` : nothing}
+                </span>
+                <button class="logout-btn" @click=${this.handleLogout}>${this.t('logoutBtn')}</button>
+              `
+            : html`
+                <span>${this.t('orSignInWith')}</span>
+                <div class="social-buttons">
+                  ${this.authProviders.map(
+                    (p) => html`
+                      <button class="social-btn" @click=${() => this.loginWith(p.id)}>
+                        ${p.name}
+                      </button>
+                    `
+                  )}
+                </div>
+              `}
+        </div>
+
         <!-- Editor Area -->
         <div class="editor-box">
           <div class="editor-toolbar">
@@ -710,13 +839,17 @@ export class CommunityComments extends LitElement {
 
           <div class="editor-footer">
             <div class="editor-meta">
-              <input
-                type="text"
-                class="name-input"
-                placeholder=${this.t('guestNamePlaceholder')}
-                .value=${this.guestName}
-                @input=${(e: any) => (this.guestName = e.target.value)}
-              />
+              ${!this.currentUser
+                ? html`
+                    <input
+                      type="text"
+                      class="name-input"
+                      placeholder=${this.t('guestNamePlaceholder')}
+                      .value=${this.guestName}
+                      @input=${(e: any) => (this.guestName = e.target.value)}
+                    />
+                  `
+                : nothing}
               <span>${this.commentBody.length} / 5,000 ${this.t('charLimit')}</span>
               <span>
                 <button class="coc-link" @click=${() => (this.showCocModal = true)}>

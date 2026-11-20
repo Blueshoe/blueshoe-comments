@@ -29,8 +29,12 @@ api = NinjaAPI(
                 "description": "Endpoints for toggling positive-only reactions on pages and comments, and teaser batch aggregation.",
             },
             {
-                "name": "Users",
-                "description": "Endpoints for user management, re-authentication checks, and GDPR account deletion.",
+                "name": "Users & Authentication",
+                "description": (
+                    "Endpoints for listing configured social login providers, session status, logout, "
+                    "re-authentication checks, and GDPR account deletion. Native allauth headless endpoints "
+                    "are also available under `/_allauth/browser/v1/`."
+                ),
             },
         ]
     },
