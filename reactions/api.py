@@ -94,7 +94,13 @@ def get_page_reactions(request: HttpRequest, thread_slug: str):
     else:
         active = list(qs.filter(anon_hash=anon_hash).values_list("kind", flat=True))
 
-    return ReactionSummarySchema(counts=counts_dict, active=active)
+    schema = ReactionSummarySchema(counts=counts_dict, active=active)
+    response = Response(schema.model_dump(mode="json"), status=200)
+    if user:
+        response["Cache-Control"] = "private, no-store"
+    else:
+        response["Cache-Control"] = "public, max-age=30, stale-while-revalidate=60"
+    return response
 
 
 @router.get("/reactions/batch/", response={200: dict[str, TeaserBatchItemOut], 400: dict})
@@ -150,4 +156,9 @@ def get_batch_reactions(request: HttpRequest, thread_slug: str):
         if slug in result:
             result[slug].active_reactions.append(kind)
 
-    return result
+    response = Response({k: v.model_dump(mode="json") for k, v in result.items()}, status=200)
+    if user:
+        response["Cache-Control"] = "private, no-store"
+    else:
+        response["Cache-Control"] = "public, max-age=30, stale-while-revalidate=60"
+    return response

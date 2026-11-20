@@ -181,7 +181,12 @@ def list_comments(request: HttpRequest, thread_slug: str):
 
     result = [_serialize_comment(c, reaction_map, replies_by_parent.get(c.id, [])) for c in top_comments]
 
-    return result
+    response = Response([s.model_dump(mode="json") for s in result], status=200)
+    if request.user.is_authenticated:
+        response["Cache-Control"] = "private, no-store"
+    else:
+        response["Cache-Control"] = "public, max-age=30, stale-while-revalidate=60"
+    return response
 
 
 @router.post("/comments/", response={201: CommentOut, 400: dict})

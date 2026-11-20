@@ -80,6 +80,12 @@ if not env("DATABASE_URL", default=""):
         "NAME": BASE_DIR / "db.sqlite3",
     }
 
+# --- Caching & High-Performance Sessions ---
+CACHES = {
+    "default": env.cache("CACHE_URL", default="locmemcache://"),
+}
+SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
+
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},

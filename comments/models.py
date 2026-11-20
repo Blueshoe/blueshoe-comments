@@ -55,6 +55,7 @@ class Comment(models.Model):
         verbose_name = _("Comment")
         verbose_name_plural = _("Comments")
         indexes = [
+            models.Index(fields=["site_host", "thread_slug", "status", "created_at"]),
             models.Index(fields=["site_host", "thread_slug"]),
         ]
 
