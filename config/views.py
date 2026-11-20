@@ -11,7 +11,7 @@ def api_docs_view(request):
     <title>Blueshoe Community API Reference</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/svg+xml" href="https://blueshoe.de/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="/static/admin/img/favicon.ico" />
     <style>
       body {
         margin: 0;

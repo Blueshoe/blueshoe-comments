@@ -1,10 +1,12 @@
 from django.contrib import admin
 from django.urls import include, path
+from django.views.generic import RedirectView
 
 from config.api import api
 from config.views import api_docs_view
 
 urlpatterns = [
+    path("favicon.ico", RedirectView.as_view(url="/static/admin/img/favicon.ico", permanent=True)),
     path("admin/", admin.site.urls),
     path("docs/", api_docs_view, name="api-docs"),
     path("docs", api_docs_view),
