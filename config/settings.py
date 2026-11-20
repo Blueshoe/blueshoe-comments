@@ -1,5 +1,7 @@
+import pkgutil as _pkgutil
 from pathlib import Path
 
+import allauth.socialaccount.providers as _allauth_providers
 import environ
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -17,6 +19,34 @@ DEBUG = env("DEBUG")
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 
+# Exclude legacy OAuth 1.0 and special non-standalone modules
+_EXCLUDED_PROVIDERS = {
+    "base",
+    "oauth",
+    "oauth2",
+    "dummy",
+    "openid",
+    "saml",
+    "discogs",
+    "evernote",
+    "fivehundredpx",
+    "flickr",
+    "openstreetmap",
+    "pocket",
+    "steam",
+    "trello",
+    "tumblr",
+    "twitter",
+    "vimeo",
+    "xing",
+}
+
+ALL_SOCIAL_PROVIDERS = [
+    f"allauth.socialaccount.providers.{_name}"
+    for _, _name, _ in _pkgutil.iter_modules(_allauth_providers.__path__)
+    if _name not in _EXCLUDED_PROVIDERS
+]
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -31,8 +61,7 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
-    "allauth.socialaccount.providers.github",
-    "allauth.socialaccount.providers.google",
+    *ALL_SOCIAL_PROVIDERS,
     # Local apps
     "users",
     "comments",

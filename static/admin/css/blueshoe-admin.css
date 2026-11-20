@@ -1,116 +1,140 @@
 /* ==========================================================================
-   Blueshoe Django Admin Theme
+   Blueshoe.io Official Django Admin Theme
    ========================================================================== */
 
 :root {
-  --bs-primary: #0284c7;
-  --bs-primary-dark: #0369a1;
-  --bs-primary-light: #38bdf8;
-  --bs-navy-900: #0f172a;
-  --bs-navy-800: #1e293b;
-  --bs-accent: #0ea5e9;
+  /* Blueshoe.io Official Brand Palette */
+  --bs-blue-primary: #00458b;
+  --bs-blue-hover: #003366;
+  --bs-blue-accent: #007bff;
+  --bs-dark: #212529;
+  --bs-gray-bg: #f8f9fa;
+  --bs-border: #dee2e6;
 
-  /* Overriding Django Admin CSS variables */
-  --primary: #0284c7;
-  --secondary: #0369a1;
-  --accent: #38bdf8;
+  /* Overriding Django Admin Standard CSS variables */
+  --primary: #00458b;
+  --secondary: #003366;
+  --accent: #007bff;
   --primary-fg: #ffffff;
-  --header-bg: #0f172a;
+  --header-bg: #00458b;
   --header-color: #ffffff;
-  --breadcrumbs-bg: #1e293b;
-  --breadcrumbs-fg: #e2e8f0;
-  --link-fg: #0284c7;
-  --link-selected-fg: #0369a1;
+  --breadcrumbs-bg: #f8f9fa;
+  --breadcrumbs-fg: #495057;
+  --breadcrumbs-link-fg: #00458b;
+  --link-fg: #00458b;
+  --link-selected-fg: #003366;
+  --font-family-primary: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  /* Django Admin Messages Variable Overrides */
+  --message-success-bg: #f0fdf4;
+  --message-info-bg: #f0f9ff;
+  --message-warning-bg: #fffbeb;
+  --message-error-bg: #fef2f2;
 }
 
-/* Custom Header with Gradient and Shadow */
+body {
+  font-family: var(--font-family-primary);
+  color: #212529;
+  background-color: #ffffff;
+}
+
+/* Header styled with Blueshoe.io signature color */
 #header {
-  background: linear-gradient(135deg, #09172e 0%, #03487c 50%, #0284c7 100%) !important;
+  background: #00458b !important;
   color: #ffffff !important;
-  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.15);
-  padding: 12px 24px;
+  box-shadow: 0 2px 8px rgba(0, 69, 139, 0.2);
+  padding: 14px 24px;
 }
 
 #header #branding {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
 }
 
 #header #branding h1 {
   margin: 0;
-  font-weight: 700;
-  font-size: 1.25rem;
-  letter-spacing: -0.025em;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 #header #branding h1 a:link,
 #header #branding h1 a:visited {
   color: #ffffff !important;
   text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
 }
 
-.blueshoe-logo-icon {
-  width: 30px;
-  height: 30px;
+.blueshoe-brand-logo {
+  height: 28px;
+  width: auto;
   vertical-align: middle;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.blueshoe-portal-title {
+  font-size: 1rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  padding-left: 12px;
+  border-left: 1px solid rgba(255, 255, 255, 0.3);
+  letter-spacing: -0.01em;
 }
 
 .blueshoe-header-nav {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  margin-left: 20px;
+  gap: 10px;
+  margin-left: 16px;
 }
 
 .blueshoe-nav-badge {
   background: rgba(255, 255, 255, 0.15);
   color: #ffffff !important;
-  padding: 4px 10px;
-  border-radius: 20px;
+  padding: 4px 12px;
+  border-radius: 4px;
   font-size: 0.8rem;
   font-weight: 600;
   text-decoration: none;
-  backdrop-filter: blur(4px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: all 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  transition: all 0.15s ease-in-out;
 }
 
 .blueshoe-nav-badge:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: translateY(-1px);
+  background: #ffffff;
+  color: #00458b !important;
+  border-color: #ffffff;
 }
 
-/* Breadcrumbs */
+/* Breadcrumbs styled cleanly */
 div.breadcrumbs {
-  background: #1e293b !important;
-  color: #94a3b8 !important;
+  background: #f8f9fa !important;
+  color: #6c757d !important;
   padding: 10px 24px;
   font-size: 0.85rem;
-  border-bottom: 1px solid #334155;
+  border-bottom: 1px solid #dee2e6;
 }
 
 div.breadcrumbs a {
-  color: #38bdf8 !important;
+  color: #00458b !important;
+  font-weight: 500;
 }
 
-/* Buttons & Actions */
+/* Primary Buttons matching Blueshoe.io */
 .button,
 input[type=submit],
 input[type=button],
 .submit-row input,
 a.button {
-  background: #0284c7 !important;
-  border-radius: 6px !important;
+  background: #00458b !important;
+  border-radius: 4px !important;
   color: #ffffff !important;
   font-weight: 600 !important;
-  border: none !important;
+  border: 1px solid #00458b !important;
   padding: 8px 16px !important;
-  transition: all 0.15s ease-in-out;
+  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
 }
 
 .button:hover,
@@ -118,35 +142,102 @@ input[type=submit]:hover,
 input[type=button]:hover,
 .submit-row input:hover,
 a.button:hover {
-  background: #0369a1 !important;
-  box-shadow: 0 2px 6px rgba(2, 132, 199, 0.3);
+  background: #003366 !important;
+  border-color: #003366 !important;
 }
 
-/* Tables & Modules */
+.button.default,
+input[type=submit].default {
+  background: #00458b !important;
+}
+
+/* Modules & Tables */
 .module caption,
 .inline-group h2 {
-  background: #0369a1 !important;
+  background: #00458b !important;
   color: #ffffff !important;
-  font-weight: 700;
-  border-radius: 6px 6px 0 0;
+  font-weight: 600;
+  padding: 8px 12px;
+  border-radius: 4px 4px 0 0;
 }
 
 #changelist table thead th {
-  background: #f1f5f9;
-  color: #1e293b;
+  background: #f8f9fa;
+  color: #212529;
   font-weight: 700;
-  border-bottom: 2px solid #cbd5e1;
+  border-bottom: 2px solid #dee2e6;
 }
 
-/* Clean cards on index page */
 .dashboard .module table th a {
   font-weight: 600;
-  color: #0284c7;
+  color: #00458b;
 }
 
-/* Object tools */
+/* Change list link colors */
+#changelist table tbody tr:hover {
+  background: #f1f5f9;
+}
+
 ul.object-tools a.viewsitelink,
 ul.object-tools a.addlink {
-  background: #0284c7 !important;
-  border-radius: 6px;
+  background: #00458b !important;
+  border-radius: 4px;
+}
+
+/* ==========================================================================
+   Modern Notification Messages (Overriding Dated Django Olive Green)
+   ========================================================================== */
+ul.messagelist {
+  padding: 0 !important;
+  margin: 16px 24px !important;
+}
+
+ul.messagelist li {
+  font-size: 0.9rem !important;
+  font-weight: 500 !important;
+  display: block !important;
+  padding: 12px 18px 12px 46px !important;
+  margin: 0 0 10px 0 !important;
+  border-radius: 6px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+  position: relative !important;
+  background-position: 16px center !important;
+  background-size: 18px 18px !important;
+  line-height: 1.5 !important;
+}
+
+/* Success Message: Soft Emerald with clean border & SVG checkmark */
+ul.messagelist li.success {
+  background-color: #f0fdf4 !important;
+  color: #14532d !important;
+  border: 1px solid #bbf7d0 !important;
+  border-left: 4px solid #16a34a !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%2316a34a'%3E%3Cpath fill-rule='evenodd' d='M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z' clip-rule='evenodd'/%3E%3C/svg%3E") !important;
+}
+
+/* Info Message: Soft Blueshoe Cyan/Sky */
+ul.messagelist li.info {
+  background-color: #f0f9ff !important;
+  color: #0369a1 !important;
+  border: 1px solid #bae6fd !important;
+  border-left: 4px solid #00458b !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%2300458b'%3E%3Cpath fill-rule='evenodd' d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z' clip-rule='evenodd'/%3E%3C/svg%3E") !important;
+}
+
+/* Warning Message: Soft Warm Amber */
+ul.messagelist li.warning {
+  background-color: #fffbeb !important;
+  color: #92400e !important;
+  border: 1px solid #fde68a !important;
+  border-left: 4px solid #f59e0b !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23f59e0b'%3E%3Cpath fill-rule='evenodd' d='M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z' clip-rule='evenodd'/%3E%3C/svg%3E") !important;
+}
+
+/* Error Message: Soft Crimson/Rose */
+ul.messagelist li.error {
+  background-color: #fef2f2 !important;
+  color: #991b1b !important;
+  border: 1px solid #fecaca !important;
+  border-left: 4px solid #dc2626 !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23dc2626'%3E%3Cpath fill-rule='evenodd' d='M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z' clip-rule='evenodd'/%3E%3C/svg%3E") !important;
 }
