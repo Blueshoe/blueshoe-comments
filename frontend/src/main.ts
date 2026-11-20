@@ -705,6 +705,12 @@ export class CommunityComments extends LitElement {
   @property({ type: String, attribute: 'thread-slug' })
   threadSlug = '';
 
+  get resolvedThreadSlug(): string {
+    const raw = this.threadSlug || (typeof window !== 'undefined' ? window.location.pathname : '');
+    const trimmed = (raw || 'default').trim().replace(/^\/+/, '').replace(/\/+$/, '');
+    return trimmed || 'root';
+  }
+
   @property({ type: String })
   lang = typeof document !== 'undefined' && document.documentElement.lang.startsWith('de') ? 'de' : 'en';
 
@@ -839,7 +845,7 @@ export class CommunityComments extends LitElement {
     this.blockedPopupUrl = null;
     this.blockedProviderId = null;
     const callbackUrl = encodeURIComponent(`${window.location.origin}/auth-callback.html`);
-    const authUrl = `${this.resolvedApiBase}/_allauth/browser/v1/auth/provider/redirect?provider=${providerId}&callback_url=${callbackUrl}`;
+    const authUrl = `${this.resolvedApiBase}/_allauth/browser/v1/auth/provider/redirect?provider=${providerId}&callback_url=${callbackUrl}&process=login`;
 
     // Direct synchronous call on click event
     const popup = window.open(authUrl, 'auth-popup', 'width=600,height=700,scrollbars=yes');
@@ -854,7 +860,7 @@ export class CommunityComments extends LitElement {
   loginWithRedirect(providerId: string) {
     this.saveDraft(this.commentBody);
     const directCallback = encodeURIComponent(window.location.href);
-    window.location.href = `${this.resolvedApiBase}/_allauth/browser/v1/auth/provider/redirect?provider=${providerId}&callback_url=${directCallback}`;
+    window.location.href = `${this.resolvedApiBase}/_allauth/browser/v1/auth/provider/redirect?provider=${providerId}&callback_url=${directCallback}&process=login`;
   }
 
   async handleLogout() {
@@ -871,7 +877,7 @@ export class CommunityComments extends LitElement {
 
   private loadDraft() {
     try {
-      const saved = localStorage.getItem(`comment-draft:${this.threadSlug}`);
+      const saved = localStorage.getItem(`comment-draft:${this.resolvedThreadSlug}`);
       if (saved) {
         this.commentBody = saved;
       }
@@ -881,14 +887,14 @@ export class CommunityComments extends LitElement {
   private saveDraft(text: string) {
     this.commentBody = text;
     try {
-      localStorage.setItem(`comment-draft:${this.threadSlug}`, text);
+      localStorage.setItem(`comment-draft:${this.resolvedThreadSlug}`, text);
     } catch (_) {}
   }
 
   async fetchPageReactions() {
-    if (!this.threadSlug) return;
+    if (!this.resolvedThreadSlug) return;
     try {
-      const res = await fetch(`${this.resolvedApiBase}/api/reactions/?thread_slug=${this.threadSlug}`, {
+      const res = await fetch(`${this.resolvedApiBase}/api/reactions/?thread_slug=${this.resolvedThreadSlug}`, {
         headers: this.getHeaders(),
         credentials: 'include',
       });
@@ -903,7 +909,7 @@ export class CommunityComments extends LitElement {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 4000);
 
-      const response = await fetch(`${this.resolvedApiBase}/api/comments/?thread_slug=${this.threadSlug}`, {
+      const response = await fetch(`${this.resolvedApiBase}/api/comments/?thread_slug=${this.resolvedThreadSlug}`, {
         signal: controller.signal,
         headers: this.getHeaders(),
         credentials: 'include',
@@ -946,7 +952,7 @@ export class CommunityComments extends LitElement {
     this.isSubmitting = true;
     try {
       const payload: Record<string, any> = {
-        thread_slug: this.threadSlug,
+        thread_slug: this.resolvedThreadSlug,
         body_markdown: this.commentBody,
         guest_name: this.guestName || undefined,
         altcha: this.currentUser ? undefined : this.altchaPayload || undefined,
@@ -967,7 +973,7 @@ export class CommunityComments extends LitElement {
           altchaEl.reset();
         }
         try {
-          localStorage.removeItem(`comment-draft:${this.threadSlug}`);
+          localStorage.removeItem(`comment-draft:${this.resolvedThreadSlug}`);
         } catch (_) {}
         await this.fetchComments();
       } else {
@@ -1004,7 +1010,7 @@ export class CommunityComments extends LitElement {
     this.isSubmittingReply = true;
     try {
       const payload: Record<string, any> = {
-        thread_slug: this.threadSlug,
+        thread_slug: this.resolvedThreadSlug,
         parent_id: parentId,
         body_markdown: this.replyBody,
         guest_name: this.replyGuestName || undefined,
@@ -1043,7 +1049,7 @@ export class CommunityComments extends LitElement {
         headers: this.getHeaders({ 'Content-Type': 'application/json' }),
         credentials: 'include',
         body: JSON.stringify({
-          thread_slug: this.threadSlug,
+          thread_slug: this.resolvedThreadSlug,
           comment_id: commentId,
           kind: kind,
         }),
@@ -1169,6 +1175,7 @@ export class CommunityComments extends LitElement {
                   <altcha-widget
                     challengeurl="${this.resolvedApiBase}/api/captcha/challenge/"
                     auto="onload"
+                    spamfilter="false"
                     display="invisible"
                     hidefooter
                     hidelogo
@@ -1341,6 +1348,7 @@ export class CommunityComments extends LitElement {
                     <altcha-widget
                       challengeurl="${this.resolvedApiBase}/api/captcha/challenge/"
                       auto="onload"
+                      spamfilter="false"
                       display="invisible"
                       hidefooter
                       hidelogo

@@ -41,3 +41,16 @@ class TestCorsConfiguration:
         )
         assert res.status_code == 200
         assert res.headers.get("Access-Control-Allow-Origin") == "http://localhost:3000"
+
+    def test_cors_preflight_altcha_headers(self):
+        client = Client()
+        res = client.options(
+            "/api/captcha/challenge/",
+            HTTP_ORIGIN="https://www.blueshoe.io",
+            HTTP_ACCESS_CONTROL_REQUEST_METHOD="GET",
+            HTTP_ACCESS_CONTROL_REQUEST_HEADERS="x-altcha-spam-filter",
+            HTTP_HOST="community.blueshoe.io",
+        )
+        assert res.status_code == 200
+        assert res.headers.get("Access-Control-Allow-Origin") == "https://www.blueshoe.io"
+        assert "x-altcha-spam-filter" in res.headers.get("Access-Control-Allow-Headers", "").lower()

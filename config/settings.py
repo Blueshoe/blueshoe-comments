@@ -114,7 +114,10 @@ if not env("DATABASE_URL", default=""):
 CACHES = {
     "default": env.cache("CACHE_URL", default="locmemcache://"),
 }
-SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
+if env("CACHE_URL", default="").startswith("redis://"):
+    SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
+else:
+    SESSION_ENGINE = "django.contrib.sessions.backends.db"
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
@@ -156,7 +159,12 @@ CORS_ALLOWED_ORIGIN_REGEXES = [
 CORS_ALLOW_HEADERS = (
     *default_headers,
     "x-visitor-id",
+    "x-altcha-spam-filter",
+    "x-altcha-config",
 )
+CORS_EXPOSE_HEADERS = [
+    "x-altcha-config",
+]
 CORS_ALLOW_CREDENTIALS = True
 
 CSRF_TRUSTED_ORIGINS = env.list(
@@ -187,7 +195,7 @@ ACCOUNT_EMAIL_VERIFICATION = "none"  # Social login primarily, bypass email veri
 SESSION_COOKIE_AGE = 180 * 24 * 60 * 60  # 180 days
 CSRF_COOKIE_AGE = 365 * 24 * 60 * 60  # 365 days
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
-SESSION_SAVE_EVERY_REQUEST = True
+SESSION_SAVE_EVERY_REQUEST = False
 
 # Custom variable to track sliding expiration limits for staff
 STAFF_SESSION_AGE = 12 * 60 * 60  # 12 hours

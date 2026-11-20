@@ -20,6 +20,10 @@ class DynamicCookieDomainMiddleware(MiddlewareMixin):
             request.COOKIES[vid_cookie] = new_vid
 
     def process_response(self, request, response):
+        # Admin requests must remain host-scoped to prevent cookie domain collisions and session loss
+        if request.path.startswith("/admin"):
+            return response
+
         host = request.get_host().split(":")[0]
 
         # Extract root domain (e.g. blueshoe.de from community.blueshoe.de)

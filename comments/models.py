@@ -100,10 +100,8 @@ class Comment(models.Model):
         else:
             live_host = host
 
-        slug = self.thread_slug.strip().lstrip("/")
-        # Ensure Blueshoe blog paths start with blog/
-        if live_host in ("www.blueshoe.io", "www.blueshoe.de") and not slug.startswith("blog"):
-            slug = f"blog/{slug}"
+        path = self.thread_slug.strip().lstrip("/")
+        if path and not path.endswith("/"):
+            path = f"{path}/"
 
-        path = slug if slug.endswith("/") else f"{slug}/"
         return f"{protocol}://{live_host}/{path}#comment-{self.id}"

@@ -157,3 +157,18 @@ class TestUsersAPI:
         content_de = res_de.content.decode()
         assert "https://www.blueshoe.de/blog" in content_de
         assert "Zum blueshoe.de Blog" in content_de
+
+    def test_headless_oauth_provider_redirect_supports_get(self, client):
+        site = Site.objects.get_current()
+        site.domain = "community.blueshoe.io"
+        site.save()
+
+        app, _ = SocialApp.objects.get_or_create(provider="github", name="GitHub", client_id="test_client_id")
+        app.sites.add(site)
+
+        res = client.get(
+            "/_allauth/browser/v1/auth/provider/redirect?provider=github&callback_url=https://www.blueshoe.io/auth-callback.html",
+            HTTP_HOST="community.blueshoe.io",
+        )
+        assert res.status_code == 302
+        assert "github.com/login/oauth/authorize" in res.headers["Location"]
