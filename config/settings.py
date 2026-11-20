@@ -3,6 +3,7 @@ from pathlib import Path
 
 import allauth.socialaccount.providers as _allauth_providers
 import environ
+from corsheaders.defaults import default_headers
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -144,9 +145,37 @@ AUTH_USER_MODEL = "users.User"
 SITE_ID = 1
 
 # --- CORS & CSRF ---
-CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS")
-CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS")
+CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default=[])
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https://([\w-]+\.)?blueshoe\.(io|de)$",
+    r"^https://([\w-]+\.)?gefyra\.dev$",
+    r"^https://([\w-]+\.)?django-hurricane\.io$",
+    r"^http://localhost(:\d+)?$",
+    r"^http://127\.0\.0\.1(:\d+)?$",
+]
+CORS_ALLOW_HEADERS = (
+    *default_headers,
+    "x-visitor-id",
+)
 CORS_ALLOW_CREDENTIALS = True
+
+CSRF_TRUSTED_ORIGINS = env.list(
+    "CSRF_TRUSTED_ORIGINS",
+    default=[
+        "https://community.blueshoe.de",
+        "https://community.blueshoe.io",
+        "https://community.django-hurricane.io",
+        "https://community.gefyra.dev",
+        "https://www.blueshoe.de",
+        "https://www.blueshoe.io",
+        "https://blueshoe.de",
+        "https://blueshoe.io",
+        "https://gefyra.dev",
+        "https://www.gefyra.dev",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ],
+)
 
 # --- Allauth Headless Setup ---
 HEADLESS_ONLY = True
