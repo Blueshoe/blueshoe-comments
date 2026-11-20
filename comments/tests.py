@@ -36,8 +36,18 @@ def test_verify_unsubscribe_token_invalid():
     assert verify_unsubscribe_token("invalid_token") is None
 
 
+def test_moderate_comment_no_key(monkeypatch):
+    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+    with patch("django.conf.settings.GEMINI_API_KEY", ""):
+        status, flag, reason = moderate_comment("Nice article!")
+        assert status == "approved"
+        assert flag == "clean"
+        assert "Auto-approved" in reason
+
+
 @patch("comments.utils.genai.Client")
-def test_moderate_comment_clean(mock_genai_client):
+def test_moderate_comment_clean(mock_genai_client, monkeypatch):
+    monkeypatch.setenv("GEMINI_API_KEY", "test-key")
     mock_model = MagicMock()
     mock_genai_client.return_value.models = mock_model
     mock_response = MagicMock()
@@ -50,7 +60,8 @@ def test_moderate_comment_clean(mock_genai_client):
 
 
 @patch("comments.utils.genai.Client")
-def test_moderate_comment_spam(mock_genai_client):
+def test_moderate_comment_spam(mock_genai_client, monkeypatch):
+    monkeypatch.setenv("GEMINI_API_KEY", "test-key")
     mock_model = MagicMock()
     mock_genai_client.return_value.models = mock_model
     mock_response = MagicMock()

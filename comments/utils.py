@@ -1,8 +1,10 @@
 import json
 import logging
+import os
 
 import mistune
 import nh3
+from django.conf import settings
 from google import genai
 from google.genai import types
 from pydantic import BaseModel
@@ -38,9 +40,16 @@ def moderate_comment(text: str) -> tuple[str, str, str]:
     Moderates a comment using Gemini 2.5 Flash.
     Returns a tuple of (status, moderation_flag, moderation_reason).
     """
+    api_key = getattr(settings, "GEMINI_API_KEY", "") or os.environ.get("GEMINI_API_KEY", "")
+
+    # If no Gemini API key is configured, gracefully auto-approve rather than blocking all comments
+    if not api_key:
+        logger.info("GEMINI_API_KEY not configured. Auto-approving comment.")
+        return "approved", "clean", "Auto-approved (AI moderation not configured)"
+
     try:
-        # Client initialized with API key from environment
-        client = genai.Client()
+        # Client initialized with configured API key
+        client = genai.Client(api_key=api_key)
 
         prompt = (
             "You are an AI moderation system for a tech community. "
@@ -52,11 +61,9 @@ def moderate_comment(text: str) -> tuple[str, str, str]:
             f"<comment>{text}</comment>"
         )
 
-        # We need to enforce a 4 second timeout, google-genai might not have a direct
-        # timeout parameter on the generate_content call yet, or it relies on httpx timeout.
-        # We will configure it if possible, otherwise rely on the client defaults.
+        model_name = getattr(settings, "GEMINI_MODEL", "gemini-3.8-flash")
         response = client.models.generate_content(
-            model="gemini-2.5-flash",
+            model=model_name,
             contents=prompt,
             config=types.GenerateContentConfig(
                 response_mime_type="application/json", response_schema=ModerationResult, temperature=0.1

@@ -307,15 +307,18 @@ def delete_comment(request: HttpRequest, comment_id: int):
 
 
 @router.get("/captcha/challenge/")
+@router.get("/captcha/challenge")
 def get_captcha_challenge(request: HttpRequest):
     options = ChallengeOptionsV1(
         hmac_key=ALTCHA_HMAC_KEY,
         max_number=100000,
     )
     challenge = create_challenge(options)
-    if hasattr(challenge, "__dict__"):
-        return challenge.__dict__
-    return challenge
+    data = challenge.__dict__ if hasattr(challenge, "__dict__") else challenge
+    response = Response(data, status=200)
+    response["Content-Type"] = "application/json; charset=utf-8"
+    response["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    return response
 
 
 @router.get("/notifications/unsubscribe/{str:token}/", response={200: dict, 400: dict})

@@ -19,6 +19,7 @@ services:
       - DATABASE_URL=postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-community}
       - CACHE_URL=${CACHE_URL:-redis://redis:6379/1}
       - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-3.8-flash}
       - MODERATION_WEBHOOK_URL=${MODERATION_WEBHOOK_URL:-}
       - TASKS_BACKEND=${TASKS_BACKEND:-django.tasks.backends.immediate.ImmediateBackend}
       - EMAIL_BACKEND=${EMAIL_BACKEND:-django.core.mail.backends.smtp.EmailBackend}

@@ -532,7 +532,24 @@ export class CommunityComments extends LitElement {
   `;
 
   @property({ type: String, attribute: 'api-base' })
-  apiBase = window.location.hostname === 'localhost' ? 'http://localhost:8079' : `https://community.${window.location.hostname}`;
+  apiBase = '';
+
+  get resolvedApiBase(): string {
+    if (this.apiBase) {
+      return this.apiBase.replace(/\/+$/, '');
+    }
+    if (typeof window === 'undefined') return '';
+    const host = window.location.hostname;
+    const protocol = window.location.protocol;
+    if (host === 'localhost' || host === '127.0.0.1' || host.endsWith('.local')) {
+      return `${protocol}//${host}:8079`;
+    }
+    if (host.startsWith('community.')) {
+      return `${protocol}//${host}`;
+    }
+    const rootDomain = host.replace(/^www\./, '');
+    return `https://community.${rootDomain}`;
+  }
 
   @property({ type: String, attribute: 'thread-slug' })
   threadSlug = '';
@@ -610,8 +627,8 @@ export class CommunityComments extends LitElement {
   async fetchAuth() {
     try {
       const [provRes, sessRes] = await Promise.all([
-        fetch(`${this.apiBase}/api/auth/providers/`),
-        fetch(`${this.apiBase}/api/auth/session/`, { credentials: 'include' }),
+        fetch(`${this.resolvedApiBase}/api/auth/providers/`),
+        fetch(`${this.resolvedApiBase}/api/auth/session/`, { credentials: 'include' }),
       ]);
       if (provRes.ok) {
         this.authProviders = await provRes.json();
@@ -627,7 +644,7 @@ export class CommunityComments extends LitElement {
     this.blockedPopupUrl = null;
     this.blockedProviderId = null;
     const callbackUrl = encodeURIComponent(`${window.location.origin}/auth-callback.html`);
-    const authUrl = `${this.apiBase}/_allauth/browser/v1/auth/provider/redirect?provider=${providerId}&callback_url=${callbackUrl}`;
+    const authUrl = `${this.resolvedApiBase}/_allauth/browser/v1/auth/provider/redirect?provider=${providerId}&callback_url=${callbackUrl}`;
     
     // Direct synchronous call on click event
     const popup = window.open(authUrl, 'auth-popup', 'width=600,height=700,scrollbars=yes');
@@ -644,12 +661,12 @@ export class CommunityComments extends LitElement {
     this.saveDraft(this.commentBody);
     // Callback directly to the current article URL
     const directCallback = encodeURIComponent(window.location.href);
-    window.location.href = `${this.apiBase}/_allauth/browser/v1/auth/provider/redirect?provider=${providerId}&callback_url=${directCallback}`;
+    window.location.href = `${this.resolvedApiBase}/_allauth/browser/v1/auth/provider/redirect?provider=${providerId}&callback_url=${directCallback}`;
   }
 
   async handleLogout() {
     try {
-      await fetch(`${this.apiBase}/api/auth/logout/`, {
+      await fetch(`${this.resolvedApiBase}/api/auth/logout/`, {
         method: 'POST',
         credentials: 'include',
       });
@@ -679,7 +696,7 @@ export class CommunityComments extends LitElement {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 4000);
 
-      const response = await fetch(`${this.apiBase}/api/comments/?thread_slug=${this.threadSlug}`, {
+      const response = await fetch(`${this.resolvedApiBase}/api/comments/?thread_slug=${this.threadSlug}`, {
         signal: controller.signal,
         credentials: 'include',
       });
@@ -727,7 +744,7 @@ export class CommunityComments extends LitElement {
         altcha: this.currentUser ? undefined : this.altchaPayload || undefined,
       };
 
-      const res = await fetch(`${this.apiBase}/api/comments/`, {
+      const res = await fetch(`${this.resolvedApiBase}/api/comments/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -765,7 +782,7 @@ export class CommunityComments extends LitElement {
 
   async toggleReaction(commentId: number | null, kind: string) {
     try {
-      const res = await fetch(`${this.apiBase}/api/reactions/`, {
+      const res = await fetch(`${this.resolvedApiBase}/api/reactions/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -958,7 +975,7 @@ export class CommunityComments extends LitElement {
                       @input=${(e: any) => (this.guestName = e.target.value)}
                     />
                     <altcha-widget
-                      challengeurl="${this.apiBase}/api/captcha/challenge/"
+                      challengeurl="${this.resolvedApiBase}/api/captcha/challenge/"
                       auto="onload"
                       hidefooter
                       hidelogo
