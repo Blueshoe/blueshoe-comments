@@ -26,6 +26,9 @@ const I18N: Record<string, Record<string, string>> = {
     loggedInAs: "Logged in as",
     logoutBtn: "Log out",
     orSignInWith: "Or sign in with:",
+    popupBlockedNotice: "Login popup was blocked by your browser.",
+    popupOpenManual: "Open Login Window",
+    popupRedirectFallback: "or continue via redirect",
   },
   de: {
     offlineMessage: "Unser Kommentar-Server macht gerade Kaffeepause ☕",
@@ -50,6 +53,9 @@ const I18N: Record<string, Record<string, string>> = {
     loggedInAs: "Angemeldet als",
     logoutBtn: "Abmelden",
     orSignInWith: "Oder anmelden mit:",
+    popupBlockedNotice: "Login-Popup wurde vom Browser blockiert.",
+    popupOpenManual: "Login-Fenster manuell öffnen",
+    popupRedirectFallback: "oder per Weiterleitung anmelden",
   },
 };
 
@@ -105,7 +111,7 @@ export class CommunityComments extends LitElement {
       font-size: 0.85rem;
       color: #64748b;
       background: #f8fafc;
-      padding: 0.4rem 0.75rem;
+      padding: 0.5rem 0.75rem;
       border-radius: 6px;
       border: 1px solid #e2e8f0;
       flex-wrap: wrap;
@@ -143,6 +149,37 @@ export class CommunityComments extends LitElement {
       cursor: pointer;
       font-size: 0.8rem;
       text-decoration: underline;
+      padding: 0;
+    }
+
+    .popup-blocked-banner {
+      width: 100%;
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 6px;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.8rem;
+      color: #92400e;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .popup-retry-link {
+      color: #00458b;
+      font-weight: 600;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .redirect-fallback-btn {
+      background: none;
+      border: none;
+      color: #64748b;
+      font-size: 0.8rem;
+      text-decoration: underline;
+      cursor: pointer;
       padding: 0;
     }
 
@@ -322,7 +359,7 @@ export class CommunityComments extends LitElement {
     }
 
     .team-badge {
-      background: #0284c7;
+      background: #00458b;
       color: #ffffff;
       padding: 1px 6px;
       border-radius: 3px;
@@ -403,7 +440,7 @@ export class CommunityComments extends LitElement {
       max-height: 85vh;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
       overflow: hidden;
       animation: modalFadeIn 0.2s ease-out;
     }
@@ -529,6 +566,12 @@ export class CommunityComments extends LitElement {
   @state()
   private currentUser: { id: number; name: string; email: string; is_team: boolean } | null = null;
 
+  @state()
+  private blockedPopupUrl: string | null = null;
+
+  @state()
+  private blockedProviderId: string | null = null;
+
   private t(key: string): string {
     const dict = I18N[this.lang] || I18N.en;
     return dict[key] || I18N.en[key] || key;
@@ -552,6 +595,8 @@ export class CommunityComments extends LitElement {
 
     window.addEventListener('message', (event: MessageEvent) => {
       if (event.data?.type === 'oauth_success') {
+        this.blockedPopupUrl = null;
+        this.blockedProviderId = null;
         this.fetchAuth();
         this.fetchComments();
       }
@@ -575,9 +620,27 @@ export class CommunityComments extends LitElement {
   }
 
   loginWith(providerId: string) {
+    this.blockedPopupUrl = null;
+    this.blockedProviderId = null;
     const callbackUrl = encodeURIComponent(`${window.location.origin}/auth-callback.html`);
     const authUrl = `${this.apiBase}/_allauth/browser/v1/auth/provider/redirect?provider=${providerId}&callback_url=${callbackUrl}`;
-    window.open(authUrl, 'auth-popup', 'width=600,height=700,scrollbars=yes');
+    
+    // Direct synchronous call on click event
+    const popup = window.open(authUrl, 'auth-popup', 'width=600,height=700,scrollbars=yes');
+
+    // Detect if browser blocked the popup window
+    if (!popup || popup.closed || typeof popup.closed === 'undefined') {
+      this.blockedPopupUrl = authUrl;
+      this.blockedProviderId = providerId;
+    }
+  }
+
+  loginWithRedirect(providerId: string) {
+    // Preserve whatever draft the user typed
+    this.saveDraft(this.commentBody);
+    // Callback directly to the current article URL
+    const directCallback = encodeURIComponent(window.location.href);
+    window.location.href = `${this.apiBase}/_allauth/browser/v1/auth/provider/redirect?provider=${providerId}&callback_url=${directCallback}`;
   }
 
   async handleLogout() {
@@ -786,6 +849,33 @@ export class CommunityComments extends LitElement {
                   )}
                 </div>
               `}
+
+          <!-- Popup Blocked Fallback Banner -->
+          ${this.blockedPopupUrl
+            ? html`
+                <div class="popup-blocked-banner">
+                  <span>⚠️ ${this.t('popupBlockedNotice')}</span>
+                  <a
+                    href="${this.blockedPopupUrl}"
+                    target="_blank"
+                    class="popup-retry-link"
+                    @click=${() => (this.blockedPopupUrl = null)}
+                  >
+                    ${this.t('popupOpenManual')}
+                  </a>
+                  ${this.blockedProviderId
+                    ? html`
+                        <button
+                          class="redirect-fallback-btn"
+                          @click=${() => this.loginWithRedirect(this.blockedProviderId!)}
+                        >
+                          (${this.t('popupRedirectFallback')})
+                        </button>
+                      `
+                    : nothing}
+                </div>
+              `
+            : nothing}
         </div>
 
         <!-- Editor Area -->

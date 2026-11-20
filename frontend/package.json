@@ -1,6 +1,6 @@
 {
   "name": "@blueshoe/community-widget",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "type": "module",
   "description": "API-First Blueshoe Community-System Web Components",
   "main": "./dist/community-widget.umd.cjs",
