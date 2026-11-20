@@ -8,7 +8,7 @@
 <a href="https://django-ninja.dev/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/API-Django_Ninja-brightgreen.svg" alt="API" /></a>
 <a href="pytest.ini" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/Test_Coverage-96%25-success.svg" alt="Coverage" /></a>
 
-Welcome to the headless community powerhouse serving <a href="https://blueshoe.de" target="_blank" rel="noopener noreferrer"><code>blueshoe.de</code></a>, <a href="https://blueshoe.io" target="_blank" rel="noopener noreferrer"><code>blueshoe.io</code></a>, and <a href="https://django-hurricane.io" target="_blank" rel="noopener noreferrer"><code>django-hurricane.io</code></a>.
+Welcome to the headless community powerhouse serving <a href="https://blueshoe.de" target="_blank" rel="noopener noreferrer"><code>blueshoe.de</code></a>, <a href="https://blueshoe.io" target="_blank" rel="noopener noreferrer"><code>blueshoe.io</code></a>, <a href="https://django-hurricane.io" target="_blank" rel="noopener noreferrer"><code>django-hurricane.io</code></a>, and <a href="https://gefyra.dev" target="_blank" rel="noopener noreferrer"><code>gefyra.dev</code></a>.
 
 Static site generators (Astro, Sphinx, Hugo, Next) are fast, secure, and peaceful... until someone wants to leave a comment. Rather than selling your readers' souls to ad-tracking third-party widgets, **Blueshoe Community Hub** gives you a self-hosted, multi-tenant, privacy-first, lightning-fast commenting and reaction platform with built-in moderation guardrails!
 
@@ -128,6 +128,7 @@ docker compose up -d
   - `community.blueshoe.de`
   - `community.blueshoe.io`
   - `community.django-hurricane.io`
+  - `community.gefyra.dev`
 
 ---
 

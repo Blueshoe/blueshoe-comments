@@ -67,8 +67,16 @@ class Comment(models.Model):
     @property
     def is_team(self):
         if self.author:
-            return self.author.is_staff or self.author.email.endswith("@blueshoe.de")
+            return (
+                self.author.is_staff
+                or self.author.email.endswith("@blueshoe.de")
+                or self.author.email.endswith("@blueshoe.io")
+            )
         return False
+
+    @property
+    def is_maintainer(self):
+        return self.is_team
 
     def __str__(self):
         return f"Comment {self.id} on {self.thread_slug}"

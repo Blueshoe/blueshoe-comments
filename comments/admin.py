@@ -149,12 +149,12 @@ class CommentAdmin(admin.ModelAdmin):
         if obj.is_deleted_author:
             return mark_safe(f"<em>{_('Deleted User')}</em>")
         if obj.author:
-            team_badge = (
-                ' <span style="background: #007bff; color: white; padding: 1px 4px; border-radius: 3px; font-size: 9px;">TEAM</span>'
+            maintainer_badge = (
+                ' <span style="background: #0284c7; color: white; padding: 1px 5px; border-radius: 3px; font-size: 9px; font-weight: bold;">MAINTAINER</span>'
                 if obj.is_team
                 else ""
             )
-            return format_html("{}{}", obj.author.get_full_name() or obj.author.username, mark_safe(team_badge))
+            return format_html("{}{}", obj.author.get_full_name() or obj.author.username, mark_safe(maintainer_badge))
         guest = obj.guest_name or _("Anonymous")
         return format_html("{}: {}", _("Guest"), guest)
 

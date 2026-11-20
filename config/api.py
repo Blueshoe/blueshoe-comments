@@ -17,6 +17,7 @@ api = NinjaAPI(
         {"url": "https://community.blueshoe.de", "description": "Production - blueshoe.de"},
         {"url": "https://community.blueshoe.io", "description": "Production - blueshoe.io"},
         {"url": "https://community.django-hurricane.io", "description": "Production - django-hurricane.io"},
+        {"url": "https://community.gefyra.dev", "description": "Production - gefyra.dev"},
     ],
     openapi_extra={
         "tags": [

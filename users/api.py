@@ -27,6 +27,7 @@ class UserSummaryOut(Schema):
     name: str
     email: str
     is_team: bool
+    is_maintainer: bool = False
 
 
 class SessionStatusOut(Schema):
@@ -86,7 +87,7 @@ def get_auth_session(request: HttpRequest):
         return SessionStatusOut(is_authenticated=False, user=None)
 
     user = request.user
-    is_team = user.is_staff or user.email.endswith("@blueshoe.de") or user.email.endswith("@blueshoe.io")
+    is_maintainer = user.is_staff or user.email.endswith("@blueshoe.de") or user.email.endswith("@blueshoe.io")
     name = user.get_full_name() or user.username
 
     return SessionStatusOut(
@@ -96,7 +97,8 @@ def get_auth_session(request: HttpRequest):
             username=user.username,
             name=name,
             email=user.email,
-            is_team=is_team,
+            is_team=is_maintainer,
+            is_maintainer=is_maintainer,
         ),
     )
 

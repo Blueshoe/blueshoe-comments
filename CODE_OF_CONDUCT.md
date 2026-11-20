@@ -12,6 +12,7 @@ Please find our discussions here:
 - [English Blog](https://www.blueshoe.io/blog)
 - [German Blog](https://www.blueshoe.de/blog)
 - [Django Hurricane Documentation](https://django-hurricane.io)
+- [Gefyra Documentation](https://gefyra.dev)
 
 ## Our Values
 We strive to create an open, inclusive, and respectful space for diverse perspectives and meaningful discussions. This community welcomes people of all backgrounds, identities, and viewpoints, while maintaining standards that ensure productive dialogue.

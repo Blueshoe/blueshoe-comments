@@ -122,6 +122,7 @@ class TestUsersAPI:
         assert data["is_authenticated"] is True
         assert data["user"]["username"] == "teamdev"
         assert data["user"]["is_team"] is True
+        assert data["user"]["is_maintainer"] is True
         assert data["user"]["name"] == "Dev Blueshoe"
 
     def test_logout(self, client):

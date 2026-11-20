@@ -45,7 +45,7 @@ class TestAdminModerationAndObservability:
         assert "ILLEGAL" in flag_html
 
         author_html = admin_instance.author_display(c)
-        assert "TEAM" in author_html
+        assert "MAINTAINER" in author_html
         assert "author" in author_html
 
         snippet = admin_instance.content_snippet(c)

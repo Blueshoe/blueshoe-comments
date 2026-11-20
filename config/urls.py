@@ -10,6 +10,9 @@ urlpatterns = [
     path("docs", api_docs_view),
     path("api/", api.urls),
     path("_allauth/", include("allauth.headless.urls")),  # Allauth headless routing
+    path(
+        "accounts/", include("allauth.urls")
+    ),  # OAuth callback URLs for providers (e.g. /accounts/github/login/callback/)
 ]
 
 # Blueshoe Admin Customization
