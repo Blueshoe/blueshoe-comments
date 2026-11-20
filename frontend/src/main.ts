@@ -1,7 +1,11 @@
 import 'altcha';
-import { LitElement, html, css, nothing } from 'lit';
+import altchaCss from 'altcha/altcha.css?inline';
+
+import { LitElement, html, css, nothing, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CODE_OF_CONDUCT_I18N, CodeOfConductContent } from './code-of-conduct';
+
+const altchaStyles = unsafeCSS(altchaCss);
 
 const I18N: Record<string, Record<string, string>> = {
   en: {
@@ -89,7 +93,9 @@ const REACTION_KINDS = [
 
 @customElement('community-comments')
 export class CommunityComments extends LitElement {
-  static styles = css`
+  static styles = [
+    altchaStyles,
+    css`
     :host {
       display: block;
       font-family: var(--community-font, system-ui, sans-serif);
@@ -673,7 +679,8 @@ export class CommunityComments extends LitElement {
       text-align: center;
       background: #f8fafc;
     }
-  `;
+  `,
+  ];
 
   @property({ type: String, attribute: 'api-base' })
   apiBase = '';
@@ -1162,6 +1169,7 @@ export class CommunityComments extends LitElement {
                   <altcha-widget
                     challengeurl="${this.resolvedApiBase}/api/captcha/challenge/"
                     auto="onload"
+                    display="invisible"
                     hidefooter
                     hidelogo
                     @statechange=${(e: CustomEvent) => {
@@ -1333,6 +1341,7 @@ export class CommunityComments extends LitElement {
                     <altcha-widget
                       challengeurl="${this.resolvedApiBase}/api/captcha/challenge/"
                       auto="onload"
+                      display="invisible"
                       hidefooter
                       hidelogo
                       @statechange=${(e: CustomEvent) => {
