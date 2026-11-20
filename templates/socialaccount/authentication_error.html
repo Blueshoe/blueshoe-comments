@@ -230,7 +230,13 @@
         <div><strong>Provider:</strong> {{ auth_error.provider.name|default:auth_error.provider }}</div>
       {% endif %}
       <div><strong>Domain:</strong> {{ request.get_host }}</div>
-      <div><strong>Notice:</strong> No active OAuth state or authorization grant found.</div>
+      {% if auth_error.exception %}
+        <div><strong>Reason:</strong> {{ auth_error.exception }}</div>
+      {% elif auth_error.code %}
+        <div><strong>Code:</strong> {{ auth_error.code }}</div>
+      {% else %}
+        <div><strong>Notice:</strong> No active OAuth state or authorization grant found.</div>
+      {% endif %}
     </div>
 
     <div class="action-group">

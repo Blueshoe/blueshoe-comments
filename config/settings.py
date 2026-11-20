@@ -190,6 +190,8 @@ HEADLESS_ONLY = True
 ACCOUNT_LOGIN_METHODS = {"email"}
 ACCOUNT_SIGNUP_FIELDS = ["email*"]
 ACCOUNT_EMAIL_VERIFICATION = "none"  # Social login primarily, bypass email verification for now or configure as needed
+ACCOUNT_ADAPTER = "users.adapter.CustomAccountAdapter"
+SOCIALACCOUNT_ADAPTER = "users.adapter.CustomSocialAccountAdapter"
 
 # --- Sessions & Cookies (Langlebige Sessions) ---
 SESSION_COOKIE_AGE = 180 * 24 * 60 * 60  # 180 days
