@@ -16,6 +16,7 @@ dependencies = [
     "mistune>=3.4.0",
     "nh3>=0.3.8",
     "psycopg[binary]>=3.3.9",
+    "pyjwt[crypto]>=2.9.0",
     "pytest>=9.2.0",
     "pytest-cov>=7.1.0",
     "pytest-django>=4.14.0",

@@ -320,3 +320,10 @@ class TestUsersAPI:
         )
         assert replay_res.status_code == 401
         assert "already used" in replay_res.content.decode()
+
+    def test_google_jwt_dependency_available(self):
+        import jwt
+        from allauth.socialaccount.internal import jwtkit
+
+        assert hasattr(jwt, "decode")
+        assert hasattr(jwtkit, "verify_and_decode")
