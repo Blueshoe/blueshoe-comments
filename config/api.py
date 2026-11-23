@@ -6,10 +6,11 @@ from users.api import router as users_router
 
 api = NinjaAPI(
     title="Blueshoe Community API",
-    version="1.0.0",
+    version="0.4.0",
     description=(
         "API-First Community System featuring markdown comments, 1-level threaded replies, "
-        "dual positive-only reactions (page & comment levels), and synchronous Gemini 2.5 Flash AI moderation."
+        "dual positive-only reactions (page & comment levels), passwordless Magic Login Link, "
+        "and synchronous Gemini 3.8 Flash AI moderation."
     ),
     urls_namespace="api",
     servers=[
@@ -23,18 +24,24 @@ api = NinjaAPI(
         "tags": [
             {
                 "name": "Comments",
-                "description": "Endpoints for retrieving, posting, editing, and deleting comments, Altcha CAPTCHA, and email unsubscribe.",
+                "description": (
+                    "Endpoints for retrieving, posting, editing, and deleting comments, Altcha CAPTCHA challenge "
+                    "verification, and email reply notification unsubscribes."
+                ),
             },
             {
                 "name": "Reactions",
-                "description": "Endpoints for toggling positive-only reactions on pages and comments, and teaser batch aggregation.",
+                "description": (
+                    "Endpoints for toggling positive-only reactions on pages and comments, with anti-flooding rate limits "
+                    "(HTTP 429) and teaser batch aggregation."
+                ),
             },
             {
                 "name": "Users & Authentication",
                 "description": (
-                    "Endpoints for listing configured social login providers, session status, logout, "
-                    "re-authentication checks, and GDPR account deletion. Native allauth headless endpoints "
-                    "are also available under `/_allauth/browser/v1/`."
+                    "Endpoints for passwordless Magic Login Link (request & verify), listing configured social login providers, "
+                    "session status, logout, and GDPR account deletion with re-authentication guardrails. Native allauth headless "
+                    "endpoints are also available under `/_allauth/browser/v1/`."
                 ),
             },
         ]

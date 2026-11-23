@@ -20,8 +20,12 @@ class TestApiDocs:
         data = res.json()
         assert "openapi" in data
         assert "paths" in data
+        assert data["info"]["version"] == "0.4.0"
+        assert "Gemini 3.8 Flash" in data["info"]["description"]
         assert "/api/comments/" in data["paths"]
         assert "/api/reactions/" in data["paths"]
         assert "/api/me/" in data["paths"]
         assert "/api/auth/providers/" in data["paths"]
         assert "/api/auth/session/" in data["paths"]
+        assert "/api/auth/magic-link/request/" in data["paths"]
+        assert "/api/auth/magic-link/verify/" in data["paths"]

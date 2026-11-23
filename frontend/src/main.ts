@@ -45,6 +45,13 @@ const I18N: Record<string, Record<string, string>> = {
     sendingMagicLinkBtn: "Sending...",
     magicLinkSentMessage: "Check your inbox! We've sent a magic login link to",
     magicLinkSentInstructions: "Click the link in the email to complete your login.",
+    pendingReviewTitle: "Pending Editorial Review",
+    pendingReviewNotice: "This comment is held for editorial review and has not been published yet.",
+    assessmentReasonLabel: "Assessment / Reason:",
+    reviseBtn: "Revise Comment",
+    saveRevisionBtn: "Save & Resubmit",
+    cancelRevisionBtn: "Cancel",
+    savingRevisionBtn: "Saving...",
   },
   de: {
     offlineMessage: "Unser Kommentar-Server macht gerade Kaffeepause ☕",
@@ -83,6 +90,13 @@ const I18N: Record<string, Record<string, string>> = {
     sendingMagicLinkBtn: "Wird gesendet...",
     magicLinkSentMessage: "Postfach prüfen! Wir haben einen Login-Link gesendet an",
     magicLinkSentInstructions: "Klicke auf den Link in der E-Mail, um dich anzumelden.",
+    pendingReviewTitle: "In redaktioneller Prüfung",
+    pendingReviewNotice: "Dieser Kommentar ist in redaktioneller Prüfung und noch nicht öffentlich sichtbar.",
+    assessmentReasonLabel: "Einschätzung / Begründung:",
+    reviseBtn: "Kommentar überarbeiten",
+    saveRevisionBtn: "Speichern & Erneut einreichen",
+    cancelRevisionBtn: "Abbrechen",
+    savingRevisionBtn: "Wird gespeichert...",
   },
 };
 
@@ -320,6 +334,88 @@ export class CommunityComments extends LitElement {
       padding: 0 4px;
     }
 
+    .pending-review-box {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-left: 4px solid #f59e0b;
+      border-radius: 6px;
+      padding: 0.65rem 0.85rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.85rem;
+      color: #92400e;
+    }
+
+    .pending-review-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .pending-review-reason {
+      margin: 0.35rem 0 0.6rem;
+      font-size: 0.85rem;
+      color: #78350f;
+      line-height: 1.45;
+      background: rgba(254, 243, 199, 0.6);
+      padding: 0.4rem 0.6rem;
+      border-radius: 4px;
+      border: 1px dashed #fcd34d;
+    }
+
+    .revise-btn {
+      background: #f59e0b;
+      color: #ffffff;
+      border: none;
+      border-radius: 4px;
+      padding: 3px 10px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: background 0.15s;
+    }
+
+    .revise-btn:hover {
+      background: #d97706;
+    }
+
+    .revision-editor {
+      margin-top: 0.6rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .revision-textarea {
+      width: 100%;
+      min-height: 85px;
+      padding: 0.6rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      background: #ffffff;
+      resize: vertical;
+    }
+
+    .revision-textarea:focus {
+      outline: none;
+      border-color: #00458b;
+    }
+
+    .revision-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      justify-content: flex-end;
+    }
+
     /* Editor */
     .editor-box {
       border: 1px solid #cbd5e1;
@@ -512,6 +608,82 @@ export class CommunityComments extends LitElement {
     .comment-body {
       font-size: 0.95rem;
       line-height: 1.6;
+      word-break: break-word;
+    }
+
+    .comment-body p {
+      margin: 0.4rem 0;
+    }
+
+    .comment-body p:first-child {
+      margin-top: 0;
+    }
+
+    .comment-body p:last-child {
+      margin-bottom: 0;
+    }
+
+    .comment-body pre {
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 0.85rem 1.1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.85rem;
+      line-height: 1.55;
+      margin: 0.65rem 0;
+      white-space: pre;
+      tab-size: 4;
+      border: 1px solid #1e293b;
+    }
+
+    .comment-body pre code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+      border-radius: 0;
+      font-size: inherit;
+      font-family: inherit;
+      white-space: pre;
+    }
+
+    .comment-body code {
+      background: #f1f5f9;
+      color: #0f172a;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.88em;
+      border: 1px solid #e2e8f0;
+      white-space: pre-wrap;
+    }
+
+    .comment-body blockquote {
+      border-left: 3px solid #cbd5e1;
+      padding-left: 0.75rem;
+      margin: 0.5rem 0;
+      color: #64748b;
+      font-style: italic;
+    }
+
+    .comment-body ul,
+    .comment-body ol {
+      margin: 0.4rem 0;
+      padding-left: 1.4rem;
+    }
+
+    .comment-body li {
+      margin: 0.2rem 0;
+    }
+
+    .comment-body a {
+      color: #00458b;
+      text-decoration: underline;
+    }
+
+    .comment-body a:hover {
+      color: #003366;
     }
 
     /* Reactions Bar */
@@ -869,6 +1041,50 @@ export class CommunityComments extends LitElement {
 
   @state()
   private magicLinkSentTo = '';
+
+  @state()
+  private editingCommentId: number | null = null;
+
+  @state()
+  private editingBody = '';
+
+  @state()
+  private isSavingRevision = false;
+
+  startEditingComment(commentId: number, rawMarkdown: string) {
+    this.editingCommentId = commentId;
+    this.editingBody = rawMarkdown;
+  }
+
+  cancelEditingComment() {
+    this.editingCommentId = null;
+    this.editingBody = '';
+  }
+
+  async handleSaveRevision(commentId: number) {
+    if (!this.editingBody.trim() || this.isSavingRevision) return;
+    this.isSavingRevision = true;
+    try {
+      const res = await fetch(`${this.resolvedApiBase}/api/comments/${commentId}/`, {
+        method: 'PATCH',
+        headers: this.getHeaders({ 'Content-Type': 'application/json' }),
+        credentials: 'include',
+        body: JSON.stringify({ body_markdown: this.editingBody }),
+      });
+      if (res.ok) {
+        this.editingCommentId = null;
+        this.editingBody = '';
+        await this.fetchComments();
+      } else {
+        const err = await res.json().catch(() => ({}));
+        alert(err?.error || 'Failed to update comment.');
+      }
+    } catch (e) {
+      console.error('Failed to update comment', e);
+    } finally {
+      this.isSavingRevision = false;
+    }
+  }
 
   async handleRequestMagicLink() {
     if (!this.magicLinkEmail.trim() || this.isSendingMagicLink) return;
@@ -1565,10 +1781,60 @@ export class CommunityComments extends LitElement {
                   <span class="comment-date">• ${new Date(c.created_at).toLocaleDateString()}</span>
                 </div>
 
-                <div class="comment-body" .innerHTML=${c.body_html}></div>
+                ${c.status === 'pending'
+                  ? html`
+                      <div class="pending-review-box">
+                        <div class="pending-review-header">
+                          <span>⏳ ${this.t('pendingReviewTitle')}</span>
+                          ${c.can_edit && this.editingCommentId !== c.id
+                            ? html`
+                                <button
+                                  class="revise-btn"
+                                  @click=${() => this.startEditingComment(c.id, c.raw_markdown)}
+                                >
+                                  ✎ ${this.t('reviseBtn')}
+                                </button>
+                              `
+                            : nothing}
+                        </div>
+                        <p class="pending-review-notice">${this.t('pendingReviewNotice')}</p>
+                        ${c.moderation_reason
+                          ? html`
+                              <div class="pending-review-reason">
+                                <strong>${this.t('assessmentReasonLabel')}</strong> ${c.moderation_reason}
+                              </div>
+                            `
+                          : nothing}
+                      </div>
+                    `
+                  : nothing}
+
+                ${this.editingCommentId === c.id
+                  ? html`
+                      <div class="revision-editor">
+                        <textarea
+                          class="revision-textarea"
+                          .value=${this.editingBody}
+                          @input=${(e: any) => (this.editingBody = e.target.value)}
+                        ></textarea>
+                        <div class="revision-actions">
+                          <button class="cancel-btn" @click=${this.cancelEditingComment}>
+                            ${this.t('cancelRevisionBtn')}
+                          </button>
+                          <button
+                            class="submit-btn"
+                            ?disabled=${!this.editingBody.trim() || this.isSavingRevision}
+                            @click=${() => this.handleSaveRevision(c.id)}
+                          >
+                            ${this.isSavingRevision ? this.t('savingRevisionBtn') : this.t('saveRevisionBtn')}
+                          </button>
+                        </div>
+                      </div>
+                    `
+                  : html`<div class="comment-body" .innerHTML=${c.body_html}></div>`}
 
                 <!-- Top-Level Comment Reactions & Reply Button -->
-                ${this.renderReactionsBar(c.reactions, c.id, true)}
+                ${c.status === 'approved' ? this.renderReactionsBar(c.reactions, c.id, true) : nothing}
 
                 <!-- Inline Reply Form for this comment -->
                 ${this.renderInlineReplyBox(c)}
@@ -1585,10 +1851,61 @@ export class CommunityComments extends LitElement {
                                 ${r.is_team ? html`<span class="team-badge">${this.t('teamBadge')}</span>` : nothing}
                                 <span class="comment-date">• ${new Date(r.created_at).toLocaleDateString()}</span>
                               </div>
-                              <div class="comment-body" .innerHTML=${r.body_html}></div>
+
+                              ${r.status === 'pending'
+                                ? html`
+                                    <div class="pending-review-box">
+                                      <div class="pending-review-header">
+                                        <span>⏳ ${this.t('pendingReviewTitle')}</span>
+                                        ${r.can_edit && this.editingCommentId !== r.id
+                                          ? html`
+                                              <button
+                                                class="revise-btn"
+                                                @click=${() => this.startEditingComment(r.id, r.raw_markdown)}
+                                              >
+                                                ✎ ${this.t('reviseBtn')}
+                                              </button>
+                                            `
+                                          : nothing}
+                                      </div>
+                                      <p class="pending-review-notice">${this.t('pendingReviewNotice')}</p>
+                                      ${r.moderation_reason
+                                        ? html`
+                                            <div class="pending-review-reason">
+                                              <strong>${this.t('assessmentReasonLabel')}</strong> ${r.moderation_reason}
+                                            </div>
+                                          `
+                                        : nothing}
+                                    </div>
+                                  `
+                                : nothing}
+
+                              ${this.editingCommentId === r.id
+                                ? html`
+                                    <div class="revision-editor">
+                                      <textarea
+                                        class="revision-textarea"
+                                        .value=${this.editingBody}
+                                        @input=${(e: any) => (this.editingBody = e.target.value)}
+                                      ></textarea>
+                                      <div class="revision-actions">
+                                        <button class="cancel-btn" @click=${this.cancelEditingComment}>
+                                          ${this.t('cancelRevisionBtn')}
+                                        </button>
+                                        <button
+                                          class="submit-btn"
+                                          ?disabled=${!this.editingBody.trim() || this.isSavingRevision}
+                                          @click=${() => this.handleSaveRevision(r.id)}
+                                        >
+                                          ${this.isSavingRevision ? this.t('savingRevisionBtn') : this.t('saveRevisionBtn')}
+                                        </button>
+                                      </div>
+                                    </div>
+                                  `
+                                : html`<div class="comment-body" .innerHTML=${r.body_html}></div>`}
 
                               <!-- Reply-Level Reactions -->
-                              ${this.renderReactionsBar(r.reactions, r.id, false)}
+                              ${r.status === 'approved' ? this.renderReactionsBar(r.reactions, r.id, false) : nothing}
                             </div>
                           `
                         )}

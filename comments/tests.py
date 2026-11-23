@@ -31,6 +31,12 @@ def test_markdown_and_sanitization():
     # Empty string check
     assert render_and_sanitize_markdown("") == ""
 
+    # Code block and line breaks
+    code_raw = "Line 1\nLine 2\n```python\ndef test():\n    return 42\n```"
+    code_html = render_and_sanitize_markdown(code_raw)
+    assert "<br>" in code_html
+    assert '<code class="language-python">def test():\n    return 42\n</code>' in code_html
+
 
 def test_verify_unsubscribe_token_invalid():
     assert verify_unsubscribe_token("invalid_token") is None
@@ -346,3 +352,82 @@ class TestCommentsAPI:
 
         comment.refresh_from_db()
         assert comment.notify_replies is False
+
+    def test_editorial_pending_review_and_revision_lifecycle(self, client, mailoutbox, monkeypatch):
+        author = User.objects.create_user(username="charlie", email="charlie@test.com")
+        client.force_login(author)
+
+        # Mock moderate_comment to return pending + reason for badlink
+        from comments import api as comments_api
+
+        monkeypatch.setattr(
+            comments_api,
+            "moderate_comment",
+            lambda body: (
+                ("pending", "spam", "Contains suspected promotional link")
+                if "badlink" in body
+                else ("approved", "clean", "")
+            ),
+        )
+
+        create_res = client.post(
+            "/api/comments/",
+            data={"thread_slug": "editorial-test", "body_markdown": "Check my badlink here!"},
+            content_type="application/json",
+            HTTP_HOST="blueshoe.de",
+        )
+        assert create_res.status_code == 201
+        created_data = create_res.json()
+        assert created_data["status"] == "pending"
+        assert created_data["can_edit"] is True
+        assert created_data["moderation_reason"] == "Contains suspected promotional link"
+        comment_id = created_data["id"]
+
+        # Verify email notification sent to author with reason
+        assert len(mailoutbox) == 1
+        assert "requires review or revision" in mailoutbox[0].subject
+        assert "Contains suspected promotional link" in mailoutbox[0].body
+
+        # 2. Anonymous visitor calls GET /api/comments/ -> does NOT see pending comment
+        client.logout()
+        anon_res = client.get("/api/comments/?thread_slug=editorial-test", HTTP_HOST="blueshoe.de")
+        assert len(anon_res.json()) == 0
+
+        # 3. Another user calls GET /api/comments/ -> does NOT see Charlie's pending comment
+        other_user = User.objects.create_user(username="david", email="david@test.com")
+        client.force_login(other_user)
+        other_res = client.get("/api/comments/?thread_slug=editorial-test", HTTP_HOST="blueshoe.de")
+        assert len(other_res.json()) == 0
+
+        # 4. Author logs in and calls GET /api/comments/ -> DOES see their own pending comment
+        client.force_login(author)
+        author_res = client.get("/api/comments/?thread_slug=editorial-test", HTTP_HOST="blueshoe.de")
+        assert len(author_res.json()) == 1
+        author_comment = author_res.json()[0]
+        assert author_comment["id"] == comment_id
+        assert author_comment["status"] == "pending"
+        assert author_comment["can_edit"] is True
+        assert author_comment["moderation_reason"] == "Contains suspected promotional link"
+        assert author_comment["raw_markdown"] == "Check my badlink here!"
+
+        # 5. Author revises the comment via PATCH to fix the issue
+        patch_res = client.patch(
+            f"/api/comments/{comment_id}/",
+            data={"body_markdown": "This is my revised clean comment."},
+            content_type="application/json",
+            HTTP_HOST="blueshoe.de",
+        )
+        assert patch_res.status_code == 200
+        patch_data = patch_res.json()
+        assert patch_data["status"] == "approved"
+        assert patch_data["moderation_reason"] == ""
+
+        # 6. Now anonymous visitors can see the approved comment!
+        client.logout()
+        anon_res_after = client.get("/api/comments/?thread_slug=editorial-test", HTTP_HOST="blueshoe.de")
+        assert len(anon_res_after.json()) == 1
+        assert anon_res_after.json()[0]["id"] == comment_id
+        assert "This is my revised clean comment." in anon_res_after.json()[0]["body_html"]
+        # Public visitor does not get private edit fields
+        assert anon_res_after.json()[0]["can_edit"] is False
+        assert anon_res_after.json()[0]["raw_markdown"] == ""

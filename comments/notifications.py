@@ -49,3 +49,41 @@ def send_reply_notification(parent_comment, new_comment):
         unsubscribe_url=unsubscribe_url,
         comment_url=comment_url,
     )
+
+
+def send_moderation_pending_email(comment):
+    """
+    Sends an email to the comment author explaining why their comment is held in pending review
+    and provides the assessment/reason so they can revise it.
+    """
+    if not comment.author or not comment.author.email:
+        return None
+
+    name = comment.author.get_full_name() or comment.author.first_name or comment.author.username
+    reason = comment.moderation_reason or "Your comment requires editorial review before publication."
+    live_url = comment.get_absolute_url()
+
+    subject = "Your comment on Blueshoe Community requires review or revision"
+    message = (
+        f"Hello {name}!\n\n"
+        f"Thank you for participating in our discussions.\n\n"
+        f"Your comment is currently held in pending review and has not yet been published.\n\n"
+        f"Assessment / Reason:\n{reason}\n\n"
+        f"Original comment:\n{comment.body_markdown}\n\n"
+        f"You can review and revise your comment directly on the article page:\n{live_url}\n\n"
+        f"Best regards,\n"
+        f"The Blueshoe Community Editorial Team\n"
+    )
+    from django.conf import settings
+    from django.core.mail import send_mail
+
+    try:
+        return send_mail(
+            subject=subject,
+            message=message,
+            from_email=getattr(settings, "DEFAULT_FROM_EMAIL", "noreply@blueshoe.de"),
+            recipient_list=[comment.author.email],
+            fail_silently=True,
+        )
+    except Exception:
+        return None

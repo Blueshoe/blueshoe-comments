@@ -21,12 +21,12 @@ def render_and_sanitize_markdown(markdown_text: str) -> str:
     if not markdown_text:
         return ""
 
-    markdown = mistune.create_markdown(plugins=["strikethrough", "table", "url"], escape=False)
+    markdown = mistune.create_markdown(plugins=["strikethrough", "table", "url"], hard_wrap=True, escape=False)
     raw_html = markdown(markdown_text)
 
-    allowed_tags = {"p", "code", "pre", "blockquote", "ul", "ol", "li", "strong", "em", "a"}
+    allowed_tags = {"p", "code", "pre", "blockquote", "ul", "ol", "li", "strong", "em", "a", "br", "span"}
 
-    allowed_attributes = {"a": {"href"}}
+    allowed_attributes = {"a": {"href"}, "code": {"class"}, "span": {"class"}}
 
     sanitized_html = nh3.clean(
         raw_html, tags=allowed_tags, attributes=allowed_attributes, link_rel="nofollow ugc", strip_comments=True

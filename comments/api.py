@@ -6,7 +6,7 @@ from altcha import ChallengeOptionsV1, verify_solution_v1
 from altcha import create_challenge_v1 as create_challenge
 from django.conf import settings
 from django.core.cache import cache
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.http import HttpRequest, HttpResponse
 from django.utils import timezone
 from ninja import Router, Schema
@@ -15,7 +15,7 @@ from ninja.responses import Response
 from reactions.models import Reaction
 
 from .models import Comment
-from .notifications import send_reply_notification, verify_unsubscribe_token
+from .notifications import send_moderation_pending_email, send_reply_notification, verify_unsubscribe_token
 from .utils import moderate_comment
 
 logger = logging.getLogger(__name__)
@@ -40,6 +40,10 @@ class CommentReplyOut(Schema):
     edited_at: datetime.datetime | None = None
     created_at: datetime.datetime
     reactions: ReactionSummarySchema
+    status: str = "approved"
+    moderation_reason: str = ""
+    can_edit: bool = False
+    raw_markdown: str = ""
 
 
 class CommentOut(Schema):
@@ -54,6 +58,10 @@ class CommentOut(Schema):
     created_at: datetime.datetime
     replies: list[CommentReplyOut] = []
     reactions: ReactionSummarySchema
+    status: str = "approved"
+    moderation_reason: str = ""
+    can_edit: bool = False
+    raw_markdown: str = ""
 
 
 class CreateCommentIn(Schema):
@@ -119,12 +127,18 @@ def _build_reaction_map(comment_ids: list[int], request: HttpRequest, site_host:
     return reaction_map
 
 
-def _serialize_comment(comment: Comment, reaction_map: dict[int, dict], replies: list[Comment] = None) -> CommentOut:
+def _serialize_comment(
+    comment: Comment,
+    reaction_map: dict[int, dict],
+    replies: list[Comment] = None,
+    current_user=None,
+) -> CommentOut:
     reactions = reaction_map.get(comment.id, {"counts": {}, "active": []})
     serialized_replies = []
     if replies:
         for r in replies:
             r_reactions = reaction_map.get(r.id, {"counts": {}, "active": []})
+            can_edit_r = bool(current_user and current_user.is_authenticated and r.author_id == current_user.id)
             serialized_replies.append(
                 CommentReplyOut(
                     id=r.id,
@@ -137,9 +151,14 @@ def _serialize_comment(comment: Comment, reaction_map: dict[int, dict], replies:
                     edited_at=r.edited_at,
                     created_at=r.created_at,
                     reactions=ReactionSummarySchema(**r_reactions),
+                    status=r.status,
+                    moderation_reason=r.moderation_reason if can_edit_r else "",
+                    can_edit=can_edit_r,
+                    raw_markdown=r.body_markdown if can_edit_r else "",
                 )
             )
 
+    can_edit_c = bool(current_user and current_user.is_authenticated and comment.author_id == current_user.id)
     return CommentOut(
         id=comment.id,
         parent_id=comment.parent_id,
@@ -152,6 +171,10 @@ def _serialize_comment(comment: Comment, reaction_map: dict[int, dict], replies:
         created_at=comment.created_at,
         replies=serialized_replies,
         reactions=ReactionSummarySchema(**reactions),
+        status=comment.status,
+        moderation_reason=comment.moderation_reason if can_edit_c else "",
+        can_edit=can_edit_c,
+        raw_markdown=comment.body_markdown if can_edit_c else "",
     )
 
 
@@ -161,21 +184,22 @@ def list_comments(request: HttpRequest, thread_slug: str):
         return Response({"error": "thread_slug required"}, status=400)
 
     site_host = request.get_host().split(":")[0]
+    user = request.user if request.user.is_authenticated else None
 
-    # Fetch top-level approved comments
-    top_comments = list(
-        Comment.objects.filter(site_host=site_host, thread_slug=thread_slug, status="approved", parent__isnull=True)
-        .select_related("author")
-        .order_by("created_at")
-    )
+    # Fetch top-level approved comments, plus author's own comments in review
+    filter_q = Q(site_host=site_host, thread_slug=thread_slug, status="approved", parent__isnull=True)
+    if user:
+        filter_q |= Q(site_host=site_host, thread_slug=thread_slug, author=user, parent__isnull=True)
 
-    # Fetch approved 1-level replies
+    top_comments = list(Comment.objects.filter(filter_q).select_related("author").order_by("created_at"))
+
+    # Fetch 1-level replies (approved + author's own replies)
     top_ids = [c.id for c in top_comments]
-    reply_comments = list(
-        Comment.objects.filter(site_host=site_host, thread_slug=thread_slug, status="approved", parent_id__in=top_ids)
-        .select_related("author")
-        .order_by("created_at")
-    )
+    reply_filter_q = Q(site_host=site_host, thread_slug=thread_slug, status="approved", parent_id__in=top_ids)
+    if user:
+        reply_filter_q |= Q(site_host=site_host, thread_slug=thread_slug, author=user, parent_id__in=top_ids)
+
+    reply_comments = list(Comment.objects.filter(reply_filter_q).select_related("author").order_by("created_at"))
 
     # Group replies by parent_id
     replies_by_parent: dict[int, list[Comment]] = {cid: [] for cid in top_ids}
@@ -186,7 +210,9 @@ def list_comments(request: HttpRequest, thread_slug: str):
     all_comment_ids = top_ids + [r.id for r in reply_comments]
     reaction_map = _build_reaction_map(all_comment_ids, request, site_host)
 
-    result = [_serialize_comment(c, reaction_map, replies_by_parent.get(c.id, [])) for c in top_comments]
+    result = [
+        _serialize_comment(c, reaction_map, replies_by_parent.get(c.id, []), current_user=user) for c in top_comments
+    ]
 
     response = Response([s.model_dump(mode="json") for s in result], status=200)
     if request.user.is_authenticated:
@@ -266,11 +292,13 @@ def create_comment(request: HttpRequest, payload: CreateCommentIn):
         ip_hash=ip_hash,
     )
 
-    # 7. Notify parent author if approved
+    # 7. Notify parent author if approved, or notify comment author if held in pending review
     if mod_status == "approved" and parent and parent.notify_replies:
         send_reply_notification(parent, comment)
+    elif mod_status == "pending" and author and author.email:
+        send_moderation_pending_email(comment)
 
-    serialized = _serialize_comment(comment, {comment.id: {"counts": {}, "active": []}})
+    serialized = _serialize_comment(comment, {comment.id: {"counts": {}, "active": []}}, current_user=author)
     return Response(serialized.model_dump(mode="json"), status=201)
 
 
@@ -298,9 +326,12 @@ def update_comment(request: HttpRequest, comment_id: int, payload: UpdateComment
     comment.moderation_reason = mod_reason
     comment.save()
 
+    if mod_status == "pending" and comment.author and comment.author.email:
+        send_moderation_pending_email(comment)
+
     site_host = request.get_host().split(":")[0]
     reaction_map = _build_reaction_map([comment.id], request, site_host)
-    return _serialize_comment(comment, reaction_map)
+    return _serialize_comment(comment, reaction_map, current_user=request.user)
 
 
 @router.delete("/comments/{int:comment_id}/", response={204: None, 401: dict, 404: dict})
@@ -316,8 +347,7 @@ def delete_comment(request: HttpRequest, comment_id: int):
     return HttpResponse(status=204)
 
 
-@router.get("/captcha/challenge/")
-@router.get("/captcha/challenge")
+@router.get("/captcha/challenge/", operation_id="get_captcha_challenge")
 def get_captcha_challenge(request: HttpRequest):
     options = ChallengeOptionsV1(
         hmac_key=ALTCHA_HMAC_KEY,
@@ -329,6 +359,11 @@ def get_captcha_challenge(request: HttpRequest):
     response["Content-Type"] = "application/json; charset=utf-8"
     response["Cache-Control"] = "no-cache, no-store, must-revalidate"
     return response
+
+
+@router.get("/captcha/challenge", operation_id="get_captcha_challenge_no_slash", include_in_schema=False)
+def get_captcha_challenge_no_slash(request: HttpRequest):
+    return get_captcha_challenge(request)
 
 
 @router.get("/notifications/unsubscribe/{str:token}/", response={200: dict, 400: dict})
