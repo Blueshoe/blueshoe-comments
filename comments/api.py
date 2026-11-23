@@ -215,10 +215,8 @@ def list_comments(request: HttpRequest, thread_slug: str):
     ]
 
     response = Response([s.model_dump(mode="json") for s in result], status=200)
-    if request.user.is_authenticated:
-        response["Cache-Control"] = "private, no-store"
-    else:
-        response["Cache-Control"] = "public, max-age=30, stale-while-revalidate=60"
+    # Comment payloads include per-visitor reaction `active` state — never publicly cache.
+    response["Cache-Control"] = "private, no-store"
     return response
 
 

@@ -108,10 +108,8 @@ def get_page_reactions(request: HttpRequest, thread_slug: str):
 
     schema = ReactionSummarySchema(counts=counts_dict, active=active)
     response = Response(schema.model_dump(mode="json"), status=200)
-    if user:
-        response["Cache-Control"] = "private, no-store"
-    else:
-        response["Cache-Control"] = "public, max-age=30, stale-while-revalidate=60"
+    # `active` is per visitor/user — never publicly cache this response.
+    response["Cache-Control"] = "private, no-store"
     return response
 
 
@@ -169,8 +167,6 @@ def get_batch_reactions(request: HttpRequest, thread_slug: str):
             result[slug].active_reactions.append(kind)
 
     response = Response({k: v.model_dump(mode="json") for k, v in result.items()}, status=200)
-    if user:
-        response["Cache-Control"] = "private, no-store"
-    else:
-        response["Cache-Control"] = "public, max-age=30, stale-while-revalidate=60"
+    # Includes per-visitor `active_reactions` — do not publicly cache.
+    response["Cache-Control"] = "private, no-store"
     return response

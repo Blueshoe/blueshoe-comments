@@ -271,18 +271,16 @@
 
   <script>
     // Error page is usually on community.*; localStorage/BroadcastChannel will not
-    // reach the blog origin. Keep postMessage + close button for popup flows.
+    // reach the blog origin. Only offer close + postMessage when opened as a popup.
     (function () {
-      var message = {
-        type: 'oauth_error',
-        error: '{{ auth_error.code|default:"callback_failed" }}'
-      };
+      if (!window.opener) return;
       document.getElementById('close-popup-btn').style.display = 'inline-block';
-      if (window.opener) {
-        try {
-          window.opener.postMessage(message, '*');
-        } catch (e) {}
-      }
+      try {
+        window.opener.postMessage({
+          type: 'oauth_error',
+          error: '{{ auth_error.code|default:"callback_failed" }}'
+        }, '*');
+      } catch (e) {}
     })();
   </script>
 </body>

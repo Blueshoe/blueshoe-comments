@@ -32,6 +32,9 @@ const I18N: Record<string, Record<string, string>> = {
     postReplyBtn: "Post Reply",
     replyPlaceholder: "Write a constructive reply...",
     pageReactionsTitle: "Article Reactions",
+    reactionCountSingular: "1 reaction",
+    reactionCountPlural: "{n} reactions",
+    addReaction: "Add reaction",
     replyingTo: "Replying to",
     loggedInAs: "Logged in as",
     logoutBtn: "Log out",
@@ -77,6 +80,9 @@ const I18N: Record<string, Record<string, string>> = {
     postReplyBtn: "Antwort senden",
     replyPlaceholder: "Schreibe eine konstruktive Antwort...",
     pageReactionsTitle: "Artikel-Reaktionen",
+    reactionCountSingular: "1 Reaktion",
+    reactionCountPlural: "{n} Reaktionen",
+    addReaction: "Reaktion hinzufügen",
     replyingTo: "Antwort an",
     loggedInAs: "Angemeldet als",
     logoutBtn: "Abmelden",
@@ -232,26 +238,124 @@ export class CommunityComments extends LitElement {
       font-weight: 700;
     }
 
-    /* Page Reactions Bar */
-    .page-reactions-container {
+    /* Page Reactions (giscus-style) */
+    .page-reactions {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: space-between;
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      padding: 0.5rem 0.85rem;
-      flex-wrap: wrap;
-      gap: 0.5rem;
+      gap: 0.45rem;
+      padding: 0.35rem 0 0.15rem;
     }
 
-    .page-reactions-label {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #475569;
+    .page-reactions-summary {
+      font-size: 0.8rem;
+      color: #64748b;
+      font-weight: 500;
+    }
+
+    .page-reactions-row {
       display: flex;
       align-items: center;
-      gap: 0.35rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      position: relative;
+    }
+
+    .page-reaction-trigger,
+    .page-reaction-pill {
+      box-sizing: border-box;
+      height: 28px;
+      border: 1px solid #cbd5e1;
+      background: #ffffff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s, background 0.15s;
+    }
+
+    .page-reaction-trigger {
+      width: 28px;
+      padding: 0;
+      border-radius: 50%;
+      color: #64748b;
+    }
+
+    .page-reaction-trigger:hover,
+    .page-reaction-trigger[aria-expanded='true'] {
+      border-color: var(--community-accent, #3b82f6);
+      color: var(--community-accent, #3b82f6);
+      background: #e0f2fe;
+    }
+
+    .page-reaction-trigger svg {
+      width: 16px;
+      height: 16px;
+      display: block;
+    }
+
+    .page-reaction-pill {
+      gap: 0.3rem;
+      border-radius: 20px;
+      padding: 0 10px;
+      font-size: 0.85rem;
+      color: #334155;
+      line-height: 1;
+    }
+
+    .page-reaction-pill:hover {
+      border-color: var(--community-accent, #3b82f6);
+      background: #e0f2fe;
+    }
+
+    .page-reaction-pill.active {
+      border-color: var(--community-accent, #3b82f6);
+      background: #e0f2fe;
+      color: var(--community-accent, #3b82f6);
+      font-weight: 600;
+    }
+
+    .page-reaction-picker {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 40;
+      min-width: 180px;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: var(--community-radius, 8px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      padding: 0.45rem;
+    }
+
+    .page-reaction-picker-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.2rem;
+    }
+
+    .page-reaction-option {
+      width: 36px;
+      height: 36px;
+      border: none;
+      border-radius: 4px;
+      background: transparent;
+      font-size: 1.15rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .page-reaction-option:hover {
+      background: #f1f5f9;
+    }
+
+    .page-reaction-option.active {
+      background: #e0f2fe;
+      box-shadow: inset 0 0 0 1px var(--community-accent, #3b82f6);
     }
 
     /* Auth Banner */
@@ -263,7 +367,7 @@ export class CommunityComments extends LitElement {
       color: #64748b;
       background: #f8fafc;
       padding: 0.5rem 0.75rem;
-      border-radius: 6px;
+      border-radius: var(--community-radius, 8px);
       border: 1px solid #e2e8f0;
       flex-wrap: wrap;
       gap: 0.5rem;
@@ -307,7 +411,7 @@ export class CommunityComments extends LitElement {
       width: 100%;
       background: #fffbeb;
       border: 1px solid #fde68a;
-      border-radius: 6px;
+      border-radius: var(--community-radius, 8px);
       padding: 0.5rem 0.75rem;
       font-size: 0.8rem;
       color: #92400e;
@@ -318,7 +422,7 @@ export class CommunityComments extends LitElement {
     }
 
     .popup-retry-link {
-      color: #00458b;
+      color: var(--community-accent, #3b82f6);
       font-weight: 600;
       text-decoration: underline;
       cursor: pointer;
@@ -355,11 +459,11 @@ export class CommunityComments extends LitElement {
 
     .magic-email-input:focus {
       outline: none;
-      border-color: #00458b;
+      border-color: var(--community-accent, #3b82f6);
     }
 
     .magic-send-btn {
-      background: #00458b;
+      background: var(--community-accent, #3b82f6);
       color: #ffffff;
       border: none;
       border-radius: 4px;
@@ -371,7 +475,7 @@ export class CommunityComments extends LitElement {
     }
 
     .magic-send-btn:hover {
-      background: #003366;
+      background: #1d4ed8;
     }
 
     .magic-send-btn:disabled {
@@ -392,7 +496,7 @@ export class CommunityComments extends LitElement {
       width: 100%;
       background: #ecfdf5;
       border: 1px solid #a7f3d0;
-      border-radius: 6px;
+      border-radius: var(--community-radius, 8px);
       padding: 0.4rem 0.75rem;
       font-size: 0.85rem;
       color: #065f46;
@@ -415,8 +519,8 @@ export class CommunityComments extends LitElement {
     .pending-review-box {
       background: #fffbeb;
       border: 1px solid #fde68a;
-      border-left: 4px solid #f59e0b;
-      border-radius: 6px;
+      border-left: 4px solid #92400e;
+      border-radius: var(--community-radius, 8px);
       padding: 0.65rem 0.85rem;
       margin-bottom: 0.75rem;
       font-size: 0.85rem;
@@ -436,12 +540,12 @@ export class CommunityComments extends LitElement {
     .pending-review-reason {
       margin: 0.35rem 0 0.6rem;
       font-size: 0.85rem;
-      color: #78350f;
+      color: #92400e;
       line-height: 1.45;
       background: rgba(254, 243, 199, 0.6);
       padding: 0.4rem 0.6rem;
       border-radius: 4px;
-      border: 1px dashed #fcd34d;
+      border: 1px dashed #fde68a;
     }
 
     .revise-btn {
@@ -460,7 +564,7 @@ export class CommunityComments extends LitElement {
     }
 
     .revise-btn:hover {
-      background: #d97706;
+      filter: brightness(0.92);
     }
 
     .revision-editor {
@@ -475,7 +579,7 @@ export class CommunityComments extends LitElement {
       min-height: 85px;
       padding: 0.6rem;
       border: 1px solid #cbd5e1;
-      border-radius: 6px;
+      border-radius: var(--community-radius, 8px);
       font-family: inherit;
       font-size: 0.9rem;
       background: #ffffff;
@@ -484,7 +588,7 @@ export class CommunityComments extends LitElement {
 
     .revision-textarea:focus {
       outline: none;
-      border-color: #00458b;
+      border-color: var(--community-accent, #3b82f6);
     }
 
     .revision-actions {
@@ -497,7 +601,7 @@ export class CommunityComments extends LitElement {
     /* Editor */
     .editor-box {
       border: 1px solid #cbd5e1;
-      border-radius: 8px;
+      border-radius: var(--community-radius, 8px);
       overflow: hidden;
       background: #f8fafc;
       transition: border-color 0.2s;
@@ -626,7 +730,7 @@ export class CommunityComments extends LitElement {
       background: var(--community-accent, #3b82f6);
       color: #ffffff;
       border: none;
-      border-radius: 6px;
+      border-radius: var(--community-radius, 8px);
       padding: 0.5rem 1rem;
       font-size: 0.9rem;
       font-weight: 600;
@@ -635,7 +739,7 @@ export class CommunityComments extends LitElement {
     }
 
     .submit-btn:hover {
-      filter: brightness(0.9);
+      background: #1d4ed8;
     }
 
     .submit-btn:disabled {
@@ -652,7 +756,7 @@ export class CommunityComments extends LitElement {
 
     .comment-card {
       border: 1px solid #e2e8f0;
-      border-radius: 8px;
+      border-radius: var(--community-radius, 8px);
       padding: 1rem;
       background: #ffffff;
     }
@@ -670,10 +774,10 @@ export class CommunityComments extends LitElement {
     }
 
     .team-badge {
-      background: #00458b;
+      background: var(--community-accent, #3b82f6);
       color: #ffffff;
       padding: 1px 6px;
-      border-radius: 3px;
+      border-radius: 4px;
       font-size: 0.75rem;
       font-weight: 600;
     }
@@ -705,7 +809,7 @@ export class CommunityComments extends LitElement {
       background: #0f172a;
       color: #f8fafc;
       padding: 0.85rem 1.1rem;
-      border-radius: 8px;
+      border-radius: var(--community-radius, 8px);
       overflow-x: auto;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       font-size: 0.85rem;
@@ -756,12 +860,12 @@ export class CommunityComments extends LitElement {
     }
 
     .comment-body a {
-      color: #00458b;
+      color: var(--community-accent, #3b82f6);
       text-decoration: underline;
     }
 
     .comment-body a:hover {
-      color: #003366;
+      color: #1d4ed8;
     }
 
     /* Reactions Bar */
@@ -790,8 +894,8 @@ export class CommunityComments extends LitElement {
     .reaction-pill:hover,
     .reaction-pill.active {
       background: #e0f2fe;
-      border-color: #38bdf8;
-      color: #0369a1;
+      border-color: var(--community-accent, #3b82f6);
+      color: var(--community-accent, #3b82f6);
       transform: scale(1.05);
     }
 
@@ -814,7 +918,7 @@ export class CommunityComments extends LitElement {
     .reply-action-btn:hover {
       background: #f1f5f9;
       border-color: #cbd5e1;
-      color: #00458b;
+      color: var(--community-accent, #3b82f6);
     }
 
     /* 1-Level Replies Container */
@@ -831,7 +935,7 @@ export class CommunityComments extends LitElement {
     .reply-card {
       background: #f8fafc;
       border: 1px solid #e2e8f0;
-      border-radius: 6px;
+      border-radius: var(--community-radius, 8px);
       padding: 0.75rem;
     }
 
@@ -842,7 +946,7 @@ export class CommunityComments extends LitElement {
       padding: 0.85rem;
       background: #f8fafc;
       border: 1px solid #cbd5e1;
-      border-radius: 8px;
+      border-radius: var(--community-radius, 8px);
       display: flex;
       flex-direction: column;
       gap: 0.6rem;
@@ -857,7 +961,7 @@ export class CommunityComments extends LitElement {
     .inline-reply-box h6 {
       margin: 0;
       font-size: 0.85rem;
-      color: #475569;
+      color: #64748b;
     }
 
     .reply-textarea {
@@ -865,7 +969,7 @@ export class CommunityComments extends LitElement {
       min-height: 75px;
       padding: 0.6rem;
       border: 1px solid #cbd5e1;
-      border-radius: 6px;
+      border-radius: var(--community-radius, 8px);
       font-family: inherit;
       font-size: 0.9rem;
       resize: vertical;
@@ -874,7 +978,7 @@ export class CommunityComments extends LitElement {
 
     .reply-textarea:focus {
       outline: none;
-      border-color: #00458b;
+      border-color: var(--community-accent, #3b82f6);
     }
 
     .reply-footer {
@@ -894,7 +998,7 @@ export class CommunityComments extends LitElement {
     .cancel-btn {
       background: transparent;
       border: 1px solid #cbd5e1;
-      border-radius: 6px;
+      border-radius: var(--community-radius, 8px);
       padding: 0.4rem 0.85rem;
       font-size: 0.85rem;
       font-weight: 500;
@@ -904,7 +1008,7 @@ export class CommunityComments extends LitElement {
 
     .cancel-btn:hover {
       background: #e2e8f0;
-      color: #1e293b;
+      color: #334155;
     }
 
     /* Modal for Code of Conduct */
@@ -960,7 +1064,7 @@ export class CommunityComments extends LitElement {
       margin: 0;
       font-size: 1.1rem;
       font-weight: 700;
-      color: #0f172a;
+      color: #334155;
     }
 
     .close-icon {
@@ -973,7 +1077,7 @@ export class CommunityComments extends LitElement {
     }
 
     .close-icon:hover {
-      color: #0f172a;
+      color: #334155;
     }
 
     .modal-content {
@@ -988,7 +1092,7 @@ export class CommunityComments extends LitElement {
       margin: 1.2rem 0 0.4rem;
       font-size: 0.95rem;
       font-weight: 700;
-      color: #0f172a;
+      color: #334155;
     }
 
     .modal-content h5:first-child {
@@ -1094,6 +1198,9 @@ export class CommunityComments extends LitElement {
   private showCocModal = false;
 
   @state()
+  private showPageReactionPicker = false;
+
+  @state()
   private authProviders: { id: string; name: string }[] = [];
 
   @state()
@@ -1110,6 +1217,8 @@ export class CommunityComments extends LitElement {
   private oauthLoginSettled = false;
 
   private unsubscribeOAuth: (() => void) | null = null;
+
+  private _onDocPointerDown: ((e: Event) => void) | null = null;
 
   @state()
   private altchaPayload = '';
@@ -1239,9 +1348,25 @@ export class CommunityComments extends LitElement {
     window.addEventListener('keydown', (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         if (this.showCocModal) this.showCocModal = false;
+        if (this.showPageReactionPicker) this.showPageReactionPicker = false;
         if (this.activeReplyParentId !== null) this.activeReplyParentId = null;
       }
     });
+
+    if (this._onDocPointerDown) {
+      document.removeEventListener('pointerdown', this._onDocPointerDown, true);
+    }
+    this._onDocPointerDown = (e: Event) => {
+      if (!this.showPageReactionPicker) return;
+      const path = e.composedPath();
+      const root = this.shadowRoot;
+      const picker = root?.querySelector('.page-reaction-picker');
+      const trigger = root?.querySelector('.page-reaction-trigger');
+      if (picker && path.includes(picker)) return;
+      if (trigger && path.includes(trigger)) return;
+      this.showPageReactionPicker = false;
+    };
+    document.addEventListener('pointerdown', this._onDocPointerDown, true);
 
     this.unsubscribeOAuth?.();
     this.unsubscribeOAuth = subscribeOAuthSignals((data) => {
@@ -1253,6 +1378,10 @@ export class CommunityComments extends LitElement {
   disconnectedCallback() {
     this.unsubscribeOAuth?.();
     this.unsubscribeOAuth = null;
+    if (this._onDocPointerDown) {
+      document.removeEventListener('pointerdown', this._onDocPointerDown, true);
+      this._onDocPointerDown = null;
+    }
     // Leave the popup open; auth-callback / finishOAuthLogin close it.
     // localStorage pending signal is consumed again on the next subscribe.
     super.disconnectedCallback();
@@ -1375,11 +1504,26 @@ export class CommunityComments extends LitElement {
       const res = await fetch(`${this.resolvedApiBase}/api/reactions/?thread_slug=${this.resolvedThreadSlug}`, {
         headers: this.getHeaders(),
         credentials: 'include',
+        cache: 'no-store',
       });
       if (res.ok) {
         this.pageReactions = await res.json();
       }
     } catch (_) {}
+  }
+
+  private applyLocalPageReactionToggle(kind: string, action: 'added' | 'removed') {
+    const counts = { ...(this.pageReactions?.counts || {}) };
+    let active = [...(this.pageReactions?.active || [])];
+    if (action === 'added') {
+      counts[kind] = (counts[kind] || 0) + 1;
+      if (!active.includes(kind)) active.push(kind);
+    } else {
+      counts[kind] = Math.max(0, (counts[kind] || 1) - 1);
+      if (counts[kind] === 0) delete counts[kind];
+      active = active.filter((k) => k !== kind);
+    }
+    this.pageReactions = { counts, active };
   }
 
   async fetchComments() {
@@ -1391,6 +1535,7 @@ export class CommunityComments extends LitElement {
         signal: controller.signal,
         headers: this.getHeaders(),
         credentials: 'include',
+        cache: 'no-store',
       });
 
       clearTimeout(timeoutId);
@@ -1526,6 +1671,7 @@ export class CommunityComments extends LitElement {
         method: 'POST',
         headers: this.getHeaders({ 'Content-Type': 'application/json' }),
         credentials: 'include',
+        cache: 'no-store',
         body: JSON.stringify({
           thread_slug: this.resolvedThreadSlug,
           comment_id: commentId,
@@ -1537,12 +1683,16 @@ export class CommunityComments extends LitElement {
         alert(data?.error || 'Too many reactions. Please slow down.');
         return;
       }
-      if (res.ok) {
-        if (commentId === null) {
-          await this.fetchPageReactions();
-        } else {
-          await this.fetchComments();
+      if (!res.ok) return;
+
+      const data = await res.json().catch(() => ({}));
+      if (commentId === null) {
+        if (data?.action === 'added' || data?.action === 'removed') {
+          this.applyLocalPageReactionToggle(kind, data.action);
         }
+        await this.fetchPageReactions();
+      } else {
+        await this.fetchComments();
       }
     } catch (err) {
       console.error('Failed to toggle reaction', err);
@@ -1587,6 +1737,91 @@ export class CommunityComments extends LitElement {
           <div class="modal-footer">
             <button class="submit-btn" @click=${() => (this.showCocModal = false)}>${coc.closeBtn}</button>
           </div>
+        </div>
+      </div>
+    `;
+  }
+
+  private reactionTotal(counts: Record<string, number>): number {
+    return Object.values(counts).reduce((sum, n) => sum + (n || 0), 0);
+  }
+
+  private reactionSummaryLabel(total: number): string {
+    if (total === 1) return this.t('reactionCountSingular');
+    return this.t('reactionCountPlural').replace('{n}', String(total));
+  }
+
+  renderPageReactions() {
+    const counts = this.pageReactions?.counts || {};
+    const active = this.pageReactions?.active || [];
+    const total = this.reactionTotal(counts);
+    const visible = REACTION_KINDS.filter(({ kind }) => (counts[kind] || 0) > 0);
+
+    return html`
+      <div class="page-reactions">
+        ${total > 0
+          ? html`<div class="page-reactions-summary">${this.reactionSummaryLabel(total)}</div>`
+          : nothing}
+        <div class="page-reactions-row">
+          <button
+            type="button"
+            class="page-reaction-trigger"
+            aria-label=${this.t('addReaction')}
+            aria-expanded=${this.showPageReactionPicker ? 'true' : 'false'}
+            title=${this.t('addReaction')}
+            @click=${(e: Event) => {
+              e.stopPropagation();
+              this.showPageReactionPicker = !this.showPageReactionPicker;
+            }}
+          >
+            <svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.4">
+              <circle cx="8" cy="8" r="6.25"></circle>
+              <path d="M5.2 9.4c.7 1 1.7 1.5 2.8 1.5s2.1-.5 2.8-1.5" stroke-linecap="round"></path>
+              <circle cx="5.8" cy="6.4" r="0.7" fill="currentColor" stroke="none"></circle>
+              <circle cx="10.2" cy="6.4" r="0.7" fill="currentColor" stroke="none"></circle>
+            </svg>
+          </button>
+
+          ${visible.map(({ kind, emoji }) => {
+            const count = counts[kind] || 0;
+            const isActive = active.includes(kind);
+            return html`
+              <button
+                type="button"
+                class="page-reaction-pill ${isActive ? 'active' : ''}"
+                @click=${() => this.toggleReaction(null, kind)}
+              >
+                <span aria-hidden="true">${emoji}</span>
+                <span>${count}</span>
+              </button>
+            `;
+          })}
+
+          ${this.showPageReactionPicker
+            ? html`
+                <div class="page-reaction-picker" role="menu" aria-label=${this.t('addReaction')}>
+                  <div class="page-reaction-picker-grid">
+                    ${REACTION_KINDS.map(({ kind, emoji }) => {
+                      const isActive = active.includes(kind);
+                      return html`
+                        <button
+                          type="button"
+                          class="page-reaction-option ${isActive ? 'active' : ''}"
+                          role="menuitem"
+                          title=${kind}
+                          @click=${async () => {
+                            await this.toggleReaction(null, kind);
+                            this.showPageReactionPicker = false;
+                          }}
+                        >
+                          ${emoji}
+                        </button>
+                      `;
+                    })}
+                  </div>
+                </div>
+              `
+            : nothing}
         </div>
       </div>
     `;
@@ -1704,11 +1939,8 @@ export class CommunityComments extends LitElement {
           </span>
         </div>
 
-        <!-- Page Reactions Bar (Reacting to the article itself) -->
-        <div class="page-reactions-container">
-          <span class="page-reactions-label">⭐ ${this.t('pageReactionsTitle')}:</span>
-          ${this.renderReactionsBar(this.pageReactions, null, false)}
-        </div>
+        <!-- Page Reactions (giscus-style) -->
+        ${this.renderPageReactions()}
 
         <!-- Auth Status Bar -->
         <div class="auth-bar">
