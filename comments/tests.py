@@ -115,6 +115,42 @@ class TestCommentsAPI:
         res = client.get("/api/comments/", HTTP_HOST="blueshoe.de")
         assert res.status_code == 422
 
+    def test_email_privacy_guardrail_never_leaks_email_address(self, client):
+        # 1. User whose username happens to be an email address
+        user = User.objects.create_user(
+            username="secret.agent@secretcompany.com", email="secret.agent@secretcompany.com"
+        )
+        Comment.objects.create(
+            site_host="blueshoe.de",
+            thread_slug="privacy-test",
+            author=user,
+            body_markdown="I have a comment",
+            status="approved",
+        )
+
+        # 2. Guest comment where the guest entered an email into the name field
+        Comment.objects.create(
+            site_host="blueshoe.de",
+            thread_slug="privacy-test",
+            guest_name="guest.user@externaldomain.org",
+            body_markdown="Guest comment",
+            status="approved",
+        )
+
+        res = client.get("/api/comments/?thread_slug=privacy-test", HTTP_HOST="blueshoe.de")
+        assert res.status_code == 200
+        data = res.json()
+        assert len(data) == 2
+
+        response_text = res.content.decode()
+        # Verify NO email addresses or domains are present anywhere in the response
+        assert "@" not in data[0]["author_name"]
+        assert "@" not in data[1]["author_name"]
+        assert "secretcompany.com" not in response_text
+        assert "externaldomain.org" not in response_text
+        assert data[0]["author_name"] == "secret.agent"
+        assert data[1]["author_name"] == "guest.user"
+
     def test_create_comment_honeypot(self, client):
         res = client.post(
             "/api/comments/",

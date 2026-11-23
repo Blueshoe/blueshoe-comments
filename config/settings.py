@@ -207,6 +207,9 @@ SESSION_SAVE_EVERY_REQUEST = False
 # Custom variable to track sliding expiration limits for staff
 STAFF_SESSION_AGE = 12 * 60 * 60  # 12 hours
 
+# --- Magic Login Link (48 hours validity) ---
+MAGIC_LINK_EXPIRE_SECONDS = env.int("MAGIC_LINK_EXPIRE_SECONDS", default=48 * 60 * 60)
+
 # --- Django Tasks Framework (Background Tasks) ---
 TASKS = {
     "default": {

@@ -39,6 +39,12 @@ const I18N: Record<string, Record<string, string>> = {
     popupBlockedNotice: "Login popup was blocked by your browser.",
     popupOpenManual: "Open Login Window",
     popupRedirectFallback: "or continue via redirect",
+    emailLinkBtn: "✉️ Email Link",
+    emailLinkPlaceholder: "Enter your email address...",
+    sendMagicLinkBtn: "Send Login Link",
+    sendingMagicLinkBtn: "Sending...",
+    magicLinkSentMessage: "Check your inbox! We've sent a magic login link to",
+    magicLinkSentInstructions: "Click the link in the email to complete your login.",
   },
   de: {
     offlineMessage: "Unser Kommentar-Server macht gerade Kaffeepause ☕",
@@ -71,6 +77,12 @@ const I18N: Record<string, Record<string, string>> = {
     popupBlockedNotice: "Login-Popup wurde vom Browser blockiert.",
     popupOpenManual: "Login-Fenster manuell öffnen",
     popupRedirectFallback: "oder per Weiterleitung anmelden",
+    emailLinkBtn: "✉️ E-Mail-Link",
+    emailLinkPlaceholder: "Deine E-Mail-Adresse...",
+    sendMagicLinkBtn: "Login-Link senden",
+    sendingMagicLinkBtn: "Wird gesendet...",
+    magicLinkSentMessage: "Postfach prüfen! Wir haben einen Login-Link gesendet an",
+    magicLinkSentInstructions: "Klicke auf den Link in der E-Mail, um dich anzumelden.",
   },
 };
 
@@ -228,6 +240,84 @@ export class CommunityComments extends LitElement {
       text-decoration: underline;
       cursor: pointer;
       padding: 0;
+    }
+
+    .magic-link-form {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      width: 100%;
+      margin-top: 0.35rem;
+      flex-wrap: wrap;
+    }
+
+    .magic-email-input {
+      padding: 0.35rem 0.6rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      flex: 1;
+      min-width: 200px;
+      max-width: 280px;
+    }
+
+    .magic-email-input:focus {
+      outline: none;
+      border-color: #00458b;
+    }
+
+    .magic-send-btn {
+      background: #00458b;
+      color: #ffffff;
+      border: none;
+      border-radius: 4px;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .magic-send-btn:hover {
+      background: #003366;
+    }
+
+    .magic-send-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .magic-cancel-btn {
+      background: transparent;
+      border: none;
+      color: #64748b;
+      cursor: pointer;
+      font-size: 0.85rem;
+      padding: 2px 6px;
+    }
+
+    .magic-sent-banner {
+      width: 100%;
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      border-radius: 6px;
+      padding: 0.4rem 0.75rem;
+      font-size: 0.85rem;
+      color: #065f46;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-top: 0.35rem;
+    }
+
+    .close-banner-btn {
+      background: transparent;
+      border: none;
+      color: #065f46;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 0 4px;
     }
 
     /* Editor */
@@ -768,6 +858,45 @@ export class CommunityComments extends LitElement {
   @state()
   private altchaPayload = '';
 
+  @state()
+  private showMagicLinkInput = false;
+
+  @state()
+  private magicLinkEmail = '';
+
+  @state()
+  private isSendingMagicLink = false;
+
+  @state()
+  private magicLinkSentTo = '';
+
+  async handleRequestMagicLink() {
+    if (!this.magicLinkEmail.trim() || this.isSendingMagicLink) return;
+    this.isSendingMagicLink = true;
+    try {
+      const res = await fetch(`${this.resolvedApiBase}/api/auth/magic-link/request/`, {
+        method: 'POST',
+        headers: this.getHeaders({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify({
+          email: this.magicLinkEmail,
+          next_url: window.location.href,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok) {
+        this.magicLinkSentTo = this.magicLinkEmail;
+        this.magicLinkEmail = '';
+        this.showMagicLinkInput = false;
+      } else {
+        alert(data?.error || 'Failed to send magic link.');
+      }
+    } catch (err) {
+      console.error('Magic link error', err);
+    } finally {
+      this.isSendingMagicLink = false;
+    }
+  }
+
   private t(key: string): string {
     const dict = I18N[this.lang] || I18N.en;
     return dict[key] || I18N.en[key] || key;
@@ -1245,14 +1374,60 @@ export class CommunityComments extends LitElement {
             : html`
                 <span>${this.t('orSignInWith')}</span>
                 <div class="social-buttons">
-                  ${this.authProviders.map(
-                    (p) => html`
-                      <button class="social-btn" @click=${() => this.loginWith(p.id)}>
-                        ${p.name}
-                      </button>
-                    `
+                  ${this.authProviders.map((p) =>
+                    p.id === 'email_link'
+                      ? html`
+                          <button
+                            class="social-btn"
+                            @click=${() => (this.showMagicLinkInput = !this.showMagicLinkInput)}
+                          >
+                            ${this.t('emailLinkBtn')}
+                          </button>
+                        `
+                      : html`
+                          <button class="social-btn" @click=${() => this.loginWith(p.id)}>
+                            ${p.name}
+                          </button>
+                        `
                   )}
                 </div>
+
+                ${this.showMagicLinkInput
+                  ? html`
+                      <div class="magic-link-form">
+                        <input
+                          type="email"
+                          class="magic-email-input"
+                          placeholder=${this.t('emailLinkPlaceholder')}
+                          .value=${this.magicLinkEmail}
+                          @input=${(e: any) => (this.magicLinkEmail = e.target.value)}
+                          @keydown=${(e: KeyboardEvent) => {
+                            if (e.key === 'Enter') this.handleRequestMagicLink();
+                          }}
+                        />
+                        <button
+                          class="magic-send-btn"
+                          ?disabled=${!this.magicLinkEmail.trim() || this.isSendingMagicLink}
+                          @click=${this.handleRequestMagicLink}
+                        >
+                          ${this.isSendingMagicLink ? this.t('sendingMagicLinkBtn') : this.t('sendMagicLinkBtn')}
+                        </button>
+                        <button class="magic-cancel-btn" @click=${() => (this.showMagicLinkInput = false)}>✕</button>
+                      </div>
+                    `
+                  : nothing}
+
+                ${this.magicLinkSentTo
+                  ? html`
+                      <div class="magic-sent-banner">
+                        <span>
+                          ✉️ ${this.t('magicLinkSentMessage')} <strong>${this.magicLinkSentTo}</strong>.
+                          ${this.t('magicLinkSentInstructions')}
+                        </span>
+                        <button class="close-banner-btn" @click=${() => (this.magicLinkSentTo = '')}>✕</button>
+                      </div>
+                    `
+                  : nothing}
               `}
 
           <!-- Popup Blocked Fallback Banner -->

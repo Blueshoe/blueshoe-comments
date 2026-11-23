@@ -174,3 +174,97 @@ class TestUsersAPI:
         assert res.status_code == 302
         assert "github.com/login/oauth/authorize" in res.headers["Location"]
         assert "redirect_uri=https%3A%2F%2Fcommunity.blueshoe.io" in res.headers["Location"]
+
+    def test_magic_link_flow(self, client, mailoutbox):
+        # 1. Providers endpoint includes email_link
+        prov_res = client.get("/api/auth/providers/")
+        assert prov_res.status_code == 200
+        provider_ids = [p["id"] for p in prov_res.json()]
+        assert "email_link" in provider_ids
+
+        # 2. Invalid email format
+        bad_req = client.post(
+            "/api/auth/magic-link/request/",
+            data={"email": "not-an-email"},
+            content_type="application/json",
+        )
+        assert bad_req.status_code == 400
+
+        # 3. Valid email request dispatches magic link
+        req_res = client.post(
+            "/api/auth/magic-link/request/",
+            data={"email": "reader@example.com", "next_url": "https://www.blueshoe.io/blog/post-1/"},
+            content_type="application/json",
+            HTTP_HOST="community.blueshoe.io",
+        )
+        assert req_res.status_code == 200
+        assert req_res.json()["status"] == "email_sent"
+        assert len(mailoutbox) == 1
+        email_body = mailoutbox[0].body
+        assert "Click the link below to sign in" in email_body
+
+        # Extract verify URL and token from email
+        import re
+        from urllib.parse import parse_qs, urlparse
+
+        match = re.search(r"https?://[^\s]+", email_body)
+        assert match is not None
+        verify_url = match.group(0)
+        parsed = urlparse(verify_url)
+        params = parse_qs(parsed.query)
+        token = params["token"][0]
+
+        # 4. GET request renders the confirmation page (anti-scanner check, token remains unconsumed)
+        preview_res = client.get(
+            f"/api/auth/magic-link/verify/?token={token}&next=https://www.blueshoe.io/blog/post-1/",
+            HTTP_HOST="community.blueshoe.io",
+        )
+        assert preview_res.status_code == 200
+        preview_content = preview_res.content.decode()
+        assert "Confirm your Sign-In" in preview_content
+        assert "reader@example.com" in preview_content
+        assert "magic-auth-form" in preview_content
+
+        # 5. POST request consumes token, logs user in and redirects to next
+        post_res = client.post(
+            "/api/auth/magic-link/verify/",
+            data={"token": token, "next": "https://www.blueshoe.io/blog/post-1/"},
+            HTTP_HOST="community.blueshoe.io",
+        )
+        assert post_res.status_code == 302
+        assert post_res.headers["Location"] == "https://www.blueshoe.io/blog/post-1/"
+
+        # Check user is logged in with clean display name (email domain hidden)
+        session_res = client.get("/api/auth/session/")
+        assert session_res.json()["is_authenticated"] is True
+        assert session_res.json()["user"]["email"] == "reader@example.com"
+        assert session_res.json()["user"]["name"] == "Reader"
+
+        # Check clean privacy-friendly name generation
+        from users.api import generate_display_names_from_email
+
+        assert generate_display_names_from_email("john.doe@blueshoe.io") == ("john.doe", "John", "Doe")
+        assert generate_display_names_from_email("max_mustermann@blueshoe.de") == (
+            "max_mustermann",
+            "Max",
+            "Mustermann",
+        )
+        assert generate_display_names_from_email("sarah-connor@future.org") == ("sarah-connor", "Sarah", "Connor")
+        assert generate_display_names_from_email("clara+feedback@test.com") == ("clara", "Clara", "")
+
+        # Check SocialAccount record exists under /admin/socialaccount/socialaccount/
+        from allauth.socialaccount.models import SocialAccount
+
+        sa = SocialAccount.objects.get(user__email="reader@example.com")
+        assert sa.provider == "email_link"
+        assert sa.uid == "reader@example.com"
+        assert sa.extra_data["auth_method"] == "magic_link"
+
+        # 6. Replaying the POST with the same token fails with 401
+        replay_res = client.post(
+            "/api/auth/magic-link/verify/",
+            data={"token": token, "next": "https://www.blueshoe.io/blog/post-1/"},
+            HTTP_HOST="community.blueshoe.io",
+        )
+        assert replay_res.status_code == 401
+        assert "already used" in replay_res.content.decode()

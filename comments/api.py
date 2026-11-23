@@ -74,8 +74,15 @@ def _get_author_name(comment: Comment) -> str:
     if comment.is_deleted_author:
         return "Deleted User"
     if comment.author:
-        return comment.author.get_full_name() or comment.author.username
-    return comment.guest_name or "Guest"
+        name = comment.author.get_full_name() or comment.author.username
+        # Strict privacy guardrail: never leak email addresses or domains
+        if "@" in name:
+            name = name.split("@")[0]
+        return name.strip() or "Community Member"
+    guest = (comment.guest_name or "Guest").strip()
+    if "@" in guest:
+        guest = guest.split("@")[0].strip()
+    return guest or "Guest"
 
 
 def _get_anon_hash(request: HttpRequest, site_host: str) -> str:
@@ -221,7 +228,10 @@ def create_comment(request: HttpRequest, payload: CreateCommentIn):
         except Exception:
             return Response({"error": "Invalid Captcha"}, status=400)
 
-        guest_name = (payload.guest_name or "Guest").strip()[:100]
+        raw_guest = (payload.guest_name or "Guest").strip()[:100]
+        if "@" in raw_guest:
+            raw_guest = raw_guest.split("@")[0].strip()
+        guest_name = raw_guest or "Guest"
     else:
         author = request.user
 
