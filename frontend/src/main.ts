@@ -1,8 +1,10 @@
 import 'altcha';
 import altchaCss from 'altcha/altcha.css?inline';
 
+import DOMPurify from 'dompurify';
 import { LitElement, html, css, nothing, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
+import { marked } from 'marked';
 import { CODE_OF_CONDUCT_I18N, CodeOfConductContent } from './code-of-conduct';
 
 const altchaStyles = unsafeCSS(altchaCss);
@@ -114,6 +116,42 @@ const FORMATS = {
   link: ['[', '](https://)', 'link'],
   quote: ['> ', '', 'quote'],
 } as const;
+
+/** Allowed tags/attrs aligned with comments.utils.render_and_sanitize_markdown. */
+const MARKDOWN_ALLOWED_TAGS = [
+  'p',
+  'code',
+  'pre',
+  'blockquote',
+  'ul',
+  'ol',
+  'li',
+  'strong',
+  'em',
+  'a',
+  'br',
+  'span',
+];
+const MARKDOWN_ALLOWED_ATTR = ['href', 'class', 'rel'];
+
+marked.setOptions({ breaks: true, gfm: true });
+
+function renderMarkdownPreview(markdownText: string): string {
+  if (!markdownText) return '';
+  const rawHtml = marked.parse(markdownText, { async: false }) as string;
+  return DOMPurify.sanitize(rawHtml, {
+    ALLOWED_TAGS: MARKDOWN_ALLOWED_TAGS,
+    ALLOWED_ATTR: MARKDOWN_ALLOWED_ATTR,
+    ADD_ATTR: ['target'],
+  });
+}
+
+DOMPurify.addHook('afterSanitizeAttributes', (node) => {
+  if (node.tagName === 'A' && node.hasAttribute('href')) {
+    node.setAttribute('rel', 'nofollow ugc');
+    node.setAttribute('target', '_blank');
+  }
+});
 
 const REACTION_KINDS = [
   { kind: 'like', emoji: '👍' },
@@ -868,7 +906,7 @@ export class CommunityComments extends LitElement {
       color: #1d4ed8;
     }
 
-    /* Reactions Bar */
+    /* Comment Reactions Bar (same controls as page reactions) */
     .reactions-bar {
       display: flex;
       align-items: center;
@@ -877,26 +915,13 @@ export class CommunityComments extends LitElement {
       flex-wrap: wrap;
     }
 
-    .reaction-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      background: #f1f5f9;
-      border: 1px solid #cbd5e1;
-      border-radius: 20px;
-      padding: 2px 8px;
-      font-size: 0.8rem;
-      cursor: pointer;
-      color: #334155;
-      transition: all 0.15s ease-in-out;
+    .reactions-bar .page-reactions-row {
+      justify-content: flex-start;
     }
 
-    .reaction-pill:hover,
-    .reaction-pill.active {
-      background: #e0f2fe;
-      border-color: var(--community-accent, #3b82f6);
-      color: var(--community-accent, #3b82f6);
-      transform: scale(1.05);
+    .reactions-bar .page-reaction-picker {
+      left: 0;
+      transform: none;
     }
 
     .reply-action-btn {
@@ -909,9 +934,9 @@ export class CommunityComments extends LitElement {
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      padding: 2px 8px;
+      height: 28px;
+      padding: 0 8px;
       border-radius: 20px;
-      margin-left: 0.4rem;
       transition: all 0.15s ease-in-out;
     }
 
@@ -1197,8 +1222,9 @@ export class CommunityComments extends LitElement {
   @state()
   private showCocModal = false;
 
+  /** 'page' for article reactions, or `comment:${id}` for comment/reply reactions. */
   @state()
-  private showPageReactionPicker = false;
+  private openReactionPickerKey: string | null = null;
 
   @state()
   private authProviders: { id: string; name: string }[] = [];
@@ -1348,7 +1374,7 @@ export class CommunityComments extends LitElement {
     window.addEventListener('keydown', (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         if (this.showCocModal) this.showCocModal = false;
-        if (this.showPageReactionPicker) this.showPageReactionPicker = false;
+        if (this.openReactionPickerKey !== null) this.openReactionPickerKey = null;
         if (this.activeReplyParentId !== null) this.activeReplyParentId = null;
       }
     });
@@ -1357,14 +1383,15 @@ export class CommunityComments extends LitElement {
       document.removeEventListener('pointerdown', this._onDocPointerDown, true);
     }
     this._onDocPointerDown = (e: Event) => {
-      if (!this.showPageReactionPicker) return;
+      if (this.openReactionPickerKey === null) return;
       const path = e.composedPath();
-      const root = this.shadowRoot;
-      const picker = root?.querySelector('.page-reaction-picker');
-      const trigger = root?.querySelector('.page-reaction-trigger');
-      if (picker && path.includes(picker)) return;
-      if (trigger && path.includes(trigger)) return;
-      this.showPageReactionPicker = false;
+      const hitPickerUi = path.some(
+        (node) =>
+          node instanceof Element &&
+          (node.classList.contains('page-reaction-picker') || node.classList.contains('page-reaction-trigger'))
+      );
+      if (hitPickerUi) return;
+      this.openReactionPickerKey = null;
     };
     document.addEventListener('pointerdown', this._onDocPointerDown, true);
 
@@ -1618,6 +1645,7 @@ export class CommunityComments extends LitElement {
   }
 
   toggleReplyBox(parentId: number) {
+    this.openReactionPickerKey = null;
     if (this.activeReplyParentId === parentId) {
       this.activeReplyParentId = null;
     } else {
@@ -1751,100 +1779,112 @@ export class CommunityComments extends LitElement {
     return this.t('reactionCountPlural').replace('{n}', String(total));
   }
 
+  private reactionPickerKey(commentId: number | null): string {
+    return commentId === null ? 'page' : `comment:${commentId}`;
+  }
+
+  private toggleReactionPicker(key: string) {
+    this.openReactionPickerKey = this.openReactionPickerKey === key ? null : key;
+  }
+
+  /** Shared giscus-style trigger + active pills + emoji picker. */
+  renderReactionControls(
+    reactions: { counts?: Record<string, number>; active?: string[] } | undefined,
+    commentId: number | null
+  ) {
+    const counts = reactions?.counts || {};
+    const active = reactions?.active || [];
+    const visible = REACTION_KINDS.filter(({ kind }) => (counts[kind] || 0) > 0);
+    const pickerKey = this.reactionPickerKey(commentId);
+    const pickerOpen = this.openReactionPickerKey === pickerKey;
+
+    return html`
+      <div class="page-reactions-row">
+        <button
+          type="button"
+          class="page-reaction-trigger"
+          aria-label=${this.t('addReaction')}
+          aria-expanded=${pickerOpen ? 'true' : 'false'}
+          title=${this.t('addReaction')}
+          @click=${(e: Event) => {
+            e.stopPropagation();
+            this.toggleReactionPicker(pickerKey);
+          }}
+        >
+          <svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.4">
+            <circle cx="8" cy="8" r="6.25"></circle>
+            <path d="M5.2 9.4c.7 1 1.7 1.5 2.8 1.5s2.1-.5 2.8-1.5" stroke-linecap="round"></path>
+            <circle cx="5.8" cy="6.4" r="0.7" fill="currentColor" stroke="none"></circle>
+            <circle cx="10.2" cy="6.4" r="0.7" fill="currentColor" stroke="none"></circle>
+          </svg>
+        </button>
+
+        ${visible.map(({ kind, emoji }) => {
+          const count = counts[kind] || 0;
+          const isActive = active.includes(kind);
+          return html`
+            <button
+              type="button"
+              class="page-reaction-pill ${isActive ? 'active' : ''}"
+              @click=${() => this.toggleReaction(commentId, kind)}
+            >
+              <span aria-hidden="true">${emoji}</span>
+              <span>${count}</span>
+            </button>
+          `;
+        })}
+
+        ${pickerOpen
+          ? html`
+              <div class="page-reaction-picker" role="menu" aria-label=${this.t('addReaction')}>
+                <div class="page-reaction-picker-grid">
+                  ${REACTION_KINDS.map(({ kind, emoji }) => {
+                    const isActive = active.includes(kind);
+                    return html`
+                      <button
+                        type="button"
+                        class="page-reaction-option ${isActive ? 'active' : ''}"
+                        role="menuitem"
+                        title=${kind}
+                        @click=${async () => {
+                          await this.toggleReaction(commentId, kind);
+                          this.openReactionPickerKey = null;
+                        }}
+                      >
+                        ${emoji}
+                      </button>
+                    `;
+                  })}
+                </div>
+              </div>
+            `
+          : nothing}
+      </div>
+    `;
+  }
+
   renderPageReactions() {
     const counts = this.pageReactions?.counts || {};
-    const active = this.pageReactions?.active || [];
     const total = this.reactionTotal(counts);
-    const visible = REACTION_KINDS.filter(({ kind }) => (counts[kind] || 0) > 0);
 
     return html`
       <div class="page-reactions">
         ${total > 0
           ? html`<div class="page-reactions-summary">${this.reactionSummaryLabel(total)}</div>`
           : nothing}
-        <div class="page-reactions-row">
-          <button
-            type="button"
-            class="page-reaction-trigger"
-            aria-label=${this.t('addReaction')}
-            aria-expanded=${this.showPageReactionPicker ? 'true' : 'false'}
-            title=${this.t('addReaction')}
-            @click=${(e: Event) => {
-              e.stopPropagation();
-              this.showPageReactionPicker = !this.showPageReactionPicker;
-            }}
-          >
-            <svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.4">
-              <circle cx="8" cy="8" r="6.25"></circle>
-              <path d="M5.2 9.4c.7 1 1.7 1.5 2.8 1.5s2.1-.5 2.8-1.5" stroke-linecap="round"></path>
-              <circle cx="5.8" cy="6.4" r="0.7" fill="currentColor" stroke="none"></circle>
-              <circle cx="10.2" cy="6.4" r="0.7" fill="currentColor" stroke="none"></circle>
-            </svg>
-          </button>
-
-          ${visible.map(({ kind, emoji }) => {
-            const count = counts[kind] || 0;
-            const isActive = active.includes(kind);
-            return html`
-              <button
-                type="button"
-                class="page-reaction-pill ${isActive ? 'active' : ''}"
-                @click=${() => this.toggleReaction(null, kind)}
-              >
-                <span aria-hidden="true">${emoji}</span>
-                <span>${count}</span>
-              </button>
-            `;
-          })}
-
-          ${this.showPageReactionPicker
-            ? html`
-                <div class="page-reaction-picker" role="menu" aria-label=${this.t('addReaction')}>
-                  <div class="page-reaction-picker-grid">
-                    ${REACTION_KINDS.map(({ kind, emoji }) => {
-                      const isActive = active.includes(kind);
-                      return html`
-                        <button
-                          type="button"
-                          class="page-reaction-option ${isActive ? 'active' : ''}"
-                          role="menuitem"
-                          title=${kind}
-                          @click=${async () => {
-                            await this.toggleReaction(null, kind);
-                            this.showPageReactionPicker = false;
-                          }}
-                        >
-                          ${emoji}
-                        </button>
-                      `;
-                    })}
-                  </div>
-                </div>
-              `
-            : nothing}
-        </div>
+        ${this.renderReactionControls(this.pageReactions, null)}
       </div>
     `;
   }
 
-  renderReactionsBar(reactions: { counts?: Record<string, number>; active?: string[] } | undefined, commentId: number | null, allowReply = false) {
-    const counts = reactions?.counts || {};
-    const active = reactions?.active || [];
-
+  renderReactionsBar(
+    reactions: { counts?: Record<string, number>; active?: string[] } | undefined,
+    commentId: number | null,
+    allowReply = false
+  ) {
     return html`
       <div class="reactions-bar">
-        ${REACTION_KINDS.map(({ kind, emoji }) => {
-          const count = counts[kind] || 0;
-          const isActive = active.includes(kind);
-          return html`
-            <button
-              class="reaction-pill ${isActive ? 'active' : ''}"
-              @click=${() => this.toggleReaction(commentId, kind)}
-            >
-              ${emoji} ${count > 0 ? count : ''}
-            </button>
-          `;
-        })}
+        ${this.renderReactionControls(reactions, commentId)}
         ${allowReply && commentId !== null
           ? html`
               <button class="reply-action-btn" @click=${() => this.toggleReplyBox(commentId)}>
@@ -2083,7 +2123,7 @@ export class CommunityComments extends LitElement {
             : html`
                 <div class="editor-preview">
                   ${this.commentBody
-                    ? html`<div style="white-space: pre-wrap;">${this.commentBody}</div>`
+                    ? html`<div class="comment-body" .innerHTML=${renderMarkdownPreview(this.commentBody)}></div>`
                     : html`<span style="color: #94a3b8;">${this.t('previewEmpty')}</span>`}
                 </div>
               `}

@@ -35,8 +35,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "altcha": "^3.6.0",
+    "dompurify": "^3.5.0",
     "lit": "^3.1.2",
-    "altcha": "^3.6.0"
+    "marked": "^18.2.1"
   },
   "devDependencies": {
     "typescript": "^7.0.2",
