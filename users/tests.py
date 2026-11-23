@@ -158,6 +158,30 @@ class TestUsersAPI:
         assert "https://www.blueshoe.de/blog" in content_de
         assert "Zum blueshoe.de Blog" in content_de
 
+    def test_oauth_login_cancelled_no_reverse_match_fix(self, client):
+        site = Site.objects.get_current()
+        site.domain = "community.blueshoe.io"
+        site.save()
+
+        app, _ = SocialApp.objects.get_or_create(provider="github", name="GitHub", client_id="test_client_id")
+        app.sites.add(site)
+
+        # GitHub passes error=access_denied when user cancels OAuth consent
+        res = client.get(
+            "/accounts/github/login/callback/?error=access_denied&error_description=The+user+has+denied+your+application+access.",
+            HTTP_HOST="community.blueshoe.io",
+            follow=True,
+        )
+        assert res.status_code in (200, 401)
+        content = res.content.decode()
+        assert "Authentication Notice" in content or "cancelled" in content.lower()
+        assert "Blueshoe" in content
+
+        # Direct test of the cancelled view
+        res_cancelled = client.get("/accounts/social/login/cancelled/")
+        assert res_cancelled.status_code == 200
+        assert "cancelled" in res_cancelled.content.decode().lower()
+
     def test_headless_oauth_provider_redirect_supports_get(self, client):
         site = Site.objects.get_current()
         site.domain = "community.blueshoe.io"
@@ -174,6 +198,34 @@ class TestUsersAPI:
         assert res.status_code == 302
         assert "github.com/login/oauth/authorize" in res.headers["Location"]
         assert "redirect_uri=https%3A%2F%2Fcommunity.blueshoe.io" in res.headers["Location"]
+
+    def test_linkedin_oauth2_uses_openid_connect_scopes(self, client):
+        site = Site.objects.get_current()
+        site.domain = "community.blueshoe.io"
+        site.save()
+
+        app, _ = SocialApp.objects.get_or_create(
+            provider="linkedin_oauth2", name="LinkedIn", client_id="test_li_client"
+        )
+        app.sites.add(site)
+
+        res = client.get(
+            "/_allauth/browser/v1/auth/provider/redirect?provider=linkedin_oauth2&callback_url=https://www.blueshoe.io/auth-callback.html&process=login",
+            HTTP_HOST="community.blueshoe.io",
+            HTTP_X_FORWARDED_PROTO="https",
+        )
+        assert res.status_code == 302
+        location = res.headers["Location"]
+        assert "linkedin.com/oauth/v2/authorization" in location
+        # Verify modern OpenID Connect scopes are requested and legacy r_emailaddress is NOT requested
+        assert "openid" in location
+        assert "email" in location
+        assert "r_emailaddress" not in location
+        assert "r_liteprofile" not in location
+        assert (
+            "redirect_uri=https%3A%2F%2Fcommunity.blueshoe.io%2Faccounts%2Flinkedin_oauth2%2Flogin%2Fcallback%2F"
+            in location
+        )
 
     def test_magic_link_flow(self, client, mailoutbox):
         # 1. Providers endpoint includes email_link
