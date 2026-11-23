@@ -1,26 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Authenticating...</title>
-    <script>
-        // Check if there is an error in URL params
-        const urlParams = new URLSearchParams(window.location.search);
-        const error = urlParams.get('error');
-        
-        if (window.opener) {
-            if (error) {
-                window.opener.postMessage({ type: 'oauth_error', error }, '*');
-            } else {
-                window.opener.postMessage({ type: 'oauth_success' }, '*');
-            }
-            window.close();
-        } else {
-            document.write('Authentication complete. You can close this window.');
-        }
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Authenticating...</title>
 </head>
 <body>
-    Authenticating...
+  <p>Authenticating...</p>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search)
+    const error = urlParams.get('error')
+    const message = error
+      ? { type: 'oauth_error', error: error }
+      : { type: 'oauth_success' }
+    const payload = JSON.stringify(Object.assign({}, message, { ts: Date.now() }))
+
+    // localStorage survives COOP browsing-context splits; BroadcastChannel often does not.
+    try {
+      localStorage.setItem('blueshoe_oauth', payload)
+    } catch (_) {}
+
+    try {
+      const channel = new BroadcastChannel('blueshoe_oauth')
+      channel.postMessage(message)
+      channel.close()
+    } catch (_) {}
+
+    if (window.opener) {
+      try {
+        // Use '*' so the opener receives the nudge even if origins differ.
+        // The widget only treats this as a signal to refetch the session.
+        window.opener.postMessage(message, '*')
+      } catch (_) {}
+    }
+
+    setTimeout(function () {
+      try {
+        window.close()
+      } catch (_) {}
+      if (!window.closed) {
+        document.body.textContent = error
+          ? 'Authentication failed. You can close this window.'
+          : 'Authentication complete. You can close this window.'
+      }
+    }, 100)
+  </script>
 </body>
 </html>

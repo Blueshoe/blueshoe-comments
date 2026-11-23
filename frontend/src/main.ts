@@ -117,6 +117,84 @@ const REACTION_KINDS = [
   { kind: 'insightful', emoji: '💡' },
 ];
 
+const OAUTH_SIGNAL_KEY = 'blueshoe_oauth';
+
+type OAuthSignal = { type?: string; error?: string; ts?: number };
+type OAuthSignalHandler = (data: OAuthSignal) => void;
+
+const oauthSignalHandlers = new Set<OAuthSignalHandler>();
+let oauthSignalBusReady = false;
+
+function dispatchOAuthSignal(data: OAuthSignal) {
+  for (const handler of oauthSignalHandlers) {
+    try {
+      handler(data);
+    } catch (_) {}
+  }
+}
+
+/**
+ * Window-level bus so Lit remounts cannot drop oauth_success.
+ * Prefer localStorage (survives COOP browsing-context splits); BroadcastChannel
+ * and postMessage are best-effort extras.
+ *
+ * oauthSignalBusReady is set only after listeners are attached. Init is fully
+ * synchronous (no await), so concurrent callers cannot observe a half-ready bus.
+ */
+function ensureOAuthSignalBus() {
+  if (oauthSignalBusReady || typeof window === 'undefined') return;
+
+  window.addEventListener('message', (event: MessageEvent) => {
+    const data = event.data as OAuthSignal | undefined;
+    if (data?.type !== 'oauth_success' && data?.type !== 'oauth_error') return;
+    // Do not require same-origin: the API error page may postMessage from
+    // community.* while the widget runs on www.*. The payload is only a nudge
+    // to refetch /api/auth/session/ with credentials — it is not trusted for identity.
+    dispatchOAuthSignal(data);
+  });
+
+  window.addEventListener('storage', (event: StorageEvent) => {
+    if (event.key !== OAUTH_SIGNAL_KEY || !event.newValue) return;
+    try {
+      const data = JSON.parse(event.newValue) as OAuthSignal;
+      // Keep the key if no widget is mounted yet (pending consume on subscribe).
+      if (oauthSignalHandlers.size === 0) return;
+      try {
+        localStorage.removeItem(OAUTH_SIGNAL_KEY);
+      } catch (_) {}
+      dispatchOAuthSignal(data);
+    } catch (_) {}
+  });
+
+  try {
+    const channel = new BroadcastChannel(OAUTH_SIGNAL_KEY);
+    channel.addEventListener('message', (event: MessageEvent) => {
+      dispatchOAuthSignal(event.data as OAuthSignal);
+    });
+  } catch (_) {}
+
+  oauthSignalBusReady = true;
+}
+
+function consumePendingOAuthSignal(handler: OAuthSignalHandler) {
+  try {
+    const raw = localStorage.getItem(OAUTH_SIGNAL_KEY);
+    if (!raw) return;
+    const data = JSON.parse(raw) as OAuthSignal;
+    localStorage.removeItem(OAUTH_SIGNAL_KEY);
+    queueMicrotask(() => handler(data));
+  } catch (_) {}
+}
+
+function subscribeOAuthSignals(handler: OAuthSignalHandler) {
+  ensureOAuthSignalBus();
+  oauthSignalHandlers.add(handler);
+  consumePendingOAuthSignal(handler);
+  return () => {
+    oauthSignalHandlers.delete(handler);
+  };
+}
+
 @customElement('community-comments')
 export class CommunityComments extends LitElement {
   static styles = [
@@ -1027,6 +1105,12 @@ export class CommunityComments extends LitElement {
   @state()
   private blockedProviderId: string | null = null;
 
+  private authPopup: Window | null = null;
+
+  private oauthLoginSettled = false;
+
+  private unsubscribeOAuth: (() => void) | null = null;
+
   @state()
   private altchaPayload = '';
 
@@ -1159,22 +1243,63 @@ export class CommunityComments extends LitElement {
       }
     });
 
-    window.addEventListener('message', (event: MessageEvent) => {
-      if (event.data?.type === 'oauth_success') {
-        this.blockedPopupUrl = null;
-        this.blockedProviderId = null;
-        this.fetchAuth();
-        this.fetchComments();
-        this.fetchPageReactions();
-      }
+    this.unsubscribeOAuth?.();
+    this.unsubscribeOAuth = subscribeOAuthSignals((data) => {
+      if (!this.isConnected) return;
+      this.handleOAuthSignal(data);
     });
+  }
+
+  disconnectedCallback() {
+    this.unsubscribeOAuth?.();
+    this.unsubscribeOAuth = null;
+    // Leave the popup open; auth-callback / finishOAuthLogin close it.
+    // localStorage pending signal is consumed again on the next subscribe.
+    super.disconnectedCallback();
+  }
+
+  private handleOAuthSignal(data: OAuthSignal) {
+    if (data.type === 'oauth_success') {
+      this.finishOAuthLogin();
+    } else if (data.type === 'oauth_error') {
+      this.closeAuthPopup();
+    }
+  }
+
+  private closeAuthPopup() {
+    const popup = this.authPopup;
+    this.authPopup = null;
+    if (!popup || popup.closed) return;
+    try {
+      popup.close();
+    } catch (_) {}
+  }
+
+  private finishOAuthLogin() {
+    this.closeAuthPopup();
+    if (this.oauthLoginSettled) return;
+    this.oauthLoginSettled = true;
+    this.blockedPopupUrl = null;
+    this.blockedProviderId = null;
+    void this.refreshAuthAfterOAuth();
+  }
+
+  /** Refresh UI after a known oauth_success signal (not session polling). */
+  private async refreshAuthAfterOAuth() {
+    await this.fetchAuth();
+    if (!this.currentUser) {
+      // Cookie from the popup redirect can lag a tick behind the storage signal.
+      await new Promise((r) => setTimeout(r, 500));
+      await this.fetchAuth();
+    }
+    await Promise.all([this.fetchComments(), this.fetchPageReactions()]);
   }
 
   async fetchAuth() {
     try {
       const [provRes, sessRes] = await Promise.all([
-        fetch(`${this.resolvedApiBase}/api/auth/providers/`),
-        fetch(`${this.resolvedApiBase}/api/auth/session/`, { credentials: 'include' }),
+        fetch(`${this.resolvedApiBase}/api/auth/providers/`, { credentials: 'include', cache: 'no-store' }),
+        fetch(`${this.resolvedApiBase}/api/auth/session/`, { credentials: 'include', cache: 'no-store' }),
       ]);
       if (provRes.ok) {
         this.authProviders = await provRes.json();
@@ -1189,17 +1314,25 @@ export class CommunityComments extends LitElement {
   loginWith(providerId: string) {
     this.blockedPopupUrl = null;
     this.blockedProviderId = null;
+    this.oauthLoginSettled = false;
+    this.closeAuthPopup();
+    try {
+      localStorage.removeItem(OAUTH_SIGNAL_KEY);
+    } catch (_) {}
+
     const callbackUrl = encodeURIComponent(`${window.location.origin}/auth-callback.html`);
     const authUrl = `${this.resolvedApiBase}/_allauth/browser/v1/auth/provider/redirect?provider=${providerId}&callback_url=${callbackUrl}&process=login`;
 
-    // Direct synchronous call on click event
+    // Must stay synchronous inside the click handler so the popup is not blocked.
     const popup = window.open(authUrl, 'auth-popup', 'width=600,height=700,scrollbars=yes');
 
-    // Detect if browser blocked the popup window
     if (!popup || popup.closed || typeof popup.closed === 'undefined') {
       this.blockedPopupUrl = authUrl;
       this.blockedProviderId = providerId;
+      return;
     }
+
+    this.authPopup = popup;
   }
 
   loginWithRedirect(providerId: string) {

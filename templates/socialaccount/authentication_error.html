@@ -270,18 +270,20 @@
   </div>
 
   <script>
-    // If opened as an OAuth popup by the comments widget, notify the parent opener
-    if (window.opener) {
+    // Error page is usually on community.*; localStorage/BroadcastChannel will not
+    // reach the blog origin. Keep postMessage + close button for popup flows.
+    (function () {
+      var message = {
+        type: 'oauth_error',
+        error: '{{ auth_error.code|default:"callback_failed" }}'
+      };
       document.getElementById('close-popup-btn').style.display = 'inline-block';
-      try {
-        window.opener.postMessage({
-          type: 'oauth_error',
-          error: '{{ auth_error.code|default:"callback_failed" }}'
-        }, '*');
-      } catch (e) {
-        // Opener might be cross-origin
+      if (window.opener) {
+        try {
+          window.opener.postMessage(message, '*');
+        } catch (e) {}
       }
-    }
+    })();
   </script>
 </body>
 </html>

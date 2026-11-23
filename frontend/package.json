@@ -1,6 +1,6 @@
 {
   "name": "@blueshoe/community-widget",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "type": "module",
   "description": "API-First Blueshoe Community-System Web Components",
   "main": "./dist/community-widget.umd.cjs",
@@ -14,6 +14,7 @@
   "files": [
     "dist",
     "bin",
+    "auth-callback.html",
     "README.md"
   ],
   "bin": {

@@ -70,6 +70,10 @@ For popup social logins (GitHub, Google, etc.) without page reloads, copy `auth-
 npx blueshoe-community-init ./public
 ```
 
+The callback notifies the widget via `localStorage` (primary), plus `BroadcastChannel` / `postMessage` when available. This is required because OAuth provider redirects often clear `window.opener` (COOP).
+
+> **Note:** Social login session state only works same-site to the API (e.g. `www.blueshoe.io` → `community.blueshoe.io`). From `localhost` against the production API the popup can succeed, but the widget cannot read the `SameSite=Lax` session cookie.
+
 ---
 
 ## 🎨 Theming
