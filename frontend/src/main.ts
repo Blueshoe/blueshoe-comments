@@ -23,7 +23,6 @@ const I18N: Record<string, Record<string, string>> = {
     submittingBtn: "Submitting...",
     previewEmpty: "Nothing to preview yet.",
     charLimit: "characters",
-    cocNotice: "By commenting, you agree to our",
     cocLink: "Code of Conduct",
     pendingNotice: "Your comment is being briefly reviewed by AI moderation.",
     deleteBtn: "Delete",
@@ -71,7 +70,6 @@ const I18N: Record<string, Record<string, string>> = {
     submittingBtn: "Wird gesendet...",
     previewEmpty: "Noch nichts zum Voranzeigen.",
     charLimit: "Zeichen",
-    cocNotice: "Mit deinem Kommentar stimmst du unserem",
     cocLink: "Verhaltenskodex",
     pendingNotice: "Dein Kommentar wird kurz durch die KI-Moderation geprüft.",
     deleteBtn: "Löschen",
@@ -263,9 +261,6 @@ export class CommunityComments extends LitElement {
     }
 
     .widget-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
       border-bottom: 2px solid #f1f5f9;
       padding-bottom: 0.75rem;
     }
@@ -746,11 +741,6 @@ export class CommunityComments extends LitElement {
       border: 1px solid #cbd5e1;
       border-radius: 4px;
       font-size: 0.85rem;
-    }
-
-    .coc-notice {
-      font-size: 0.8rem;
-      color: #64748b;
     }
 
     .coc-link {
@@ -1973,10 +1963,6 @@ export class CommunityComments extends LitElement {
       <div class="comments-widget">
         <div class="widget-header">
           <h3>${this.t('comments')} (${this.comments.length})</h3>
-          <span class="coc-notice">
-            ${this.t('cocNotice')}
-            <button class="coc-link" @click=${() => (this.showCocModal = true)}>${this.t('cocLink')}</button>
-          </span>
         </div>
 
         <!-- Page Reactions (giscus-style) -->
