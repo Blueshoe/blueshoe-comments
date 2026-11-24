@@ -42,10 +42,14 @@ const I18N: Record<string, Record<string, string>> = {
     loggedInAs: "Logged in as",
     logoutBtn: "Log out",
     orSignInWith: "Or sign in with:",
+    signInToPost: "Sign in to post your comment",
+    continueAsGuest: "Guest",
+    postAsGuest: "Post as Guest",
+    guestNameLabel: "Your name",
     popupBlockedNotice: "Login popup was blocked by your browser.",
     popupOpenManual: "Open Login Window",
     popupRedirectFallback: "or continue via redirect",
-    emailLinkBtn: "✉️ Email Link",
+    emailLinkBtn: "Email Link",
     emailLinkPlaceholder: "Enter your email address...",
     sendMagicLinkBtn: "Send Login Link",
     sendingMagicLinkBtn: "Sending...",
@@ -91,10 +95,14 @@ const I18N: Record<string, Record<string, string>> = {
     loggedInAs: "Angemeldet als",
     logoutBtn: "Abmelden",
     orSignInWith: "Oder anmelden mit:",
+    signInToPost: "Anmelden, um deinen Kommentar zu senden",
+    continueAsGuest: "Gast",
+    postAsGuest: "Als Gast absenden",
+    guestNameLabel: "Dein Name",
     popupBlockedNotice: "Login-Popup wurde vom Browser blockiert.",
     popupOpenManual: "Login-Fenster manuell öffnen",
     popupRedirectFallback: "oder per Weiterleitung anmelden",
-    emailLinkBtn: "✉️ E-Mail-Link",
+    emailLinkBtn: "E-Mail-Link",
     emailLinkPlaceholder: "Deine E-Mail-Adresse...",
     sendMagicLinkBtn: "Login-Link senden",
     sendingMagicLinkBtn: "Wird gesendet...",
@@ -118,6 +126,54 @@ const FORMATS = {
   link: ['[', '](https://)', 'link'],
   quote: ['> ', '', 'quote'],
 } as const;
+
+/** Brand icons as inline SVGs (Shadow DOM friendly, no Font Awesome needed). */
+const AUTH_ICONS: Record<string, ReturnType<typeof html>> = {
+  github: html`
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path
+        fill="currentColor"
+        d="M12 2C6.477 2 2 6.586 2 12.253c0 4.537 2.865 8.383 6.839 9.743.5.094.682-.222.682-.493 0-.243-.01-1.05-.014-1.905-2.782.618-3.369-1.21-3.369-1.21-.454-1.179-1.11-1.492-1.11-1.492-.908-.636.069-.623.069-.623 1.004.072 1.532 1.055 1.532 1.055.892 1.566 2.341 1.114 2.91.852.091-.662.35-1.114.636-1.37-2.22-.259-4.555-1.14-4.555-5.077 0-1.122.39-2.04 1.03-2.76-.103-.26-.447-1.302.098-2.714 0 0 .84-.275 2.75 1.053A9.35 9.35 0 0 1 12 6.844a9.35 9.35 0 0 1 2.504.345c1.909-1.328 2.748-1.053 2.748-1.053.547 1.412.203 2.454.1 2.714.64.72 1.028 1.638 1.028 2.76 0 3.947-2.339 4.815-4.566 5.068.359.317.679.943.679 1.901 0 1.372-.012 2.477-.012 2.814 0 .273.18.592.688.491C19.138 20.633 22 16.787 22 12.253 22 6.586 17.523 2 12 2z"
+      />
+    </svg>
+  `,
+  linkedin_oauth2: html`
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path
+        fill="currentColor"
+        d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"
+      />
+    </svg>
+  `,
+  google: html`
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path
+        fill="#4285F4"
+        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+      />
+      <path
+        fill="#34A853"
+        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+      />
+      <path
+        fill="#EA4335"
+        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+      />
+    </svg>
+  `,
+  email_link: html`
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path
+        fill="currentColor"
+        d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5L4 8V6l8 5 8-5v2z"
+      />
+    </svg>
+  `,
+};
 
 /** Allowed tags/attrs aligned with comments.utils.render_and_sanitize_markdown. */
 const MARKDOWN_ALLOWED_TAGS = [
@@ -302,7 +358,12 @@ export class CommunityComments extends LitElement {
       justify-content: center;
       flex-wrap: wrap;
       gap: 0.4rem;
+    }
+
+    .page-reaction-trigger-wrap {
       position: relative;
+      display: inline-flex;
+      flex-shrink: 0;
     }
 
     .page-reaction-trigger,
@@ -361,9 +422,8 @@ export class CommunityComments extends LitElement {
 
     .page-reaction-picker {
       position: absolute;
-      top: calc(100% + 6px);
-      left: 50%;
-      transform: translateX(-50%);
+      top: calc(100% + 10px);
+      left: 0;
       z-index: 40;
       min-width: 180px;
       background: #ffffff;
@@ -371,6 +431,19 @@ export class CommunityComments extends LitElement {
       border-radius: var(--community-radius, 8px);
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
       padding: 0.45rem;
+    }
+
+    .page-reaction-picker::before {
+      content: '';
+      position: absolute;
+      top: -7px;
+      left: 14px;
+      width: 12px;
+      height: 12px;
+      background: #ffffff;
+      border-left: 1px solid #e2e8f0;
+      border-top: 1px solid #e2e8f0;
+      transform: translateX(-50%) rotate(45deg);
     }
 
     .page-reaction-picker-grid {
@@ -401,43 +474,142 @@ export class CommunityComments extends LitElement {
       box-shadow: inset 0 0 0 1px var(--community-accent, #3b82f6);
     }
 
-    /* Auth Banner */
-    .auth-bar {
+    .editor-submit {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      font-size: 0.85rem;
-      color: #64748b;
-      background: #f8fafc;
-      padding: 0.5rem 0.75rem;
-      border-radius: var(--community-radius, 8px);
-      border: 1px solid #e2e8f0;
+      gap: 0.75rem;
       flex-wrap: wrap;
-      gap: 0.5rem;
+      margin-left: auto;
     }
 
-    .social-buttons {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-
-    .social-btn {
-      background: #ffffff;
-      border: 1px solid #cbd5e1;
-      border-radius: 4px;
-      padding: 2px 8px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-      color: #334155;
+    .footer-user {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 0.45rem;
+      font-size: 0.85rem;
+      color: #64748b;
     }
 
-    .social-btn:hover {
-      background: #e2e8f0;
+    .footer-user strong {
+      color: #334155;
+    }
+
+    .submit-wrap {
+      position: relative;
+      display: inline-flex;
+    }
+
+    .auth-picker {
+      position: absolute;
+      bottom: calc(100% + 10px);
+      right: 0;
+      z-index: 50;
+      width: max-content;
+      max-width: 90vw;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: var(--community-radius, 8px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      padding: 0.7rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .auth-picker::after {
+      content: '';
+      position: absolute;
+      bottom: -7px;
+      right: 22px;
+      width: 12px;
+      height: 12px;
+      background: #ffffff;
+      border-right: 1px solid #e2e8f0;
+      border-bottom: 1px solid #e2e8f0;
+      transform: rotate(45deg);
+    }
+
+    .auth-picker-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #64748b;
+      margin: 0;
+    }
+
+    .auth-picker-providers {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      flex-wrap: nowrap;
+    }
+
+    .auth-provider-btn {
+      width: 40px;
+      height: 40px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      background: #ffffff;
+      color: #334155;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.15s, background 0.15s, color 0.15s;
+    }
+
+    .auth-provider-btn:hover,
+    .auth-provider-btn.active {
+      border-color: var(--community-accent, #3b82f6);
+      background: #e0f2fe;
+      color: var(--community-accent, #3b82f6);
+    }
+
+    .auth-provider-btn svg {
+      width: 20px;
+      height: 20px;
+      display: block;
+    }
+
+    .auth-guest-btn {
+      height: 40px;
+      padding: 0 12px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      background: #ffffff;
+      color: #334155;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      line-height: 1;
+      transition: border-color 0.15s, background 0.15s, color 0.15s;
+    }
+
+    .auth-guest-btn:hover,
+    .auth-guest-btn.active {
+      border-color: var(--community-accent, #3b82f6);
+      background: #e0f2fe;
+      color: var(--community-accent, #3b82f6);
+    }
+
+    .auth-picker-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      padding-top: 0.15rem;
+      border-top: 1px solid #f1f5f9;
+      min-width: 220px;
+    }
+
+    .auth-picker-panel .name-input,
+    .auth-picker-panel .magic-email-input {
+      width: 100%;
+      max-width: none;
+      min-width: 0;
+    }
+
+    .auth-picker-panel .magic-link-form {
+      width: 100%;
+      margin-top: 0;
     }
 
     .logout-btn {
@@ -951,11 +1123,6 @@ export class CommunityComments extends LitElement {
       justify-content: flex-start;
     }
 
-    .reactions-bar .page-reaction-picker {
-      left: 0;
-      transform: none;
-    }
-
     .reply-action-btn {
       background: transparent;
       border: 1px solid transparent;
@@ -1049,7 +1216,10 @@ export class CommunityComments extends LitElement {
     .reply-actions {
       display: flex;
       align-items: center;
+      justify-content: flex-end;
       gap: 0.5rem;
+      flex-wrap: wrap;
+      width: 100%;
     }
 
     .cancel-btn {
@@ -1254,6 +1424,17 @@ export class CommunityComments extends LitElement {
   @state()
   private showCocModal = false;
 
+  @state()
+  private showAuthPicker = false;
+
+  /** Which submit action opened the auth picker. */
+  @state()
+  private authPickerContext: 'comment' | 'reply' = 'comment';
+
+  /** Sub-view inside the auth picker tooltip. */
+  @state()
+  private authPickerMode: 'providers' | 'guest' | 'email' = 'providers';
+
   /** 'page' for article reactions, or `comment:${id}` for comment/reply reactions. */
   @state()
   private openReactionPickerKey: string | null = null;
@@ -1280,9 +1461,6 @@ export class CommunityComments extends LitElement {
 
   @state()
   private altchaPayload = '';
-
-  @state()
-  private showMagicLinkInput = false;
 
   @state()
   private magicLinkEmail = '';
@@ -1386,6 +1564,7 @@ export class CommunityComments extends LitElement {
 
   async handleRequestMagicLink() {
     if (!this.magicLinkEmail.trim() || this.isSendingMagicLink) return;
+    this.saveDraft(this.commentBody);
     this.isSendingMagicLink = true;
     try {
       const res = await fetch(`${this.resolvedApiBase}/api/auth/magic-link/request/`, {
@@ -1400,7 +1579,6 @@ export class CommunityComments extends LitElement {
       if (res.ok) {
         this.magicLinkSentTo = this.magicLinkEmail;
         this.magicLinkEmail = '';
-        this.showMagicLinkInput = false;
       } else {
         alert(data?.error || 'Failed to send magic link.');
       }
@@ -1454,6 +1632,7 @@ export class CommunityComments extends LitElement {
       if (e.key === 'Escape') {
         if (this.showCocModal) this.showCocModal = false;
         if (this.openReactionPickerKey !== null) this.openReactionPickerKey = null;
+        if (this.showAuthPicker) this.closeAuthPicker();
         if (this.activeReplyParentId !== null) this.activeReplyParentId = null;
       }
     });
@@ -1462,15 +1641,25 @@ export class CommunityComments extends LitElement {
       document.removeEventListener('pointerdown', this._onDocPointerDown, true);
     }
     this._onDocPointerDown = (e: Event) => {
-      if (this.openReactionPickerKey === null) return;
       const path = e.composedPath();
-      const hitPickerUi = path.some(
-        (node) =>
-          node instanceof Element &&
-          (node.classList.contains('page-reaction-picker') || node.classList.contains('page-reaction-trigger'))
-      );
-      if (hitPickerUi) return;
-      this.openReactionPickerKey = null;
+      if (this.openReactionPickerKey !== null) {
+        const hitReactionUi = path.some(
+          (node) =>
+            node instanceof Element &&
+            (node.classList.contains('page-reaction-picker') ||
+              node.classList.contains('page-reaction-trigger') ||
+              node.classList.contains('page-reaction-trigger-wrap'))
+        );
+        if (!hitReactionUi) this.openReactionPickerKey = null;
+      }
+      if (this.showAuthPicker) {
+        const hitAuthUi = path.some(
+          (node) =>
+            node instanceof Element &&
+            (node.classList.contains('auth-picker') || node.classList.contains('submit-wrap'))
+        );
+        if (!hitAuthUi) this.closeAuthPicker();
+      }
     };
     document.addEventListener('pointerdown', this._onDocPointerDown, true);
 
@@ -1527,7 +1716,24 @@ export class CommunityComments extends LitElement {
       await new Promise((r) => setTimeout(r, 500));
       await this.fetchAuth();
     }
+    // Draft stays in commentBody / localStorage; just close the auth tooltip.
+    this.closeAuthPicker();
     await Promise.all([this.fetchComments(), this.fetchPageReactions()]);
+  }
+
+  private openAuthPicker(context: 'comment' | 'reply') {
+    this.openReactionPickerKey = null;
+    const sameContext = this.showAuthPicker && this.authPickerContext === context;
+    this.authPickerContext = context;
+    if (!sameContext) {
+      this.authPickerMode = 'providers';
+    }
+    this.showAuthPicker = true;
+  }
+
+  private closeAuthPicker() {
+    this.showAuthPicker = false;
+    this.authPickerMode = 'providers';
   }
 
   async fetchAuth() {
@@ -1547,6 +1753,8 @@ export class CommunityComments extends LitElement {
   }
 
   loginWith(providerId: string) {
+    // Keep typed comment across the OAuth popup round-trip.
+    this.saveDraft(this.commentBody);
     this.blockedPopupUrl = null;
     this.blockedProviderId = null;
     this.oauthLoginSettled = false;
@@ -1675,15 +1883,36 @@ export class CommunityComments extends LitElement {
     }, 0);
   }
 
+  private requestPostComment() {
+    if (!this.commentBody.trim() || this.isSubmitting) return;
+
+    if (!this.currentUser) {
+      // Guests must pick an identity first (OAuth / email / guest name).
+      if (this.authPickerMode === 'guest' && this.altchaPayload) {
+        void this.handlePostComment();
+        return;
+      }
+      this.openAuthPicker('comment');
+      return;
+    }
+
+    void this.handlePostComment();
+  }
+
   async handlePostComment() {
     if (!this.commentBody.trim() || this.isSubmitting) return;
+    if (!this.currentUser && !this.altchaPayload) {
+      this.openAuthPicker('comment');
+      this.authPickerMode = 'guest';
+      return;
+    }
 
     this.isSubmitting = true;
     try {
       const payload: Record<string, any> = {
         thread_slug: this.resolvedThreadSlug,
         body_markdown: this.commentBody,
-        guest_name: this.guestName || undefined,
+        guest_name: this.currentUser ? undefined : this.guestName || undefined,
         altcha: this.currentUser ? undefined : this.altchaPayload || undefined,
       };
 
@@ -1697,6 +1926,8 @@ export class CommunityComments extends LitElement {
       if (res.ok) {
         this.commentBody = '';
         this.altchaPayload = '';
+        this.guestName = '';
+        this.closeAuthPicker();
         const altchaEl = this.shadowRoot?.querySelector('altcha-widget') as any;
         if (altchaEl?.reset) {
           altchaEl.reset();
@@ -1725,6 +1956,7 @@ export class CommunityComments extends LitElement {
 
   toggleReplyBox(parentId: number) {
     this.openReactionPickerKey = null;
+    this.closeAuthPicker();
     if (this.activeReplyParentId === parentId) {
       this.activeReplyParentId = null;
     } else {
@@ -1734,8 +1966,28 @@ export class CommunityComments extends LitElement {
     }
   }
 
+  private requestPostReply(parentId: number) {
+    if (!this.replyBody.trim() || this.isSubmittingReply) return;
+
+    if (!this.currentUser) {
+      if (this.authPickerMode === 'guest' && this.replyAltchaPayload) {
+        void this.handlePostReply(parentId);
+        return;
+      }
+      this.openAuthPicker('reply');
+      return;
+    }
+
+    void this.handlePostReply(parentId);
+  }
+
   async handlePostReply(parentId: number) {
     if (!this.replyBody.trim() || this.isSubmittingReply) return;
+    if (!this.currentUser && !this.replyAltchaPayload) {
+      this.openAuthPicker('reply');
+      this.authPickerMode = 'guest';
+      return;
+    }
 
     this.isSubmittingReply = true;
     try {
@@ -1743,7 +1995,7 @@ export class CommunityComments extends LitElement {
         thread_slug: this.resolvedThreadSlug,
         parent_id: parentId,
         body_markdown: this.replyBody,
-        guest_name: this.replyGuestName || undefined,
+        guest_name: this.currentUser ? undefined : this.replyGuestName || undefined,
         altcha: this.currentUser ? undefined : this.replyAltchaPayload || undefined,
       };
 
@@ -1756,8 +2008,10 @@ export class CommunityComments extends LitElement {
 
       if (res.ok) {
         this.replyBody = '';
+        this.replyGuestName = '';
         this.replyAltchaPayload = '';
         this.activeReplyParentId = null;
+        this.closeAuthPicker();
         await this.fetchComments();
       } else {
         const errData = await res.json().catch(() => ({}));
@@ -1863,7 +2117,187 @@ export class CommunityComments extends LitElement {
   }
 
   private toggleReactionPicker(key: string) {
+    this.closeAuthPicker();
     this.openReactionPickerKey = this.openReactionPickerKey === key ? null : key;
+  }
+
+  private authProviderIcon(providerId: string) {
+    return AUTH_ICONS[providerId] || nothing;
+  }
+
+  private selectAuthProvider(providerId: string) {
+    if (providerId === 'email_link') {
+      this.authPickerMode = 'email';
+      return;
+    }
+    this.loginWith(providerId);
+  }
+
+  private selectGuestAuth() {
+    this.authPickerMode = 'guest';
+  }
+
+  renderAuthPicker() {
+    if (!this.showAuthPicker || this.currentUser) return nothing;
+
+    const isReply = this.authPickerContext === 'reply';
+    const guestName = isReply ? this.replyGuestName : this.guestName;
+    const altchaReady = isReply ? !!this.replyAltchaPayload : !!this.altchaPayload;
+    const isSubmitting = isReply ? this.isSubmittingReply : this.isSubmitting;
+    const canPostAsGuest = this.authPickerMode === 'guest' && altchaReady && !isSubmitting;
+
+    return html`
+      <div class="auth-picker" role="dialog" aria-label=${this.t('signInToPost')}>
+        <p class="auth-picker-title">${this.t('signInToPost')}</p>
+
+        <div class="auth-picker-providers">
+          ${this.authProviders.map((p) =>
+            p.id === 'email_link'
+              ? html`
+                  <button
+                    type="button"
+                    class="auth-provider-btn ${this.authPickerMode === 'email' ? 'active' : ''}"
+                    title=${p.name || this.t('emailLinkBtn')}
+                    aria-label=${p.name || this.t('emailLinkBtn')}
+                    @click=${() => this.selectAuthProvider('email_link')}
+                  >
+                    ${this.authProviderIcon('email_link')}
+                  </button>
+                `
+              : html`
+                  <button
+                    type="button"
+                    class="auth-provider-btn"
+                    title=${p.name}
+                    aria-label=${p.name}
+                    @click=${() => this.selectAuthProvider(p.id)}
+                  >
+                    ${this.authProviderIcon(p.id)}
+                  </button>
+                `
+          )}
+          <button
+            type="button"
+            class="auth-guest-btn ${this.authPickerMode === 'guest' ? 'active' : ''}"
+            @click=${() => this.selectGuestAuth()}
+          >
+            ${this.t('continueAsGuest')}
+          </button>
+        </div>
+
+        ${this.authPickerMode === 'guest'
+          ? html`
+              <div class="auth-picker-panel">
+                <input
+                  type="text"
+                  class="name-input"
+                  placeholder=${this.t('guestNamePlaceholder')}
+                  aria-label=${this.t('guestNameLabel')}
+                  .value=${guestName}
+                  @input=${(e: any) => {
+                    if (isReply) this.replyGuestName = e.target.value;
+                    else this.guestName = e.target.value;
+                  }}
+                />
+                <altcha-widget
+                  challenge="${this.resolvedApiBase}/api/captcha/challenge/"
+                  auto="onload"
+                  spamfilter="false"
+                  display="invisible"
+                  hidefooter
+                  hidelogo
+                  @statechange=${(e: CustomEvent) => {
+                    const payload =
+                      e.detail?.state === 'verified' ? e.detail?.payload || '' : '';
+                    if (isReply) {
+                      this.replyAltchaPayload =
+                        e.detail?.state === 'verified' ? payload : '';
+                    } else {
+                      this.altchaPayload =
+                        e.detail?.state === 'verified' ? payload : '';
+                    }
+                  }}
+                ></altcha-widget>
+                <button
+                  class="submit-btn"
+                  ?disabled=${!canPostAsGuest}
+                  @click=${() => {
+                    if (isReply && this.activeReplyParentId !== null) {
+                      void this.handlePostReply(this.activeReplyParentId);
+                    } else {
+                      void this.handlePostComment();
+                    }
+                  }}
+                >
+                  ${isSubmitting ? this.t('submittingBtn') : this.t('postAsGuest')}
+                </button>
+              </div>
+            `
+          : nothing}
+
+        ${this.authPickerMode === 'email'
+          ? html`
+              <div class="auth-picker-panel">
+                <div class="magic-link-form">
+                  <input
+                    type="email"
+                    class="magic-email-input"
+                    placeholder=${this.t('emailLinkPlaceholder')}
+                    .value=${this.magicLinkEmail}
+                    @input=${(e: any) => (this.magicLinkEmail = e.target.value)}
+                    @keydown=${(e: KeyboardEvent) => {
+                      if (e.key === 'Enter') this.handleRequestMagicLink();
+                    }}
+                  />
+                  <button
+                    class="magic-send-btn"
+                    ?disabled=${!this.magicLinkEmail.trim() || this.isSendingMagicLink}
+                    @click=${this.handleRequestMagicLink}
+                  >
+                    ${this.isSendingMagicLink ? this.t('sendingMagicLinkBtn') : this.t('sendMagicLinkBtn')}
+                  </button>
+                </div>
+                ${this.magicLinkSentTo
+                  ? html`
+                      <div class="magic-sent-banner">
+                        <span>
+                          ${this.t('magicLinkSentMessage')} <strong>${this.magicLinkSentTo}</strong>.
+                          ${this.t('magicLinkSentInstructions')}
+                        </span>
+                      </div>
+                    `
+                  : nothing}
+              </div>
+            `
+          : nothing}
+
+        ${this.blockedPopupUrl
+          ? html`
+              <div class="popup-blocked-banner">
+                <span>${this.t('popupBlockedNotice')}</span>
+                <a
+                  href="${this.blockedPopupUrl}"
+                  target="_blank"
+                  class="popup-retry-link"
+                  @click=${() => (this.blockedPopupUrl = null)}
+                >
+                  ${this.t('popupOpenManual')}
+                </a>
+                ${this.blockedProviderId
+                  ? html`
+                      <button
+                        class="redirect-fallback-btn"
+                        @click=${() => this.loginWithRedirect(this.blockedProviderId!)}
+                      >
+                        (${this.t('popupRedirectFallback')})
+                      </button>
+                    `
+                  : nothing}
+              </div>
+            `
+          : nothing}
+      </div>
+    `;
   }
 
   /** Shared giscus-style trigger + active pills + emoji picker. */
@@ -1879,24 +2313,52 @@ export class CommunityComments extends LitElement {
 
     return html`
       <div class="page-reactions-row">
-        <button
-          type="button"
-          class="page-reaction-trigger"
-          aria-label=${this.t('addReaction')}
-          aria-expanded=${pickerOpen ? 'true' : 'false'}
-          title=${this.t('addReaction')}
-          @click=${(e: Event) => {
-            e.stopPropagation();
-            this.toggleReactionPicker(pickerKey);
-          }}
-        >
-          <svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.4">
-            <circle cx="8" cy="8" r="6.25"></circle>
-            <path d="M5.2 9.4c.7 1 1.7 1.5 2.8 1.5s2.1-.5 2.8-1.5" stroke-linecap="round"></path>
-            <circle cx="5.8" cy="6.4" r="0.7" fill="currentColor" stroke="none"></circle>
-            <circle cx="10.2" cy="6.4" r="0.7" fill="currentColor" stroke="none"></circle>
-          </svg>
-        </button>
+        <div class="page-reaction-trigger-wrap">
+          <button
+            type="button"
+            class="page-reaction-trigger"
+            aria-label=${this.t('addReaction')}
+            aria-expanded=${pickerOpen ? 'true' : 'false'}
+            title=${this.t('addReaction')}
+            @click=${(e: Event) => {
+              e.stopPropagation();
+              this.toggleReactionPicker(pickerKey);
+            }}
+          >
+            <svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.4">
+              <circle cx="8" cy="8" r="6.25"></circle>
+              <path d="M5.2 9.4c.7 1 1.7 1.5 2.8 1.5s2.1-.5 2.8-1.5" stroke-linecap="round"></path>
+              <circle cx="5.8" cy="6.4" r="0.7" fill="currentColor" stroke="none"></circle>
+              <circle cx="10.2" cy="6.4" r="0.7" fill="currentColor" stroke="none"></circle>
+            </svg>
+          </button>
+
+          ${pickerOpen
+            ? html`
+                <div class="page-reaction-picker" role="menu" aria-label=${this.t('addReaction')}>
+                  <div class="page-reaction-picker-grid">
+                    ${REACTION_KINDS.map(({ kind, emoji }) => {
+                      const isActive = active.includes(kind);
+                      return html`
+                        <button
+                          type="button"
+                          class="page-reaction-option ${isActive ? 'active' : ''}"
+                          role="menuitem"
+                          title=${kind}
+                          @click=${async () => {
+                            await this.toggleReaction(commentId, kind);
+                            this.openReactionPickerKey = null;
+                          }}
+                        >
+                          ${emoji}
+                        </button>
+                      `;
+                    })}
+                  </div>
+                </div>
+              `
+            : nothing}
+        </div>
 
         ${visible.map(({ kind, emoji }) => {
           const count = counts[kind] || 0;
@@ -1912,32 +2374,6 @@ export class CommunityComments extends LitElement {
             </button>
           `;
         })}
-
-        ${pickerOpen
-          ? html`
-              <div class="page-reaction-picker" role="menu" aria-label=${this.t('addReaction')}>
-                <div class="page-reaction-picker-grid">
-                  ${REACTION_KINDS.map(({ kind, emoji }) => {
-                    const isActive = active.includes(kind);
-                    return html`
-                      <button
-                        type="button"
-                        class="page-reaction-option ${isActive ? 'active' : ''}"
-                        role="menuitem"
-                        title=${kind}
-                        @click=${async () => {
-                          await this.toggleReaction(commentId, kind);
-                          this.openReactionPickerKey = null;
-                        }}
-                      >
-                        ${emoji}
-                      </button>
-                    `;
-                  })}
-                </div>
-              </div>
-            `
-          : nothing}
       </div>
     `;
   }
@@ -1988,50 +2424,37 @@ export class CommunityComments extends LitElement {
           @input=${(e: any) => (this.replyBody = e.target.value)}
           @keydown=${(e: KeyboardEvent) => {
             if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-              this.handlePostReply(parentComment.id);
+              this.requestPostReply(parentComment.id);
             }
           }}
         ></textarea>
 
         <div class="reply-footer">
-          <div class="editor-meta">
-            ${!this.currentUser
-              ? html`
-                  <input
-                    type="text"
-                    class="name-input"
-                    placeholder=${this.t('guestNamePlaceholder')}
-                    .value=${this.replyGuestName}
-                    @input=${(e: any) => (this.replyGuestName = e.target.value)}
-                  />
-                  <altcha-widget
-                    challenge="${this.resolvedApiBase}/api/captcha/challenge/"
-                    auto="onload"
-                    spamfilter="false"
-                    display="invisible"
-                    @statechange=${(e: CustomEvent) => {
-                      if (e.detail?.state === 'verified') {
-                        this.replyAltchaPayload = e.detail?.payload || '';
-                      } else if (e.detail?.state === 'expired' || e.detail?.state === 'error') {
-                        this.replyAltchaPayload = '';
-                      }
-                    }}
-                  ></altcha-widget>
-                `
-              : nothing}
-          </div>
-
           <div class="reply-actions">
-            <button class="cancel-btn" @click=${() => (this.activeReplyParentId = null)}>
+            <button class="cancel-btn" @click=${() => {
+              this.activeReplyParentId = null;
+              this.closeAuthPicker();
+            }}>
               ${this.t('cancelBtn')}
             </button>
-            <button
-              class="submit-btn"
-              ?disabled=${!this.replyBody.trim() || this.isSubmittingReply || (!this.currentUser && !this.replyAltchaPayload)}
-              @click=${() => this.handlePostReply(parentComment.id)}
-            >
-              ${this.isSubmittingReply ? this.t('submittingBtn') : this.t('postReplyBtn')}
-            </button>
+            ${this.currentUser
+              ? html`
+                  <span class="footer-user">
+                    <strong>${this.currentUser.name}</strong>
+                    <button class="logout-btn" @click=${this.handleLogout}>${this.t('logoutBtn')}</button>
+                  </span>
+                `
+              : nothing}
+            <div class="submit-wrap">
+              <button
+                class="submit-btn"
+                ?disabled=${!this.replyBody.trim() || this.isSubmittingReply}
+                @click=${() => this.requestPostReply(parentComment.id)}
+              >
+                ${this.isSubmittingReply ? this.t('submittingBtn') : this.t('postReplyBtn')}
+              </button>
+              ${this.authPickerContext === 'reply' ? this.renderAuthPicker() : nothing}
+            </div>
           </div>
         </div>
       </div>
@@ -2052,103 +2475,6 @@ export class CommunityComments extends LitElement {
       <div class="comments-widget">
         <!-- Page Reactions (giscus-style) -->
         ${this.renderPageReactions()}
-
-        <!-- Auth Status Bar -->
-        <div class="auth-bar">
-          ${this.currentUser
-            ? html`
-                <span>
-                  ${this.t('loggedInAs')} <strong>${this.currentUser.name}</strong>
-                  ${this.currentUser.is_team ? html`<span class="team-badge">${this.t('teamBadge')}</span>` : nothing}
-                </span>
-                <button class="logout-btn" @click=${this.handleLogout}>${this.t('logoutBtn')}</button>
-              `
-            : html`
-                <span>${this.t('orSignInWith')}</span>
-                <div class="social-buttons">
-                  ${this.authProviders.map((p) =>
-                    p.id === 'email_link'
-                      ? html`
-                          <button
-                            class="social-btn"
-                            @click=${() => (this.showMagicLinkInput = !this.showMagicLinkInput)}
-                          >
-                            ${this.t('emailLinkBtn')}
-                          </button>
-                        `
-                      : html`
-                          <button class="social-btn" @click=${() => this.loginWith(p.id)}>
-                            ${p.name}
-                          </button>
-                        `
-                  )}
-                </div>
-
-                ${this.showMagicLinkInput
-                  ? html`
-                      <div class="magic-link-form">
-                        <input
-                          type="email"
-                          class="magic-email-input"
-                          placeholder=${this.t('emailLinkPlaceholder')}
-                          .value=${this.magicLinkEmail}
-                          @input=${(e: any) => (this.magicLinkEmail = e.target.value)}
-                          @keydown=${(e: KeyboardEvent) => {
-                            if (e.key === 'Enter') this.handleRequestMagicLink();
-                          }}
-                        />
-                        <button
-                          class="magic-send-btn"
-                          ?disabled=${!this.magicLinkEmail.trim() || this.isSendingMagicLink}
-                          @click=${this.handleRequestMagicLink}
-                        >
-                          ${this.isSendingMagicLink ? this.t('sendingMagicLinkBtn') : this.t('sendMagicLinkBtn')}
-                        </button>
-                        <button class="magic-cancel-btn" @click=${() => (this.showMagicLinkInput = false)}>✕</button>
-                      </div>
-                    `
-                  : nothing}
-
-                ${this.magicLinkSentTo
-                  ? html`
-                      <div class="magic-sent-banner">
-                        <span>
-                          ✉️ ${this.t('magicLinkSentMessage')} <strong>${this.magicLinkSentTo}</strong>.
-                          ${this.t('magicLinkSentInstructions')}
-                        </span>
-                        <button class="close-banner-btn" @click=${() => (this.magicLinkSentTo = '')}>✕</button>
-                      </div>
-                    `
-                  : nothing}
-              `}
-
-          <!-- Popup Blocked Fallback Banner -->
-          ${this.blockedPopupUrl
-            ? html`
-                <div class="popup-blocked-banner">
-                  <span>⚠️ ${this.t('popupBlockedNotice')}</span>
-                  <a
-                    href="${this.blockedPopupUrl}"
-                    target="_blank"
-                    class="popup-retry-link"
-                    @click=${() => (this.blockedPopupUrl = null)}
-                  >
-                    ${this.t('popupOpenManual')}
-                  </a>
-                  ${this.blockedProviderId
-                    ? html`
-                        <button
-                          class="redirect-fallback-btn"
-                          @click=${() => this.loginWithRedirect(this.blockedProviderId!)}
-                        >
-                          (${this.t('popupRedirectFallback')})
-                        </button>
-                      `
-                    : nothing}
-                </div>
-              `
-            : nothing}
-        </div>
 
         <!-- Editor Area -->
         <div class="editor-box">
@@ -2186,7 +2512,7 @@ export class CommunityComments extends LitElement {
                   @input=${(e: any) => this.saveDraft(e.target.value)}
                   @keydown=${(e: KeyboardEvent) => {
                     if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-                      this.handlePostComment();
+                      this.requestPostComment();
                     }
                   }}
                 ></textarea>
@@ -2201,32 +2527,6 @@ export class CommunityComments extends LitElement {
 
           <div class="editor-footer">
             <div class="editor-meta">
-              ${!this.currentUser
-                ? html`
-                    <input
-                      type="text"
-                      class="name-input"
-                      placeholder=${this.t('guestNamePlaceholder')}
-                      .value=${this.guestName}
-                      @input=${(e: any) => (this.guestName = e.target.value)}
-                    />
-                    <altcha-widget
-                      challenge="${this.resolvedApiBase}/api/captcha/challenge/"
-                      auto="onload"
-                      spamfilter="false"
-                      display="invisible"
-                      hidefooter
-                      hidelogo
-                      @statechange=${(e: CustomEvent) => {
-                        if (e.detail?.state === 'verified') {
-                          this.altchaPayload = e.detail?.payload || '';
-                        } else if (e.detail?.state === 'expired' || e.detail?.state === 'error') {
-                          this.altchaPayload = '';
-                        }
-                      }}
-                    ></altcha-widget>
-                  `
-                : nothing}
               <span>${this.commentBody.length} / 5,000 ${this.t('charLimit')}</span>
               <span>
                 <button class="coc-link" @click=${() => (this.showCocModal = true)}>
@@ -2235,13 +2535,29 @@ export class CommunityComments extends LitElement {
               </span>
             </div>
 
-            <button
-              class="submit-btn"
-              ?disabled=${!this.commentBody.trim() || this.isSubmitting || (!this.currentUser && !this.altchaPayload)}
-              @click=${this.handlePostComment}
-            >
-              ${this.isSubmitting ? this.t('submittingBtn') : this.t('submitBtn')}
-            </button>
+            <div class="editor-submit">
+              ${this.currentUser
+                ? html`
+                    <span class="footer-user">
+                      <strong>${this.currentUser.name}</strong>
+                      ${this.currentUser.is_team
+                        ? html`<span class="team-badge">${this.t('teamBadge')}</span>`
+                        : nothing}
+                      <button class="logout-btn" @click=${this.handleLogout}>${this.t('logoutBtn')}</button>
+                    </span>
+                  `
+                : nothing}
+              <div class="submit-wrap">
+                <button
+                  class="submit-btn"
+                  ?disabled=${!this.commentBody.trim() || this.isSubmitting}
+                  @click=${() => this.requestPostComment()}
+                >
+                  ${this.isSubmitting ? this.t('submittingBtn') : this.t('submitBtn')}
+                </button>
+                ${this.authPickerContext === 'comment' ? this.renderAuthPicker() : nothing}
+              </div>
+            </div>
           </div>
         </div>
 
