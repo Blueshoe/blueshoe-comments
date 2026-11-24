@@ -260,6 +260,12 @@ export class CommunityComments extends LitElement {
       gap: 1.5rem;
     }
 
+    .comments-section {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
     .widget-header {
       border-bottom: 2px solid #f1f5f9;
       padding-bottom: 0.75rem;
@@ -1961,10 +1967,6 @@ export class CommunityComments extends LitElement {
 
     return html`
       <div class="comments-widget">
-        <div class="widget-header">
-          <h3>${this.t('comments')} (${this.comments.length})</h3>
-        </div>
-
         <!-- Page Reactions (giscus-style) -->
         ${this.renderPageReactions()}
 
@@ -2161,7 +2163,11 @@ export class CommunityComments extends LitElement {
         </div>
 
         <!-- Comments List -->
-        <div class="comment-list">
+        <div class="comments-section">
+          <div class="widget-header">
+            <h3>${this.t('comments')} (${this.comments.length})</h3>
+          </div>
+          <div class="comment-list">
           ${this.comments.map(
             (c) => html`
               <div class="comment-card" id="comment-${c.id}">
@@ -2306,6 +2312,7 @@ export class CommunityComments extends LitElement {
               </div>
             `
           )}
+          </div>
         </div>
       </div>
 
