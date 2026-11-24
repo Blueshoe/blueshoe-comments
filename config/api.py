@@ -6,7 +6,7 @@ from users.api import router as users_router
 
 api = NinjaAPI(
     title="Blueshoe Community API",
-    version="0.4.0",
+    version="0.5.1",
     description=(
         "API-First Community System featuring markdown comments, 1-level threaded replies, "
         "dual positive-only reactions (page & comment levels), passwordless Magic Login Link, "
