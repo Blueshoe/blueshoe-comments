@@ -26,6 +26,8 @@ const I18N: Record<string, Record<string, string>> = {
     cocLink: "Code of Conduct",
     pendingNotice: "Your comment is being briefly reviewed by AI moderation.",
     deleteBtn: "Delete",
+    deletingBtn: "Deleting...",
+    deleteConfirm: "Delete this comment permanently?",
     editBtn: "Edit",
     editedLabel: "✎ edited",
     replyBtn: "Reply",
@@ -73,6 +75,8 @@ const I18N: Record<string, Record<string, string>> = {
     cocLink: "Verhaltenskodex",
     pendingNotice: "Dein Kommentar wird kurz durch die KI-Moderation geprüft.",
     deleteBtn: "Löschen",
+    deletingBtn: "Wird gelöscht...",
+    deleteConfirm: "Diesen Kommentar endgültig löschen?",
     editBtn: "Bearbeiten",
     editedLabel: "✎ editiert",
     replyBtn: "Antworten",
@@ -587,6 +591,13 @@ export class CommunityComments extends LitElement {
       border: 1px dashed #fde68a;
     }
 
+    .owner-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-left: auto;
+    }
+
     .revise-btn {
       background: #f59e0b;
       color: #ffffff;
@@ -604,6 +615,31 @@ export class CommunityComments extends LitElement {
 
     .revise-btn:hover {
       filter: brightness(0.92);
+    }
+
+    .delete-btn {
+      background: transparent;
+      color: #dc2626;
+      border: 1px solid #fca5a5;
+      border-radius: 4px;
+      padding: 3px 10px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .delete-btn:hover:not(:disabled) {
+      background: #fef2f2;
+      color: #b91c1c;
+    }
+
+    .delete-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
 
     .revision-editor {
@@ -1266,6 +1302,9 @@ export class CommunityComments extends LitElement {
   @state()
   private isSavingRevision = false;
 
+  @state()
+  private isDeletingCommentId: number | null = null;
+
   startEditingComment(commentId: number, rawMarkdown: string) {
     this.editingCommentId = commentId;
     this.editingBody = rawMarkdown;
@@ -1274,6 +1313,50 @@ export class CommunityComments extends LitElement {
   cancelEditingComment() {
     this.editingCommentId = null;
     this.editingBody = '';
+  }
+
+  async handleDeleteComment(commentId: number) {
+    if (this.isDeletingCommentId !== null) return;
+    if (!confirm(this.t('deleteConfirm'))) return;
+
+    this.isDeletingCommentId = commentId;
+    try {
+      const res = await fetch(`${this.resolvedApiBase}/api/comments/${commentId}/`, {
+        method: 'DELETE',
+        headers: this.getHeaders(),
+        credentials: 'include',
+      });
+      if (res.ok || res.status === 204) {
+        if (this.editingCommentId === commentId) {
+          this.editingCommentId = null;
+          this.editingBody = '';
+        }
+        if (this.activeReplyParentId === commentId) {
+          this.activeReplyParentId = null;
+        }
+        await this.fetchComments();
+      } else {
+        const err = await res.json().catch(() => ({}));
+        alert(err?.detail || err?.error || 'Failed to delete comment.');
+      }
+    } catch (e) {
+      console.error('Failed to delete comment', e);
+    } finally {
+      this.isDeletingCommentId = null;
+    }
+  }
+
+  private renderDeleteButton(commentId: number) {
+    const isDeleting = this.isDeletingCommentId === commentId;
+    return html`
+      <button
+        class="delete-btn"
+        ?disabled=${isDeleting}
+        @click=${() => this.handleDeleteComment(commentId)}
+      >
+        ${isDeleting ? this.t('deletingBtn') : this.t('deleteBtn')}
+      </button>
+    `;
   }
 
   async handleSaveRevision(commentId: number) {
@@ -2176,6 +2259,9 @@ export class CommunityComments extends LitElement {
                   ${c.is_team ? html`<span class="team-badge">${this.t('teamBadge')}</span>` : nothing}
                   ${c.edited_at ? html`<span class="comment-date">${this.t('editedLabel')}</span>` : nothing}
                   <span class="comment-date">• ${new Date(c.created_at).toLocaleDateString()}</span>
+                  ${c.can_edit && c.status !== 'pending'
+                    ? html`<span class="owner-actions">${this.renderDeleteButton(c.id)}</span>`
+                    : nothing}
                 </div>
 
                 ${c.status === 'pending'
@@ -2183,14 +2269,21 @@ export class CommunityComments extends LitElement {
                       <div class="pending-review-box">
                         <div class="pending-review-header">
                           <span>⏳ ${this.t('pendingReviewTitle')}</span>
-                          ${c.can_edit && this.editingCommentId !== c.id
+                          ${c.can_edit
                             ? html`
-                                <button
-                                  class="revise-btn"
-                                  @click=${() => this.startEditingComment(c.id, c.raw_markdown)}
-                                >
-                                  ✎ ${this.t('reviseBtn')}
-                                </button>
+                                <span class="owner-actions">
+                                  ${this.editingCommentId !== c.id
+                                    ? html`
+                                        <button
+                                          class="revise-btn"
+                                          @click=${() => this.startEditingComment(c.id, c.raw_markdown)}
+                                        >
+                                          ✎ ${this.t('reviseBtn')}
+                                        </button>
+                                      `
+                                    : nothing}
+                                  ${this.renderDeleteButton(c.id)}
+                                </span>
                               `
                             : nothing}
                         </div>
@@ -2247,6 +2340,9 @@ export class CommunityComments extends LitElement {
                                 <span class="comment-author">${r.author_name}</span>
                                 ${r.is_team ? html`<span class="team-badge">${this.t('teamBadge')}</span>` : nothing}
                                 <span class="comment-date">• ${new Date(r.created_at).toLocaleDateString()}</span>
+                                ${r.can_edit && r.status !== 'pending'
+                                  ? html`<span class="owner-actions">${this.renderDeleteButton(r.id)}</span>`
+                                  : nothing}
                               </div>
 
                               ${r.status === 'pending'
@@ -2254,14 +2350,21 @@ export class CommunityComments extends LitElement {
                                     <div class="pending-review-box">
                                       <div class="pending-review-header">
                                         <span>⏳ ${this.t('pendingReviewTitle')}</span>
-                                        ${r.can_edit && this.editingCommentId !== r.id
+                                        ${r.can_edit
                                           ? html`
-                                              <button
-                                                class="revise-btn"
-                                                @click=${() => this.startEditingComment(r.id, r.raw_markdown)}
-                                              >
-                                                ✎ ${this.t('reviseBtn')}
-                                              </button>
+                                              <span class="owner-actions">
+                                                ${this.editingCommentId !== r.id
+                                                  ? html`
+                                                      <button
+                                                        class="revise-btn"
+                                                        @click=${() => this.startEditingComment(r.id, r.raw_markdown)}
+                                                      >
+                                                        ✎ ${this.t('reviseBtn')}
+                                                      </button>
+                                                    `
+                                                  : nothing}
+                                                ${this.renderDeleteButton(r.id)}
+                                              </span>
                                             `
                                           : nothing}
                                       </div>
