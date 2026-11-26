@@ -11,111 +11,135 @@ const altchaStyles = unsafeCSS(altchaCss);
 
 const I18N: Record<string, Record<string, string>> = {
   en: {
-    offlineMessage: "Our comment server is taking a coffee break ☕",
-    retry: "Try again",
-    comments: "Comments",
-    teamBadge: "🛡️ Maintainer",
-    writeTab: "Write",
-    previewTab: "Preview",
-    placeholder: "Leave a constructive comment (Markdown supported)...",
-    guestNamePlaceholder: "Your Name (or leave blank for Guest)",
-    submitBtn: "Post Comment",
-    submittingBtn: "Submitting...",
-    previewEmpty: "Nothing to preview yet.",
-    charLimit: "characters",
-    cocLink: "Code of Conduct",
-    pendingNotice: "Your comment is being briefly reviewed by AI moderation.",
-    deleteBtn: "Delete",
-    deletingBtn: "Deleting...",
-    deleteConfirm: "Delete this comment permanently?",
-    editBtn: "Edit",
-    editedLabel: "✎ edited",
-    replyBtn: "Reply",
-    cancelBtn: "Cancel",
-    postReplyBtn: "Post Reply",
-    replyPlaceholder: "Write a constructive reply...",
-    pageReactionsTitle: "Article Reactions",
-    reactionCountSingular: "1 reaction",
-    reactionCountPlural: "{n} reactions",
-    addReaction: "Add reaction",
-    replyingTo: "Replying to",
-    loggedInAs: "Logged in as",
-    logoutBtn: "Log out",
-    orSignInWith: "Or sign in with:",
-    signInToPost: "Sign in to post your comment",
-    continueAsGuest: "Guest",
-    postAsGuest: "Post as Guest",
-    guestNameLabel: "Your name",
-    popupBlockedNotice: "Login popup was blocked by your browser.",
-    popupOpenManual: "Open Login Window",
-    popupRedirectFallback: "or continue via redirect",
-    emailLinkBtn: "Email Link",
-    emailLinkPlaceholder: "Enter your email address...",
-    sendMagicLinkBtn: "Send Login Link",
-    sendingMagicLinkBtn: "Sending...",
+    offlineMessage: 'Our comment server is taking a coffee break ☕',
+    retry: 'Try again',
+    comments: 'Comments',
+    discussionTitle: 'Community Discussion',
+    discussionSubtitle: 'Join the conversation and share your thoughts.',
+    commentCountSingular: '1 Comment',
+    commentCountPlural: '{n} Comments',
+    teamBadge: '🛡️ Maintainer',
+    writeTab: 'Write',
+    previewTab: 'Preview',
+    switchToPreview: 'Switch to preview',
+    switchToMarkdown: 'Switch to Markdown',
+    formatToggleTitle: 'Formatting',
+    placeholder: 'What do you think? Add a comment...',
+    guestNamePlaceholder: 'Your Name (or leave blank for Guest)',
+    submitBtn: 'Comment',
+    submittingBtn: 'Submitting...',
+    previewEmpty: 'Nothing to preview yet.',
+    charLimit: 'characters',
+    cocLink: 'Code of Conduct',
+    pendingNotice: 'Your comment is being briefly reviewed by AI moderation.',
+    deleteBtn: 'Delete',
+    deletingBtn: 'Deleting...',
+    deleteConfirm: 'Delete this comment permanently?',
+    editBtn: 'Edit',
+    editedLabel: 'edited',
+    replyBtn: 'Reply',
+    cancelBtn: 'Cancel',
+    postReplyBtn: 'Post Reply',
+    replyPlaceholder: 'Write a constructive reply...',
+    pageReactionsTitle: 'Article Reactions',
+    reactionCountSingular: '1 reaction',
+    reactionCountPlural: '{n} reactions',
+    addReaction: 'Add reaction',
+    replyingTo: 'Replying to',
+    loggedInAs: 'Logged in as',
+    logoutBtn: 'Log out',
+    orSignInWith: 'Or sign in with:',
+    signInToPost: 'Sign in to post your comment',
+    continueAsGuest: 'Guest',
+    postAsGuest: 'Post as Guest',
+    guestNameLabel: 'Your name',
+    popupBlockedNotice: 'Login popup was blocked by your browser.',
+    popupOpenManual: 'Open Login Window',
+    popupRedirectFallback: 'or continue via redirect',
+    emailLinkBtn: 'Email Link',
+    emailLinkPlaceholder: 'Enter your email address...',
+    sendMagicLinkBtn: 'Send Login Link',
+    sendingMagicLinkBtn: 'Sending...',
     magicLinkSentMessage: "Check your inbox! We've sent a magic login link to",
-    magicLinkSentInstructions: "Click the link in the email to complete your login.",
-    pendingReviewTitle: "Pending Editorial Review",
-    pendingReviewNotice: "This comment is held for editorial review and has not been published yet.",
-    assessmentReasonLabel: "Assessment / Reason:",
-    reviseBtn: "Revise Comment",
-    saveRevisionBtn: "Save & Resubmit",
-    cancelRevisionBtn: "Cancel",
-    savingRevisionBtn: "Saving...",
+    magicLinkSentInstructions: 'Click the link in the email to complete your login.',
+    pendingReviewTitle: 'Pending Editorial Review',
+    pendingReviewNotice: 'This comment is held for editorial review and has not been published yet.',
+    assessmentReasonLabel: 'Assessment / Reason:',
+    reviseBtn: 'Revise Comment',
+    saveRevisionBtn: 'Save & Resubmit',
+    cancelRevisionBtn: 'Cancel',
+    savingRevisionBtn: 'Saving...',
+    youAvatar: 'Me',
+    relativeJustNow: 'just now',
+    relativeMinutes: '{n} minutes ago',
+    relativeHours: '{n} hours ago',
+    relativeDays: '{n} days ago'
   },
   de: {
-    offlineMessage: "Unser Kommentar-Server macht gerade Kaffeepause ☕",
-    retry: "Nochmal versuchen",
-    comments: "Kommentare",
-    teamBadge: "🛡️ Maintainer",
-    writeTab: "Schreiben",
-    previewTab: "Vorschau",
-    placeholder: "Schreibe einen konstruktiven Kommentar (Markdown unterstützt)...",
-    guestNamePlaceholder: "Dein Name (oder leer lassen für Gast)",
-    submitBtn: "Kommentar absenden",
-    submittingBtn: "Wird gesendet...",
-    previewEmpty: "Noch nichts zum Voranzeigen.",
-    charLimit: "Zeichen",
-    cocLink: "Verhaltenskodex",
-    pendingNotice: "Dein Kommentar wird kurz durch die KI-Moderation geprüft.",
-    deleteBtn: "Löschen",
-    deletingBtn: "Wird gelöscht...",
-    deleteConfirm: "Diesen Kommentar endgültig löschen?",
-    editBtn: "Bearbeiten",
-    editedLabel: "✎ editiert",
-    replyBtn: "Antworten",
-    cancelBtn: "Abbrechen",
-    postReplyBtn: "Antwort senden",
-    replyPlaceholder: "Schreibe eine konstruktive Antwort...",
-    pageReactionsTitle: "Artikel-Reaktionen",
-    reactionCountSingular: "1 Reaktion",
-    reactionCountPlural: "{n} Reaktionen",
-    addReaction: "Reaktion hinzufügen",
-    replyingTo: "Antwort an",
-    loggedInAs: "Angemeldet als",
-    logoutBtn: "Abmelden",
-    orSignInWith: "Oder anmelden mit:",
-    signInToPost: "Anmelden, um deinen Kommentar zu senden",
-    continueAsGuest: "Gast",
-    postAsGuest: "Als Gast absenden",
-    guestNameLabel: "Dein Name",
-    popupBlockedNotice: "Login-Popup wurde vom Browser blockiert.",
-    popupOpenManual: "Login-Fenster manuell öffnen",
-    popupRedirectFallback: "oder per Weiterleitung anmelden",
-    emailLinkBtn: "E-Mail-Link",
-    emailLinkPlaceholder: "Deine E-Mail-Adresse...",
-    sendMagicLinkBtn: "Login-Link senden",
-    sendingMagicLinkBtn: "Wird gesendet...",
-    magicLinkSentMessage: "Postfach prüfen! Wir haben einen Login-Link gesendet an",
-    magicLinkSentInstructions: "Klicke auf den Link in der E-Mail, um dich anzumelden.",
-    pendingReviewTitle: "In redaktioneller Prüfung",
-    pendingReviewNotice: "Dieser Kommentar ist in redaktioneller Prüfung und noch nicht öffentlich sichtbar.",
-    assessmentReasonLabel: "Einschätzung / Begründung:",
-    reviseBtn: "Kommentar überarbeiten",
-    saveRevisionBtn: "Speichern & Erneut einreichen",
-    cancelRevisionBtn: "Abbrechen",
-    savingRevisionBtn: "Wird gespeichert...",
-  },
+    offlineMessage: 'Unser Kommentar-Server macht gerade Kaffeepause ☕',
+    retry: 'Nochmal versuchen',
+    comments: 'Kommentare',
+    discussionTitle: 'Community-Diskussion',
+    discussionSubtitle: 'Nimm an der Unterhaltung teil und teile deine Meinung.',
+    commentCountSingular: '1 Kommentar',
+    commentCountPlural: '{n} Kommentare',
+    teamBadge: '🛡️ Maintainer',
+    writeTab: 'Schreiben',
+    previewTab: 'Vorschau',
+    switchToPreview: 'Zur Vorschau wechseln',
+    switchToMarkdown: 'Zu Markdown wechseln',
+    formatToggleTitle: 'Formatierung',
+    placeholder: 'Beteilige dich an der Unterhaltung',
+    guestNamePlaceholder: 'Dein Name (oder leer lassen für Gast)',
+    submitBtn: 'Kommentieren',
+    submittingBtn: 'Wird gesendet...',
+    previewEmpty: 'Noch nichts zum Voranzeigen.',
+    charLimit: 'Zeichen',
+    cocLink: 'Verhaltenskodex',
+    pendingNotice: 'Dein Kommentar wird kurz durch die KI-Moderation geprüft.',
+    deleteBtn: 'Löschen',
+    deletingBtn: 'Wird gelöscht...',
+    deleteConfirm: 'Diesen Kommentar endgültig löschen?',
+    editBtn: 'Bearbeiten',
+    editedLabel: 'editiert',
+    replyBtn: 'Antworten',
+    cancelBtn: 'Abbrechen',
+    postReplyBtn: 'Antwort senden',
+    replyPlaceholder: 'Schreibe eine konstruktive Antwort...',
+    pageReactionsTitle: 'Artikel-Reaktionen',
+    reactionCountSingular: '1 Reaktion',
+    reactionCountPlural: '{n} Reaktionen',
+    addReaction: 'Reaktion hinzufügen',
+    replyingTo: 'Antwort an',
+    loggedInAs: 'Angemeldet als',
+    logoutBtn: 'Abmelden',
+    orSignInWith: 'Oder anmelden mit:',
+    signInToPost: 'Anmelden, um deinen Kommentar zu senden',
+    continueAsGuest: 'Gast',
+    postAsGuest: 'Als Gast absenden',
+    guestNameLabel: 'Dein Name',
+    popupBlockedNotice: 'Login-Popup wurde vom Browser blockiert.',
+    popupOpenManual: 'Login-Fenster manuell öffnen',
+    popupRedirectFallback: 'oder per Weiterleitung anmelden',
+    emailLinkBtn: 'E-Mail-Link',
+    emailLinkPlaceholder: 'Deine E-Mail-Adresse...',
+    sendMagicLinkBtn: 'Login-Link senden',
+    sendingMagicLinkBtn: 'Wird gesendet...',
+    magicLinkSentMessage: 'Postfach prüfen! Wir haben einen Login-Link gesendet an',
+    magicLinkSentInstructions: 'Klicke auf den Link in der E-Mail, um dich anzumelden.',
+    pendingReviewTitle: 'In redaktioneller Prüfung',
+    pendingReviewNotice: 'Dieser Kommentar ist in redaktioneller Prüfung und noch nicht öffentlich sichtbar.',
+    assessmentReasonLabel: 'Einschätzung / Begründung:',
+    reviseBtn: 'Kommentar überarbeiten',
+    saveRevisionBtn: 'Speichern & Erneut einreichen',
+    cancelRevisionBtn: 'Abbrechen',
+    savingRevisionBtn: 'Wird gespeichert...',
+    youAvatar: 'Ich',
+    relativeJustNow: 'gerade eben',
+    relativeMinutes: 'vor {n} Min.',
+    relativeHours: 'vor {n} Std.',
+    relativeDays: 'vor {n} Tagen'
+  }
 };
 
 const FORMATS = {
@@ -124,8 +148,50 @@ const FORMATS = {
   code: ['`', '`', 'code'],
   codeBlock: ['```python\n', '\n```', 'code block'],
   link: ['[', '](https://)', 'link'],
-  quote: ['> ', '', 'quote'],
+  quote: ['> ', '', 'quote']
 } as const;
+
+const AVATAR_COLORS = [
+  '#10b981',
+  '#f59e0b',
+  '#8b5cf6',
+  '#3b82f6',
+  '#ef4444',
+  '#06b6d4',
+  '#ec4899',
+  '#84cc16',
+  '#6366f1',
+  '#14b8a6'
+];
+
+function getInitials(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return '?';
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
+}
+
+function getAvatarColor(name: string): string {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
+}
+
+function formatRelativeTime(iso: string, t: (key: string) => string): string {
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return '';
+  const diffMs = Date.now() - date.getTime();
+  const minutes = Math.floor(diffMs / 60000);
+  if (minutes < 1) return t('relativeJustNow');
+  if (minutes < 60) return t('relativeMinutes').replace('{n}', String(minutes));
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return t('relativeHours').replace('{n}', String(hours));
+  const days = Math.floor(hours / 24);
+  if (days < 30) return t('relativeDays').replace('{n}', String(days));
+  return date.toLocaleDateString();
+}
 
 /** Brand icons as inline SVGs (Shadow DOM friendly, no Font Awesome needed). */
 const AUTH_ICONS: Record<string, ReturnType<typeof html>> = {
@@ -172,24 +238,11 @@ const AUTH_ICONS: Record<string, ReturnType<typeof html>> = {
         d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5L4 8V6l8 5 8-5v2z"
       />
     </svg>
-  `,
+  `
 };
 
 /** Allowed tags/attrs aligned with comments.utils.render_and_sanitize_markdown. */
-const MARKDOWN_ALLOWED_TAGS = [
-  'p',
-  'code',
-  'pre',
-  'blockquote',
-  'ul',
-  'ol',
-  'li',
-  'strong',
-  'em',
-  'a',
-  'br',
-  'span',
-];
+const MARKDOWN_ALLOWED_TAGS = ['p', 'code', 'pre', 'blockquote', 'ul', 'ol', 'li', 'strong', 'em', 'a', 'br', 'span'];
 const MARKDOWN_ALLOWED_ATTR = ['href', 'class', 'rel'];
 
 marked.setOptions({ breaks: true, gfm: true });
@@ -200,7 +253,7 @@ function renderMarkdownPreview(markdownText: string): string {
   return DOMPurify.sanitize(rawHtml, {
     ALLOWED_TAGS: MARKDOWN_ALLOWED_TAGS,
     ALLOWED_ATTR: MARKDOWN_ALLOWED_ATTR,
-    ADD_ATTR: ['target'],
+    ADD_ATTR: ['target']
   });
 }
 
@@ -216,7 +269,7 @@ const REACTION_KINDS = [
   { kind: 'love', emoji: '❤️' },
   { kind: 'rocket', emoji: '🚀' },
   { kind: 'celebrate', emoji: '🎉' },
-  { kind: 'insightful', emoji: '💡' },
+  { kind: 'insightful', emoji: '💡' }
 ];
 
 const OAUTH_SIGNAL_KEY = 'blueshoe_oauth';
@@ -302,1055 +355,1330 @@ export class CommunityComments extends LitElement {
   static styles = [
     altchaStyles,
     css`
-    :host {
-      display: block;
-      font-family: var(--community-font, system-ui, sans-serif);
-      color: var(--community-color, #1e293b);
-      background: var(--community-bg, #ffffff);
-      border-radius: var(--community-radius, 8px);
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    .comments-widget {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    .comments-section {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .widget-header {
-      border-bottom: 2px solid #f1f5f9;
-      padding-bottom: 0.75rem;
-    }
-
-    .widget-header h3 {
-      margin: 0;
-      font-size: 1.25rem;
-      font-weight: 700;
-    }
-
-    /* Page Reactions (giscus-style) */
-    .page-reactions {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.45rem;
-      padding: 0.35rem 0 0.15rem;
-    }
-
-    .page-reactions-summary {
-      font-size: 0.8rem;
-      color: #64748b;
-      font-weight: 500;
-    }
-
-    .page-reactions-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-    }
-
-    .page-reaction-trigger-wrap {
-      position: relative;
-      display: inline-flex;
-      flex-shrink: 0;
-    }
-
-    .page-reaction-trigger,
-    .page-reaction-pill {
-      box-sizing: border-box;
-      height: 28px;
-      border: 1px solid #cbd5e1;
-      background: #ffffff;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: border-color 0.15s, color 0.15s, background 0.15s;
-    }
-
-    .page-reaction-trigger {
-      width: 28px;
-      padding: 0;
-      border-radius: 50%;
-      color: #64748b;
-    }
-
-    .page-reaction-trigger:hover,
-    .page-reaction-trigger[aria-expanded='true'] {
-      border-color: var(--community-accent, #3b82f6);
-      color: var(--community-accent, #3b82f6);
-      background: #e0f2fe;
-    }
-
-    .page-reaction-trigger svg {
-      width: 16px;
-      height: 16px;
-      display: block;
-    }
-
-    .page-reaction-pill {
-      gap: 0.3rem;
-      border-radius: 20px;
-      padding: 0 10px;
-      font-size: 0.85rem;
-      color: #334155;
-      line-height: 1;
-    }
-
-    .page-reaction-pill:hover {
-      border-color: var(--community-accent, #3b82f6);
-      background: #e0f2fe;
-    }
-
-    .page-reaction-pill.active {
-      border-color: var(--community-accent, #3b82f6);
-      background: #e0f2fe;
-      color: var(--community-accent, #3b82f6);
-      font-weight: 600;
-    }
-
-    .page-reaction-picker {
-      position: absolute;
-      top: calc(100% + 10px);
-      left: 0;
-      z-index: 40;
-      min-width: 180px;
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: var(--community-radius, 8px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-      padding: 0.45rem;
-    }
-
-    .page-reaction-picker::before {
-      content: '';
-      position: absolute;
-      top: -7px;
-      left: 14px;
-      width: 12px;
-      height: 12px;
-      background: #ffffff;
-      border-left: 1px solid #e2e8f0;
-      border-top: 1px solid #e2e8f0;
-      transform: translateX(-50%) rotate(45deg);
-    }
-
-    .page-reaction-picker-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0.2rem;
-    }
-
-    .page-reaction-option {
-      width: 36px;
-      height: 36px;
-      border: none;
-      border-radius: 4px;
-      background: transparent;
-      font-size: 1.15rem;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .page-reaction-option:hover {
-      background: #f1f5f9;
-    }
-
-    .page-reaction-option.active {
-      background: #e0f2fe;
-      box-shadow: inset 0 0 0 1px var(--community-accent, #3b82f6);
-    }
-
-    .editor-submit {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-      margin-left: auto;
-    }
-
-    .footer-user {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      font-size: 0.85rem;
-      color: #64748b;
-    }
-
-    .footer-user strong {
-      color: #334155;
-    }
-
-    .submit-wrap {
-      position: relative;
-      display: inline-flex;
-    }
-
-    .auth-picker {
-      position: absolute;
-      bottom: calc(100% + 10px);
-      right: 0;
-      z-index: 50;
-      width: max-content;
-      max-width: 90vw;
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: var(--community-radius, 8px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-      padding: 0.7rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.55rem;
-    }
-
-    .auth-picker::after {
-      content: '';
-      position: absolute;
-      bottom: -7px;
-      right: 22px;
-      width: 12px;
-      height: 12px;
-      background: #ffffff;
-      border-right: 1px solid #e2e8f0;
-      border-bottom: 1px solid #e2e8f0;
-      transform: rotate(45deg);
-    }
-
-    .auth-picker-title {
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: #64748b;
-      margin: 0;
-    }
-
-    .auth-picker-providers {
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-      flex-wrap: nowrap;
-    }
-
-    .auth-provider-btn {
-      width: 40px;
-      height: 40px;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      background: #ffffff;
-      color: #334155;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      transition: border-color 0.15s, background 0.15s, color 0.15s;
-    }
-
-    .auth-provider-btn:hover,
-    .auth-provider-btn.active {
-      border-color: var(--community-accent, #3b82f6);
-      background: #e0f2fe;
-      color: var(--community-accent, #3b82f6);
-    }
-
-    .auth-provider-btn svg {
-      width: 20px;
-      height: 20px;
-      display: block;
-    }
-
-    .auth-guest-btn {
-      height: 40px;
-      padding: 0 12px;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      background: #ffffff;
-      color: #334155;
-      cursor: pointer;
-      font-size: 0.85rem;
-      font-weight: 600;
-      line-height: 1;
-      transition: border-color 0.15s, background 0.15s, color 0.15s;
-    }
-
-    .auth-guest-btn:hover,
-    .auth-guest-btn.active {
-      border-color: var(--community-accent, #3b82f6);
-      background: #e0f2fe;
-      color: var(--community-accent, #3b82f6);
-    }
-
-    .auth-picker-panel {
-      display: flex;
-      flex-direction: column;
-      gap: 0.45rem;
-      padding-top: 0.15rem;
-      border-top: 1px solid #f1f5f9;
-      min-width: 220px;
-    }
-
-    .auth-picker-panel .name-input,
-    .auth-picker-panel .magic-email-input {
-      width: 100%;
-      max-width: none;
-      min-width: 0;
-    }
-
-    .auth-picker-panel .magic-link-form {
-      width: 100%;
-      margin-top: 0;
-    }
-
-    .logout-btn {
-      background: transparent;
-      border: none;
-      color: #ef4444;
-      cursor: pointer;
-      font-size: 0.8rem;
-      text-decoration: underline;
-      padding: 0;
-    }
-
-    .popup-blocked-banner {
-      width: 100%;
-      background: #fffbeb;
-      border: 1px solid #fde68a;
-      border-radius: var(--community-radius, 8px);
-      padding: 0.5rem 0.75rem;
-      font-size: 0.8rem;
-      color: #92400e;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
-
-    .popup-retry-link {
-      color: var(--community-accent, #3b82f6);
-      font-weight: 600;
-      text-decoration: underline;
-      cursor: pointer;
-    }
-
-    .redirect-fallback-btn {
-      background: none;
-      border: none;
-      color: #64748b;
-      font-size: 0.8rem;
-      text-decoration: underline;
-      cursor: pointer;
-      padding: 0;
-    }
-
-    .magic-link-form {
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-      width: 100%;
-      margin-top: 0.35rem;
-      flex-wrap: wrap;
-    }
-
-    .magic-email-input {
-      padding: 0.35rem 0.6rem;
-      border: 1px solid #cbd5e1;
-      border-radius: 4px;
-      font-size: 0.85rem;
-      flex: 1;
-      min-width: 200px;
-      max-width: 280px;
-    }
-
-    .magic-email-input:focus {
-      outline: none;
-      border-color: var(--community-accent, #3b82f6);
-    }
-
-    .magic-send-btn {
-      background: var(--community-accent, #3b82f6);
-      color: #ffffff;
-      border: none;
-      border-radius: 4px;
-      padding: 0.35rem 0.75rem;
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-
-    .magic-send-btn:hover {
-      background: #1d4ed8;
-    }
-
-    .magic-send-btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    .magic-cancel-btn {
-      background: transparent;
-      border: none;
-      color: #64748b;
-      cursor: pointer;
-      font-size: 0.85rem;
-      padding: 2px 6px;
-    }
-
-    .magic-sent-banner {
-      width: 100%;
-      background: #ecfdf5;
-      border: 1px solid #a7f3d0;
-      border-radius: var(--community-radius, 8px);
-      padding: 0.4rem 0.75rem;
-      font-size: 0.85rem;
-      color: #065f46;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.5rem;
-      margin-top: 0.35rem;
-    }
-
-    .close-banner-btn {
-      background: transparent;
-      border: none;
-      color: #065f46;
-      font-weight: 700;
-      cursor: pointer;
-      padding: 0 4px;
-    }
-
-    .pending-review-box {
-      background: #fffbeb;
-      border: 1px solid #fde68a;
-      border-left: 4px solid #92400e;
-      border-radius: var(--community-radius, 8px);
-      padding: 0.65rem 0.85rem;
-      margin-bottom: 0.75rem;
-      font-size: 0.85rem;
-      color: #92400e;
-    }
-
-    .pending-review-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-weight: 700;
-      margin-bottom: 0.25rem;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-    }
-
-    .pending-review-reason {
-      margin: 0.35rem 0 0.6rem;
-      font-size: 0.85rem;
-      color: #92400e;
-      line-height: 1.45;
-      background: rgba(254, 243, 199, 0.6);
-      padding: 0.4rem 0.6rem;
-      border-radius: 4px;
-      border: 1px dashed #fde68a;
-    }
-
-    .owner-actions {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      margin-left: auto;
-    }
-
-    .revise-btn {
-      background: #f59e0b;
-      color: #ffffff;
-      border: none;
-      border-radius: 4px;
-      padding: 3px 10px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      transition: background 0.15s;
-    }
-
-    .revise-btn:hover {
-      filter: brightness(0.92);
-    }
-
-    .delete-btn {
-      background: transparent;
-      color: #dc2626;
-      border: 1px solid #fca5a5;
-      border-radius: 4px;
-      padding: 3px 10px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      transition: background 0.15s, color 0.15s;
-    }
-
-    .delete-btn:hover:not(:disabled) {
-      background: #fef2f2;
-      color: #b91c1c;
-    }
-
-    .delete-btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    .revision-editor {
-      margin-top: 0.6rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .revision-textarea {
-      width: 100%;
-      min-height: 85px;
-      padding: 0.6rem;
-      border: 1px solid #cbd5e1;
-      border-radius: var(--community-radius, 8px);
-      font-family: inherit;
-      font-size: 0.9rem;
-      background: #ffffff;
-      resize: vertical;
-    }
-
-    .revision-textarea:focus {
-      outline: none;
-      border-color: var(--community-accent, #3b82f6);
-    }
-
-    .revision-actions {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      justify-content: flex-end;
-    }
-
-    /* Editor */
-    .editor-box {
-      border: 1px solid #cbd5e1;
-      border-radius: var(--community-radius, 8px);
-      overflow: hidden;
-      background: #f8fafc;
-      transition: border-color 0.2s;
-    }
-
-    .editor-box:focus-within {
-      border-color: var(--community-accent, #3b82f6);
-    }
-
-    .editor-toolbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.5rem;
-      background: #f1f5f9;
-      border-bottom: 1px solid #e2e8f0;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    .toolbar-buttons {
-      display: flex;
-      gap: 0.25rem;
-    }
-
-    .toolbar-btn {
-      background: #ffffff;
-      border: 1px solid #cbd5e1;
-      border-radius: 4px;
-      padding: 0.25rem 0.5rem;
-      font-size: 0.85rem;
-      cursor: pointer;
-      color: #334155;
-    }
-
-    .toolbar-btn:hover {
-      background: #e2e8f0;
-    }
-
-    .tab-buttons {
-      display: flex;
-      gap: 0.25rem;
-    }
-
-    .tab-btn {
-      background: transparent;
-      border: none;
-      padding: 0.25rem 0.6rem;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.85rem;
-      color: #64748b;
-    }
-
-    .tab-btn.active {
-      background: #ffffff;
-      color: var(--community-accent, #3b82f6);
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-    }
-
-    .editor-textarea {
-      width: 100%;
-      min-height: 120px;
-      padding: 0.75rem;
-      border: none;
-      outline: none;
-      font-family: inherit;
-      font-size: 0.95rem;
-      resize: vertical;
-      background: #ffffff;
-    }
-
-    .editor-preview {
-      min-height: 120px;
-      padding: 0.75rem;
-      background: #ffffff;
-      font-size: 0.95rem;
-      line-height: 1.6;
-    }
-
-    .editor-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.6rem 0.75rem;
-      background: #f8fafc;
-      border-top: 1px solid #e2e8f0;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-    }
-
-    .editor-meta {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-size: 0.85rem;
-      color: #64748b;
-      flex-wrap: wrap;
-    }
-
-    .name-input {
-      padding: 0.35rem 0.6rem;
-      border: 1px solid #cbd5e1;
-      border-radius: 4px;
-      font-size: 0.85rem;
-    }
-
-    .coc-link {
-      color: var(--community-accent, #3b82f6);
-      text-decoration: underline;
-      cursor: pointer;
-      background: none;
-      border: none;
-      padding: 0;
-      font: inherit;
-      font-weight: 600;
-    }
-
-    .submit-btn {
-      background: var(--community-accent, #3b82f6);
-      color: #ffffff;
-      border: none;
-      border-radius: var(--community-radius, 8px);
-      padding: 0.5rem 1rem;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-
-    .submit-btn:hover {
-      background: #1d4ed8;
-    }
-
-    .submit-btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    /* Comment List */
-    .comment-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .comment-card {
-      border: 1px solid #e2e8f0;
-      border-radius: var(--community-radius, 8px);
-      padding: 1rem;
-      background: #ffffff;
-    }
-
-    .comment-header {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.5rem;
-      font-size: 0.9rem;
-    }
-
-    .comment-author {
-      font-weight: 700;
-    }
-
-    .team-badge {
-      background: var(--community-accent, #3b82f6);
-      color: #ffffff;
-      padding: 1px 6px;
-      border-radius: 4px;
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
-
-    .comment-date {
-      color: #94a3b8;
-      font-size: 0.8rem;
-    }
-
-    .comment-body {
-      font-size: 0.95rem;
-      line-height: 1.6;
-      word-break: break-word;
-    }
-
-    .comment-body p {
-      margin: 0.4rem 0;
-    }
-
-    .comment-body p:first-child {
-      margin-top: 0;
-    }
-
-    .comment-body p:last-child {
-      margin-bottom: 0;
-    }
-
-    .comment-body pre {
-      background: #0f172a;
-      color: #f8fafc;
-      padding: 0.85rem 1.1rem;
-      border-radius: var(--community-radius, 8px);
-      overflow-x: auto;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size: 0.85rem;
-      line-height: 1.55;
-      margin: 0.65rem 0;
-      white-space: pre;
-      tab-size: 4;
-      border: 1px solid #1e293b;
-    }
-
-    .comment-body pre code {
-      background: transparent;
-      color: inherit;
-      padding: 0;
-      border-radius: 0;
-      font-size: inherit;
-      font-family: inherit;
-      white-space: pre;
-    }
-
-    .comment-body code {
-      background: #f1f5f9;
-      color: #0f172a;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size: 0.88em;
-      border: 1px solid #e2e8f0;
-      white-space: pre-wrap;
-    }
-
-    .comment-body blockquote {
-      border-left: 3px solid #cbd5e1;
-      padding-left: 0.75rem;
-      margin: 0.5rem 0;
-      color: #64748b;
-      font-style: italic;
-    }
-
-    .comment-body ul,
-    .comment-body ol {
-      margin: 0.4rem 0;
-      padding-left: 1.4rem;
-    }
-
-    .comment-body li {
-      margin: 0.2rem 0;
-    }
-
-    .comment-body a {
-      color: var(--community-accent, #3b82f6);
-      text-decoration: underline;
-    }
-
-    .comment-body a:hover {
-      color: #1d4ed8;
-    }
-
-    /* Comment Reactions Bar (same controls as page reactions) */
-    .reactions-bar {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      margin-top: 0.75rem;
-      flex-wrap: wrap;
-    }
-
-    .reactions-bar .page-reactions-row {
-      justify-content: flex-start;
-    }
-
-    .reply-action-btn {
-      background: transparent;
-      border: 1px solid transparent;
-      color: #64748b;
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      height: 28px;
-      padding: 0 8px;
-      border-radius: 20px;
-      transition: all 0.15s ease-in-out;
-    }
-
-    .reply-action-btn:hover {
-      background: #f1f5f9;
-      border-color: #cbd5e1;
-      color: var(--community-accent, #3b82f6);
-    }
-
-    /* 1-Level Replies Container */
-    .replies-list {
-      margin-top: 0.85rem;
-      margin-left: 1.5rem;
-      padding-left: 1rem;
-      border-left: 2px solid #e2e8f0;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-
-    .reply-card {
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: var(--community-radius, 8px);
-      padding: 0.75rem;
-    }
-
-    /* Inline Reply Form */
-    .inline-reply-box {
-      margin-top: 0.85rem;
-      margin-left: 1.5rem;
-      padding: 0.85rem;
-      background: #f8fafc;
-      border: 1px solid #cbd5e1;
-      border-radius: var(--community-radius, 8px);
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-      animation: replyFadeIn 0.15s ease-out;
-    }
-
-    @keyframes replyFadeIn {
-      from { opacity: 0; transform: translateY(-4px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .inline-reply-box h6 {
-      margin: 0;
-      font-size: 0.85rem;
-      color: #64748b;
-    }
-
-    .reply-textarea {
-      width: 100%;
-      min-height: 75px;
-      padding: 0.6rem;
-      border: 1px solid #cbd5e1;
-      border-radius: var(--community-radius, 8px);
-      font-family: inherit;
-      font-size: 0.9rem;
-      resize: vertical;
-      background: #ffffff;
-    }
-
-    .reply-textarea:focus {
-      outline: none;
-      border-color: var(--community-accent, #3b82f6);
-    }
-
-    .reply-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-    }
-
-    .reply-actions {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      width: 100%;
-    }
-
-    .cancel-btn {
-      background: transparent;
-      border: 1px solid #cbd5e1;
-      border-radius: var(--community-radius, 8px);
-      padding: 0.4rem 0.85rem;
-      font-size: 0.85rem;
-      font-weight: 500;
-      cursor: pointer;
-      color: #64748b;
-    }
-
-    .cancel-btn:hover {
-      background: #e2e8f0;
-      color: #334155;
-    }
-
-    /* Modal for Code of Conduct */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(15, 23, 42, 0.6);
-      backdrop-filter: blur(4px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      padding: 1rem;
-    }
-
-    .modal-card {
-      background: #ffffff;
-      border-radius: 12px;
-      max-width: 600px;
-      width: 100%;
-      max-height: 85vh;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
-      overflow: hidden;
-      animation: modalFadeIn 0.2s ease-out;
-    }
-
-    @keyframes modalFadeIn {
-      from {
-        opacity: 0;
-        transform: scale(0.95);
+      :host {
+        display: block;
+        font-family: var(--community-font, system-ui, sans-serif);
+        color: var(--community-color, #1e293b);
+        background: var(--community-bg, #ffffff);
+        border-radius: var(--community-radius, 8px);
       }
-      to {
-        opacity: 1;
-        transform: scale(1);
+
+      * {
+        box-sizing: border-box;
       }
-    }
 
-    .modal-header {
-      padding: 1rem 1.25rem;
-      border-bottom: 1px solid #e2e8f0;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #f8fafc;
-    }
+      .comments-widget {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
 
-    .modal-header h4 {
-      margin: 0;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #334155;
-    }
+      .comments-section {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
 
-    .close-icon {
-      background: transparent;
-      border: none;
-      font-size: 1.25rem;
-      cursor: pointer;
-      color: #64748b;
-      line-height: 1;
-    }
+      .composer-slot {
+        margin: 0.5rem 0 1.75rem;
+      }
 
-    .close-icon:hover {
-      color: #334155;
-    }
+      .widget-header {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        padding-bottom: 0.85rem;
+        border-bottom: 1px solid #e2e8f0;
+      }
 
-    .modal-content {
-      padding: 1.25rem;
-      overflow-y: auto;
-      font-size: 0.9rem;
-      line-height: 1.6;
-      color: #334155;
-    }
+      .widget-header h3 {
+        margin: 0;
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: #0f172a;
+        letter-spacing: -0.01em;
+      }
 
-    .modal-content h5 {
-      margin: 1.2rem 0 0.4rem;
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: #334155;
-    }
+      .widget-subtitle {
+        margin: 0;
+        font-size: 0.95rem;
+        color: #64748b;
+        line-height: 1.45;
+      }
 
-    .modal-content h5:first-child {
-      margin-top: 0;
-    }
+      .comments-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin: 0.15rem 0 0.25rem;
+      }
 
-    .modal-content ul {
-      margin: 0.4rem 0;
-      padding-left: 1.2rem;
-    }
+      .comments-count {
+        font-size: 1.15rem;
+        font-weight: 600;
+        color: #0f172a;
+      }
 
-    .modal-content li {
-      margin-bottom: 0.3rem;
-    }
+      .avatar {
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        color: #ffffff;
+        font-weight: 700;
+        line-height: 1;
+        user-select: none;
+        letter-spacing: 0.02em;
+      }
 
-    .modal-footer {
-      padding: 0.75rem 1.25rem;
-      border-top: 1px solid #e2e8f0;
-      display: flex;
-      justify-content: flex-end;
-      background: #f8fafc;
-    }
+      .avatar-sm {
+        width: 28px;
+        height: 28px;
+        font-size: 0.7rem;
+      }
 
-    .status-card {
-      padding: 1.5rem;
-      border: 1px solid var(--community-accent, #3b82f6);
-      border-radius: var(--community-radius, 8px);
-      text-align: center;
-      background: #f8fafc;
-    }
-  `,
+      .avatar-md {
+        width: 36px;
+        height: 36px;
+        font-size: 0.8rem;
+      }
+
+      .avatar-lg {
+        width: 40px;
+        height: 40px;
+        font-size: 0.85rem;
+      }
+
+      /* Page Reactions (giscus-style) */
+      .page-reactions {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.35rem 0 0.15rem;
+      }
+
+      .page-reactions-summary {
+        font-size: 0.8rem;
+        color: #64748b;
+        font-weight: 500;
+      }
+
+      .page-reactions-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+      }
+
+      .page-reaction-trigger-wrap {
+        position: relative;
+        display: inline-flex;
+        flex-shrink: 0;
+      }
+
+      .page-reaction-trigger,
+      .page-reaction-pill {
+        box-sizing: border-box;
+        height: 28px;
+        border: 1px solid #cbd5e1;
+        background: #ffffff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition:
+          border-color 0.15s,
+          color 0.15s,
+          background 0.15s;
+      }
+
+      .page-reaction-trigger {
+        width: 28px;
+        padding: 0;
+        border-radius: 50%;
+        color: #64748b;
+      }
+
+      .page-reaction-trigger:hover,
+      .page-reaction-trigger[aria-expanded='true'] {
+        border-color: var(--community-accent, #3b82f6);
+        color: var(--community-accent, #3b82f6);
+        background: #e0f2fe;
+      }
+
+      .page-reaction-trigger svg {
+        width: 16px;
+        height: 16px;
+        display: block;
+      }
+
+      .page-reaction-pill {
+        gap: 0.3rem;
+        border-radius: 20px;
+        border: 1px solid #e5e7eb;
+        padding: 0 10px;
+        font-size: 0.85rem;
+        color: #475569;
+        line-height: 1;
+        background: #f3f4f6;
+        font-weight: 500;
+      }
+
+      .page-reaction-pill:hover {
+        border-color: #d1d5db;
+        background: #eef0f2;
+      }
+
+      .page-reaction-pill.active {
+        border-color: color-mix(in srgb, var(--community-accent, #2563eb) 35%, #ffffff);
+        background: color-mix(in srgb, var(--community-accent, #2563eb) 10%, #ffffff);
+        color: color-mix(in srgb, var(--community-accent, #2563eb) 82%, #0f172a);
+        font-weight: 600;
+      }
+
+      .page-reaction-pill.active:hover {
+        border-color: color-mix(in srgb, var(--community-accent, #2563eb) 45%, #ffffff);
+        background: color-mix(in srgb, var(--community-accent, #2563eb) 14%, #ffffff);
+      }
+
+      .page-reaction-picker {
+        position: absolute;
+        top: calc(100% + 10px);
+        left: 0;
+        z-index: 40;
+        min-width: 180px;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: var(--community-radius, 8px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        padding: 0.45rem;
+      }
+
+      .page-reaction-picker::before {
+        content: '';
+        position: absolute;
+        top: -7px;
+        left: 14px;
+        width: 12px;
+        height: 12px;
+        background: #ffffff;
+        border-left: 1px solid #e2e8f0;
+        border-top: 1px solid #e2e8f0;
+        transform: translateX(-50%) rotate(45deg);
+      }
+
+      .page-reaction-picker-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.2rem;
+      }
+
+      .page-reaction-option {
+        width: 36px;
+        height: 36px;
+        border: 1px solid transparent;
+        border-radius: 8px;
+        background: transparent;
+        font-size: 1.15rem;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition:
+          background 0.15s,
+          border-color 0.15s;
+      }
+
+      .page-reaction-option:hover {
+        background: #f3f4f6;
+        border-color: #e5e7eb;
+      }
+
+      .page-reaction-option.active {
+        background: color-mix(in srgb, var(--community-accent, #2563eb) 10%, #ffffff);
+        border-color: color-mix(in srgb, var(--community-accent, #2563eb) 35%, #ffffff);
+        box-shadow: none;
+      }
+
+      .page-reaction-option.active:hover {
+        background: color-mix(in srgb, var(--community-accent, #2563eb) 14%, #ffffff);
+        border-color: color-mix(in srgb, var(--community-accent, #2563eb) 45%, #ffffff);
+      }
+
+      .editor-submit {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin-left: auto;
+      }
+
+      .composer-collapsed {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        width: 100%;
+        padding: 0.7rem 0.9rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        background: #ffffff;
+        cursor: text;
+        text-align: left;
+        font: inherit;
+        color: inherit;
+        transition:
+          background 0.15s,
+          border-color 0.15s;
+      }
+
+      .composer-collapsed:hover {
+        background: #f1f5f9;
+        border-color: #cbd5e1;
+      }
+
+      .composer-collapsed-placeholder {
+        color: #94a3b8;
+        font-size: 0.95rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .composer-collapsed-placeholder.has-draft {
+        color: #334155;
+      }
+
+      .footer-user {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        font-size: 0.85rem;
+        color: #64748b;
+      }
+
+      .footer-user strong {
+        color: #334155;
+      }
+
+      .submit-wrap {
+        position: relative;
+        display: inline-flex;
+      }
+
+      .auth-picker {
+        position: absolute;
+        bottom: calc(100% + 10px);
+        right: 0;
+        z-index: 80;
+        width: max-content;
+        max-width: min(90vw, 320px);
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: var(--community-radius, 8px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        padding: 0.7rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.55rem;
+      }
+
+      .auth-picker::after {
+        content: '';
+        position: absolute;
+        bottom: -7px;
+        right: 22px;
+        width: 12px;
+        height: 12px;
+        background: #ffffff;
+        border-right: 1px solid #e2e8f0;
+        border-bottom: 1px solid #e2e8f0;
+        transform: rotate(45deg);
+      }
+
+      .auth-picker-title {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #64748b;
+        margin: 0;
+      }
+
+      .auth-picker-providers {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        flex-wrap: nowrap;
+      }
+
+      .auth-provider-btn {
+        width: 40px;
+        height: 40px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        background: #ffffff;
+        color: #334155;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition:
+          border-color 0.15s,
+          background 0.15s,
+          color 0.15s;
+      }
+
+      .auth-provider-btn:hover,
+      .auth-provider-btn.active {
+        border-color: var(--community-accent, #3b82f6);
+        background: #e0f2fe;
+        color: var(--community-accent, #3b82f6);
+      }
+
+      .auth-provider-btn svg {
+        width: 20px;
+        height: 20px;
+        display: block;
+      }
+
+      .auth-guest-btn {
+        height: 40px;
+        padding: 0 12px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        background: #ffffff;
+        color: #334155;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 600;
+        line-height: 1;
+        transition:
+          border-color 0.15s,
+          background 0.15s,
+          color 0.15s;
+      }
+
+      .auth-guest-btn:hover,
+      .auth-guest-btn.active {
+        border-color: var(--community-accent, #3b82f6);
+        background: #e0f2fe;
+        color: var(--community-accent, #3b82f6);
+      }
+
+      .auth-picker-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 0.45rem;
+        padding-top: 0.15rem;
+        border-top: 1px solid #f1f5f9;
+        min-width: 220px;
+      }
+
+      .auth-picker-panel .name-input,
+      .auth-picker-panel .magic-email-input {
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+      }
+
+      .auth-picker-panel .magic-link-form {
+        width: 100%;
+        margin-top: 0;
+      }
+
+      .logout-btn {
+        background: transparent;
+        border: none;
+        color: #ef4444;
+        cursor: pointer;
+        font-size: 0.8rem;
+        text-decoration: underline;
+        padding: 0;
+      }
+
+      .popup-blocked-banner {
+        width: 100%;
+        background: #fffbeb;
+        border: 1px solid #fde68a;
+        border-radius: var(--community-radius, 8px);
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+        color: #92400e;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+
+      .popup-retry-link {
+        color: var(--community-accent, #3b82f6);
+        font-weight: 600;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+
+      .redirect-fallback-btn {
+        background: none;
+        border: none;
+        color: #64748b;
+        font-size: 0.8rem;
+        text-decoration: underline;
+        cursor: pointer;
+        padding: 0;
+      }
+
+      .magic-link-form {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        width: 100%;
+        margin-top: 0.35rem;
+        flex-wrap: wrap;
+      }
+
+      .magic-email-input {
+        padding: 0.35rem 0.6rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        flex: 1;
+        min-width: 200px;
+        max-width: 280px;
+      }
+
+      .magic-email-input:focus {
+        outline: none;
+        border-color: var(--community-accent, #3b82f6);
+      }
+
+      .magic-send-btn {
+        background: var(--community-accent, #3b82f6);
+        color: #ffffff;
+        border: none;
+        border-radius: 4px;
+        padding: 0.35rem 0.75rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+
+      .magic-send-btn:hover {
+        background: #1d4ed8;
+      }
+
+      .magic-send-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .magic-cancel-btn {
+        background: transparent;
+        border: none;
+        color: #64748b;
+        cursor: pointer;
+        font-size: 0.85rem;
+        padding: 2px 6px;
+      }
+
+      .magic-sent-banner {
+        width: 100%;
+        background: #ecfdf5;
+        border: 1px solid #a7f3d0;
+        border-radius: var(--community-radius, 8px);
+        padding: 0.4rem 0.75rem;
+        font-size: 0.85rem;
+        color: #065f46;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        margin-top: 0.35rem;
+      }
+
+      .close-banner-btn {
+        background: transparent;
+        border: none;
+        color: #065f46;
+        font-weight: 700;
+        cursor: pointer;
+        padding: 0 4px;
+      }
+
+      .pending-review-box {
+        background: #fffbeb;
+        border: 1px solid #fde68a;
+        border-left: 4px solid #92400e;
+        border-radius: var(--community-radius, 8px);
+        padding: 0.65rem 0.85rem;
+        margin-bottom: 0.75rem;
+        font-size: 0.85rem;
+        color: #92400e;
+      }
+
+      .pending-review-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+      }
+
+      .pending-review-reason {
+        margin: 0.35rem 0 0.6rem;
+        font-size: 0.85rem;
+        color: #92400e;
+        line-height: 1.45;
+        background: rgba(254, 243, 199, 0.6);
+        padding: 0.4rem 0.6rem;
+        border-radius: 4px;
+        border: 1px dashed #fde68a;
+      }
+
+      .owner-actions {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        margin-left: auto;
+      }
+
+      .revise-btn {
+        background: #f59e0b;
+        color: #ffffff;
+        border: none;
+        border-radius: 4px;
+        padding: 3px 10px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        transition: background 0.15s;
+      }
+
+      .revise-btn:hover {
+        filter: brightness(0.92);
+      }
+
+      .delete-btn {
+        background: transparent;
+        color: #dc2626;
+        border: 1px solid #fca5a5;
+        border-radius: 4px;
+        padding: 3px 10px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        transition:
+          background 0.15s,
+          color 0.15s;
+      }
+
+      .delete-btn:hover:not(:disabled) {
+        background: #fef2f2;
+        color: #b91c1c;
+      }
+
+      .delete-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .revision-editor {
+        margin-top: 0.6rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .revision-textarea {
+        width: 100%;
+        min-height: 85px;
+        padding: 0.6rem;
+        border: 1px solid #cbd5e1;
+        border-radius: var(--community-radius, 8px);
+        font-family: inherit;
+        font-size: 0.9rem;
+        background: #ffffff;
+        resize: vertical;
+      }
+
+      .revision-textarea:focus {
+        outline: none;
+        border-color: var(--community-accent, #3b82f6);
+      }
+
+      .revision-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        justify-content: flex-end;
+      }
+
+      /* Editor */
+      .editor-box {
+        border: 1px solid #d1d5db;
+        border-radius: 16px;
+        overflow: visible;
+        background: #ffffff;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+      }
+
+      .editor-box:focus-within {
+        border-color: #9ca3af;
+        box-shadow: 0 0 0 1px #e5e7eb;
+      }
+
+      /* Clip toolbar + content to rounded corners; footer stays visible for auth popover. */
+      .editor-body {
+        overflow: hidden;
+        border-radius: 16px 16px 0 0;
+        background: #ffffff;
+      }
+
+      .editor-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.45rem 0.65rem;
+        background: #f8fafc;
+        border-bottom: 1px solid #e5e7eb;
+        border-radius: 0;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .toolbar-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.15rem;
+      }
+
+      .toolbar-btn {
+        background: transparent;
+        border: none;
+        border-radius: 6px;
+        padding: 0.35rem 0.5rem;
+        font-size: 0.85rem;
+        cursor: pointer;
+        color: #374151;
+        min-width: 30px;
+      }
+
+      .toolbar-btn:hover {
+        background: #e5e7eb;
+      }
+
+      .mode-switch-btn {
+        background: none;
+        border: none;
+        padding: 0.25rem 0.4rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--community-accent, #2563eb);
+        cursor: pointer;
+        white-space: nowrap;
+      }
+
+      .mode-switch-btn:hover {
+        text-decoration: underline;
+      }
+
+      .editor-textarea {
+        width: 100%;
+        min-height: 120px;
+        padding: 0.85rem 1rem;
+        border: none;
+        outline: none;
+        font-family: inherit;
+        font-size: 0.95rem;
+        resize: vertical;
+        background: #ffffff;
+        color: #111827;
+      }
+
+      .editor-textarea::placeholder {
+        color: #9ca3af;
+      }
+
+      .editor-preview {
+        min-height: 120px;
+        padding: 0.85rem 1rem;
+        background: #ffffff;
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
+
+      .editor-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.45rem 0.65rem 0.45rem 0.55rem;
+        background: #ffffff;
+        border-top: 1px solid #e5e7eb;
+        border-radius: 0 0 16px 16px;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        overflow: visible;
+        position: relative;
+        z-index: 2;
+      }
+
+      .editor-footer-left {
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        flex-wrap: wrap;
+      }
+
+      .format-toggle {
+        width: 32px;
+        height: 32px;
+        padding: 0;
+        border-radius: 999px;
+        border: 1px solid transparent;
+        background: transparent;
+        color: #4b5563;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition:
+          background 0.15s,
+          border-color 0.15s,
+          color 0.15s;
+      }
+
+      .format-toggle svg {
+        width: 16px;
+        height: 16px;
+        display: block;
+      }
+
+      .format-toggle:hover {
+        background: #f3f4f6;
+        color: #111827;
+      }
+
+      .format-toggle.active {
+        background: #e5e7eb;
+        border-color: #d1d5db;
+        color: #111827;
+      }
+
+      .editor-footer-left .coc-link {
+        font-size: 0.8rem;
+        font-weight: 500;
+        text-decoration: none;
+        color: #6b7280;
+      }
+
+      .editor-footer-left .coc-link:hover {
+        color: var(--community-accent, #2563eb);
+        text-decoration: underline;
+      }
+
+      .pill-btn {
+        border: none;
+        border-radius: 999px;
+        padding: 0.45rem 1rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          background 0.15s,
+          opacity 0.15s;
+      }
+
+      .pill-btn-cancel {
+        background: #e5e7eb;
+        color: #111827;
+      }
+
+      .pill-btn-cancel:hover {
+        background: #d1d5db;
+      }
+
+      .pill-btn-primary {
+        background: var(--community-accent, #2563eb);
+        color: #ffffff;
+      }
+
+      .pill-btn-primary:hover {
+        background: #1d4ed8;
+      }
+
+      .pill-btn-primary:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .name-input {
+        padding: 0.35rem 0.6rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 4px;
+        font-size: 0.85rem;
+      }
+
+      .coc-link {
+        color: var(--community-accent, #3b82f6);
+        text-decoration: underline;
+        cursor: pointer;
+        background: none;
+        border: none;
+        padding: 0;
+        font: inherit;
+        font-weight: 600;
+      }
+
+      .submit-btn {
+        background: var(--community-accent, #3b82f6);
+        color: #ffffff;
+        border: none;
+        border-radius: 999px;
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+
+      .submit-btn:hover {
+        background: #1d4ed8;
+      }
+
+      .submit-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      /* Comment List */
+      .comment-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+      }
+
+      .comment-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+      }
+
+      .comment-main {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.55rem;
+      }
+
+      .comment-card {
+        border: 1px solid #e5e7eb;
+        border-radius: 0 12px 12px 12px;
+        padding: 0.9rem 1rem;
+        background: #ffffff;
+      }
+
+      .comment-row.is-reply .comment-card {
+        background: #f8fafc;
+        border-color: #e8eef5;
+      }
+
+      .comment-header {
+        display: flex;
+        align-items: baseline;
+        gap: 0.5rem;
+        margin-bottom: 0.45rem;
+        font-size: 0.9rem;
+        flex-wrap: wrap;
+      }
+
+      .comment-author {
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: #0f172a;
+      }
+
+      .comment-header-spacer {
+        flex: 1;
+        min-width: 0.5rem;
+      }
+
+      .team-badge {
+        background: var(--community-accent, #3b82f6);
+        color: #ffffff;
+        padding: 1px 6px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+
+      .comment-date {
+        color: #94a3b8;
+        font-size: 0.8rem;
+        white-space: nowrap;
+      }
+
+      .comment-body {
+        font-size: 0.95rem;
+        line-height: 1.6;
+        word-break: break-word;
+      }
+
+      .comment-body p {
+        margin: 0.4rem 0;
+      }
+
+      .comment-body p:first-child {
+        margin-top: 0;
+      }
+
+      .comment-body p:last-child {
+        margin-bottom: 0;
+      }
+
+      .comment-body pre {
+        background: #0f172a;
+        color: #f8fafc;
+        padding: 0.85rem 1.1rem;
+        border-radius: var(--community-radius, 8px);
+        overflow-x: auto;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+        font-size: 0.85rem;
+        line-height: 1.55;
+        margin: 0.65rem 0;
+        white-space: pre;
+        tab-size: 4;
+        border: 1px solid #1e293b;
+      }
+
+      .comment-body pre code {
+        background: transparent;
+        color: inherit;
+        padding: 0;
+        border-radius: 0;
+        font-size: inherit;
+        font-family: inherit;
+        white-space: pre;
+      }
+
+      .comment-body code {
+        background: #f1f5f9;
+        color: #0f172a;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+        font-size: 0.88em;
+        border: 1px solid #e2e8f0;
+        white-space: pre-wrap;
+      }
+
+      .comment-body blockquote {
+        border-left: 3px solid #cbd5e1;
+        padding-left: 0.75rem;
+        margin: 0.5rem 0;
+        color: #64748b;
+        font-style: italic;
+      }
+
+      .comment-body ul,
+      .comment-body ol {
+        margin: 0.4rem 0;
+        padding-left: 1.4rem;
+      }
+
+      .comment-body li {
+        margin: 0.2rem 0;
+      }
+
+      .comment-body a {
+        color: var(--community-accent, #3b82f6);
+        text-decoration: underline;
+      }
+
+      .comment-body a:hover {
+        color: #1d4ed8;
+      }
+
+      /* Comment Reactions Bar */
+      .reactions-bar {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        margin-top: 0.15rem;
+        flex-wrap: wrap;
+      }
+
+      .reactions-bar .page-reactions-row {
+        justify-content: flex-start;
+        gap: 0.35rem;
+      }
+
+      .reactions-sep {
+        width: 1px;
+        height: 16px;
+        background: #d1d5db;
+        margin: 0 0.15rem;
+        flex-shrink: 0;
+      }
+
+      .reply-action-btn {
+        background: transparent;
+        border: none;
+        color: #64748b;
+        font-size: 0.78rem;
+        font-weight: 500;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        height: 28px;
+        padding: 0 0.2rem;
+        border-radius: 0;
+        transition: color 0.15s;
+      }
+
+      .reply-action-btn:hover {
+        background: transparent;
+        color: var(--community-accent, #2563eb);
+      }
+
+      /* 1-Level Replies Container */
+      .replies-list {
+        margin-top: 0.5rem;
+        margin-left: 0.25rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      /* Inline Reply Form */
+      .inline-reply-box {
+        margin-top: 0.15rem;
+        padding: 0;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 0 12px 12px 12px;
+        display: flex;
+        flex-direction: column;
+        overflow: visible;
+        animation: replyFadeIn 0.15s ease-out;
+      }
+
+      @keyframes replyFadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-4px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .inline-reply-box h6 {
+        margin: 0;
+        padding: 0.65rem 0.85rem 0;
+        font-size: 0.85rem;
+        color: #64748b;
+      }
+
+      .inline-reply-box .editor-toolbar {
+        border-radius: 0;
+        margin-top: 0.45rem;
+      }
+
+      .reply-textarea {
+        width: 100%;
+        min-height: 90px;
+        padding: 0.75rem 0.85rem;
+        border: none;
+        outline: none;
+        font-family: inherit;
+        font-size: 0.9rem;
+        resize: vertical;
+        background: #ffffff;
+      }
+
+      .reply-preview {
+        min-height: 90px;
+        padding: 0.75rem 0.85rem;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        background: #ffffff;
+      }
+
+      .reply-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        padding: 0.45rem 0.65rem;
+        border-top: 1px solid #e5e7eb;
+        border-radius: 0 0 12px 12px;
+        background: #ffffff;
+        overflow: visible;
+        position: relative;
+        z-index: 2;
+      }
+
+      .reply-footer-left {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+      }
+
+      .reply-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin-left: auto;
+      }
+
+      .cancel-btn {
+        background: #e5e7eb;
+        border: none;
+        border-radius: 999px;
+        padding: 0.45rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        color: #111827;
+      }
+
+      .cancel-btn:hover {
+        background: #d1d5db;
+        color: #111827;
+      }
+
+      /* Modal for Code of Conduct */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(4px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        padding: 1rem;
+      }
+
+      .modal-card {
+        background: #ffffff;
+        border-radius: 12px;
+        max-width: 600px;
+        width: 100%;
+        max-height: 85vh;
+        display: flex;
+        flex-direction: column;
+        box-shadow:
+          0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 8px 10px -6px rgba(0, 0, 0, 0.04);
+        overflow: hidden;
+        animation: modalFadeIn 0.2s ease-out;
+      }
+
+      @keyframes modalFadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .modal-header {
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid #e2e8f0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #f8fafc;
+      }
+
+      .modal-header h4 {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #334155;
+      }
+
+      .close-icon {
+        background: transparent;
+        border: none;
+        font-size: 1.25rem;
+        cursor: pointer;
+        color: #64748b;
+        line-height: 1;
+      }
+
+      .close-icon:hover {
+        color: #334155;
+      }
+
+      .modal-content {
+        padding: 1.25rem;
+        overflow-y: auto;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        color: #334155;
+      }
+
+      .modal-content h5 {
+        margin: 1.2rem 0 0.4rem;
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #334155;
+      }
+
+      .modal-content h5:first-child {
+        margin-top: 0;
+      }
+
+      .modal-content ul {
+        margin: 0.4rem 0;
+        padding-left: 1.2rem;
+      }
+
+      .modal-content li {
+        margin-bottom: 0.3rem;
+      }
+
+      .modal-footer {
+        padding: 0.75rem 1.25rem;
+        border-top: 1px solid #e2e8f0;
+        display: flex;
+        justify-content: flex-end;
+        background: #f8fafc;
+      }
+
+      .status-card {
+        padding: 1.5rem;
+        border: 1px solid var(--community-accent, #3b82f6);
+        border-radius: var(--community-radius, 8px);
+        text-align: center;
+        background: #f8fafc;
+      }
+    `
   ];
 
   @property({ type: String, attribute: 'api-base' })
@@ -1414,6 +1742,18 @@ export class CommunityComments extends LitElement {
 
   @state()
   private activeTab: 'write' | 'preview' = 'write';
+
+  @state()
+  private editorExpanded = false;
+
+  @state()
+  private showFormatting = false;
+
+  @state()
+  private showReplyFormatting = false;
+
+  @state()
+  private replyActiveTab: 'write' | 'preview' = 'write';
 
   @state()
   private commentBody = '';
@@ -1502,7 +1842,7 @@ export class CommunityComments extends LitElement {
       const res = await fetch(`${this.resolvedApiBase}/api/comments/${commentId}/`, {
         method: 'DELETE',
         headers: this.getHeaders(),
-        credentials: 'include',
+        credentials: 'include'
       });
       if (res.ok || res.status === 204) {
         if (this.editingCommentId === commentId) {
@@ -1527,11 +1867,7 @@ export class CommunityComments extends LitElement {
   private renderDeleteButton(commentId: number) {
     const isDeleting = this.isDeletingCommentId === commentId;
     return html`
-      <button
-        class="delete-btn"
-        ?disabled=${isDeleting}
-        @click=${() => this.handleDeleteComment(commentId)}
-      >
+      <button class="delete-btn" ?disabled=${isDeleting} @click=${() => this.handleDeleteComment(commentId)}>
         ${isDeleting ? this.t('deletingBtn') : this.t('deleteBtn')}
       </button>
     `;
@@ -1545,7 +1881,7 @@ export class CommunityComments extends LitElement {
         method: 'PATCH',
         headers: this.getHeaders({ 'Content-Type': 'application/json' }),
         credentials: 'include',
-        body: JSON.stringify({ body_markdown: this.editingBody }),
+        body: JSON.stringify({ body_markdown: this.editingBody })
       });
       if (res.ok) {
         this.editingCommentId = null;
@@ -1572,8 +1908,8 @@ export class CommunityComments extends LitElement {
         headers: this.getHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({
           email: this.magicLinkEmail,
-          next_url: window.location.href,
-        }),
+          next_url: window.location.href
+        })
       });
       const data = await res.json().catch(() => ({}));
       if (res.ok) {
@@ -1603,9 +1939,10 @@ export class CommunityComments extends LitElement {
     try {
       vid = localStorage.getItem('community_vid') || '';
       if (!vid) {
-        vid = typeof crypto !== 'undefined' && crypto.randomUUID
-          ? crypto.randomUUID()
-          : 'vid_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
+        vid =
+          typeof crypto !== 'undefined' && crypto.randomUUID
+            ? crypto.randomUUID()
+            : 'vid_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
         localStorage.setItem('community_vid', vid);
       }
     } catch (_) {
@@ -1617,7 +1954,7 @@ export class CommunityComments extends LitElement {
   private getHeaders(extra: Record<string, string> = {}): Record<string, string> {
     return {
       'X-Visitor-Id': this.getVisitorId(),
-      ...extra,
+      ...extra
     };
   }
 
@@ -1740,7 +2077,7 @@ export class CommunityComments extends LitElement {
     try {
       const [provRes, sessRes] = await Promise.all([
         fetch(`${this.resolvedApiBase}/api/auth/providers/`, { credentials: 'include', cache: 'no-store' }),
-        fetch(`${this.resolvedApiBase}/api/auth/session/`, { credentials: 'include', cache: 'no-store' }),
+        fetch(`${this.resolvedApiBase}/api/auth/session/`, { credentials: 'include', cache: 'no-store' })
       ]);
       if (provRes.ok) {
         this.authProviders = await provRes.json();
@@ -1788,7 +2125,7 @@ export class CommunityComments extends LitElement {
     try {
       await fetch(`${this.resolvedApiBase}/api/auth/logout/`, {
         method: 'POST',
-        credentials: 'include',
+        credentials: 'include'
       });
       this.currentUser = null;
       this.fetchComments();
@@ -1812,13 +2149,172 @@ export class CommunityComments extends LitElement {
     } catch (_) {}
   }
 
+  private replyCount(comment: any): number {
+    return Array.isArray(comment?.replies) ? comment.replies.length : 0;
+  }
+
+  private get totalCommentCount(): number {
+    return this.comments.reduce((sum, c) => sum + 1 + this.replyCount(c), 0);
+  }
+
+  private commentCountLabel(): string {
+    const n = this.totalCommentCount;
+    if (n === 1) return this.t('commentCountSingular');
+    return this.t('commentCountPlural').replace('{n}', String(n));
+  }
+
+  private expandEditor() {
+    this.editorExpanded = true;
+    this.closeAuthPicker();
+    requestAnimationFrame(() => {
+      const textarea = this.shadowRoot?.querySelector('textarea.editor-textarea') as HTMLTextAreaElement | null;
+      textarea?.focus();
+    });
+  }
+
+  private collapseEditor() {
+    this.editorExpanded = false;
+    this.showFormatting = false;
+    this.activeTab = 'write';
+    this.closeAuthPicker();
+  }
+
+  private toggleFormatting() {
+    this.showFormatting = !this.showFormatting;
+    this.activeTab = 'write';
+    if (this.showFormatting) {
+      requestAnimationFrame(() => {
+        const textarea = this.shadowRoot?.querySelector('textarea.editor-textarea') as HTMLTextAreaElement | null;
+        textarea?.focus();
+      });
+    }
+  }
+
+  private toggleReplyFormatting() {
+    this.showReplyFormatting = !this.showReplyFormatting;
+    this.replyActiveTab = 'write';
+    if (this.showReplyFormatting) {
+      requestAnimationFrame(() => {
+        const textarea = this.shadowRoot?.querySelector('textarea.reply-textarea') as HTMLTextAreaElement | null;
+        textarea?.focus();
+      });
+    }
+  }
+
+  private switchEditorMode(mode: 'write' | 'preview', target: 'comment' | 'reply' = 'comment') {
+    if (target === 'reply') {
+      this.replyActiveTab = mode;
+      if (mode === 'write') {
+        requestAnimationFrame(() => {
+          const textarea = this.shadowRoot?.querySelector('textarea.reply-textarea') as HTMLTextAreaElement | null;
+          textarea?.focus();
+        });
+      }
+      return;
+    }
+
+    this.activeTab = mode;
+    if (mode === 'write') {
+      requestAnimationFrame(() => {
+        const textarea = this.shadowRoot?.querySelector('textarea.editor-textarea') as HTMLTextAreaElement | null;
+        textarea?.focus();
+      });
+    }
+  }
+
+  private renderFormatIcon() {
+    return html`
+      <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true" fill="currentColor">
+        <path
+          d="M19.68 17.061c-.08.595-.695.991-1.254.771-.594-.233-.857-.517-.857-.517-.221-.207-.365-.424-.434-.65h-.025c-.266.368-.655.673-1.168.914-.512.24-1.074.36-1.686.36-.594 0-1.124-.117-1.588-.353a2.647 2.647 0 01-1.083-.977 2.613 2.613 0 01-.386-1.406c0-.555.15-1.043.454-1.465.303-.422.756-.75 1.359-.985.603-.234 1.346-.353 2.229-.353h1.546v-.407c0-.465-.126-.861-.378-1.189-.252-.328-.704-.492-1.355-.492-.42 0-.872.073-1.36.221-.193.059-.387.115-.571.173a.848.848 0 01-1.045-.505c-.166-.43.033-.928.463-1.093.247-.094.517-.181.812-.258a7.618 7.618 0 011.757-.25c1.122-.027 1.947.171 2.475.591.499.396.807.827.926 1.291.119.465.179.957.179 1.479v2.956c0 .368.04.646.119.832 0 0 .05.18.353.338a.962.962 0 01.518.974Zm-4.07-.892a2.29 2.29 0 00.91-.629c.247-.28.37-.618.37-1.015v-.68h-1.648c-.634 0-1.146.104-1.537.314-.391.209-.586.538-.586.985 0 .379.139.679.417.9.277.221.625.331 1.044.331.329 0 .672-.069 1.032-.208l-.001.002Zm-5.924 1.732a.916.916 0 01-.886-.66l-1.003-3.562H3.489l-.983 3.56a.915.915 0 01-.886.662c-.608 0-1.05-.568-.885-1.14L4.69 2.954a.991.991 0 01.956-.706c.444 0 .834.288.956.705L10.57 16.76c.165.573-.276 1.141-.885 1.141Zm-4.01-12.2h-.06l-1.742 6.371h3.56L5.677 5.7Z"
+        />
+      </svg>
+    `;
+  }
+
+  private renderFormatToolbar(target: 'comment' | 'reply') {
+    const mode = target === 'reply' ? this.replyActiveTab : this.activeTab;
+    return html`
+      <div class="editor-toolbar">
+        ${mode === 'write'
+          ? html`
+              <div class="toolbar-buttons">
+                <button
+                  class="toolbar-btn"
+                  @click=${() => this.insertFormat(FORMATS.bold[0], FORMATS.bold[1], FORMATS.bold[2], target)}
+                  title="Bold"
+                >
+                  <strong>B</strong>
+                </button>
+                <button
+                  class="toolbar-btn"
+                  @click=${() => this.insertFormat(FORMATS.italic[0], FORMATS.italic[1], FORMATS.italic[2], target)}
+                  title="Italic"
+                >
+                  <em>I</em>
+                </button>
+                <button
+                  class="toolbar-btn"
+                  @click=${() => this.insertFormat(FORMATS.code[0], FORMATS.code[1], FORMATS.code[2], target)}
+                  title="Inline Code"
+                >
+                  &lt;/&gt;
+                </button>
+                <button
+                  class="toolbar-btn"
+                  @click=${() =>
+                    this.insertFormat(FORMATS.codeBlock[0], FORMATS.codeBlock[1], FORMATS.codeBlock[2], target)}
+                  title="Code Block"
+                >
+                  { }
+                </button>
+                <button
+                  class="toolbar-btn"
+                  @click=${() => this.insertFormat(FORMATS.link[0], FORMATS.link[1], FORMATS.link[2], target)}
+                  title="Link"
+                >
+                  🔗
+                </button>
+                <button
+                  class="toolbar-btn"
+                  @click=${() => this.insertFormat(FORMATS.quote[0], FORMATS.quote[1], FORMATS.quote[2], target)}
+                  title="Quote"
+                >
+                  ”
+                </button>
+              </div>
+            `
+          : html`<div></div>`}
+        <button
+          class="mode-switch-btn"
+          @click=${() => this.switchEditorMode(mode === 'write' ? 'preview' : 'write', target)}
+        >
+          ${mode === 'write' ? this.t('switchToPreview') : this.t('switchToMarkdown')}
+        </button>
+      </div>
+    `;
+  }
+
+  private renderAvatar(name: string, size: 'sm' | 'md' | 'lg' = 'md') {
+    const label = name.trim() || '?';
+    return html`
+      <span class="avatar avatar-${size}" style="background:${getAvatarColor(label)}" aria-hidden="true" title=${label}>
+        ${getInitials(label)}
+      </span>
+    `;
+  }
+
+  private composerAvatarName(): string {
+    return this.currentUser?.name || this.t('youAvatar');
+  }
+
   async fetchPageReactions() {
     if (!this.resolvedThreadSlug) return;
     try {
       const res = await fetch(`${this.resolvedApiBase}/api/reactions/?thread_slug=${this.resolvedThreadSlug}`, {
         headers: this.getHeaders(),
         credentials: 'include',
-        cache: 'no-store',
+        cache: 'no-store'
       });
       if (res.ok) {
         this.pageReactions = await res.json();
@@ -1849,7 +2345,7 @@ export class CommunityComments extends LitElement {
         signal: controller.signal,
         headers: this.getHeaders(),
         credentials: 'include',
-        cache: 'no-store',
+        cache: 'no-store'
       });
 
       clearTimeout(timeoutId);
@@ -1863,24 +2359,42 @@ export class CommunityComments extends LitElement {
     }
   }
 
-  private insertFormat(before: string, after: string = before, placeholder: string = '') {
-    const textarea = this.shadowRoot?.querySelector('textarea.editor-textarea') as HTMLTextAreaElement | null;
-    if (!textarea) return;
+  private insertFormat(
+    before: string,
+    after: string = before,
+    placeholder: string = '',
+    target: 'comment' | 'reply' = 'comment'
+  ) {
+    if (target === 'reply') {
+      if (this.replyActiveTab !== 'write') this.replyActiveTab = 'write';
+    } else if (this.activeTab !== 'write') {
+      this.activeTab = 'write';
+    }
 
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const current = textarea.value;
-    const selected = current.substring(start, end) || placeholder;
+    requestAnimationFrame(() => {
+      const selector = target === 'reply' ? 'textarea.reply-textarea' : 'textarea.editor-textarea';
+      const textarea = this.shadowRoot?.querySelector(selector) as HTMLTextAreaElement | null;
+      if (!textarea) return;
 
-    const replacement = `${before}${selected}${after}`;
-    const nextValue = current.substring(0, start) + replacement + current.substring(end);
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const current = textarea.value;
+      const selected = current.substring(start, end) || placeholder;
 
-    this.saveDraft(nextValue);
+      const replacement = `${before}${selected}${after}`;
+      const nextValue = current.substring(0, start) + replacement + current.substring(end);
 
-    setTimeout(() => {
-      textarea.focus();
-      textarea.setSelectionRange(start + before.length, start + before.length + selected.length);
-    }, 0);
+      if (target === 'reply') {
+        this.replyBody = nextValue;
+      } else {
+        this.saveDraft(nextValue);
+      }
+
+      setTimeout(() => {
+        textarea.focus();
+        textarea.setSelectionRange(start + before.length, start + before.length + selected.length);
+      }, 0);
+    });
   }
 
   private requestPostComment() {
@@ -1913,21 +2427,21 @@ export class CommunityComments extends LitElement {
         thread_slug: this.resolvedThreadSlug,
         body_markdown: this.commentBody,
         guest_name: this.currentUser ? undefined : this.guestName || undefined,
-        altcha: this.currentUser ? undefined : this.altchaPayload || undefined,
+        altcha: this.currentUser ? undefined : this.altchaPayload || undefined
       };
 
       const res = await fetch(`${this.resolvedApiBase}/api/comments/`, {
         method: 'POST',
         headers: this.getHeaders({ 'Content-Type': 'application/json' }),
         credentials: 'include',
-        body: JSON.stringify(payload),
+        body: JSON.stringify(payload)
       });
 
       if (res.ok) {
         this.commentBody = '';
         this.altchaPayload = '';
         this.guestName = '';
-        this.closeAuthPicker();
+        this.collapseEditor();
         const altchaEl = this.shadowRoot?.querySelector('altcha-widget') as any;
         if (altchaEl?.reset) {
           altchaEl.reset();
@@ -1959,10 +2473,14 @@ export class CommunityComments extends LitElement {
     this.closeAuthPicker();
     if (this.activeReplyParentId === parentId) {
       this.activeReplyParentId = null;
+      this.showReplyFormatting = false;
+      this.replyActiveTab = 'write';
     } else {
       this.activeReplyParentId = parentId;
       this.replyBody = '';
       this.replyAltchaPayload = '';
+      this.showReplyFormatting = false;
+      this.replyActiveTab = 'write';
     }
   }
 
@@ -1996,14 +2514,14 @@ export class CommunityComments extends LitElement {
         parent_id: parentId,
         body_markdown: this.replyBody,
         guest_name: this.currentUser ? undefined : this.replyGuestName || undefined,
-        altcha: this.currentUser ? undefined : this.replyAltchaPayload || undefined,
+        altcha: this.currentUser ? undefined : this.replyAltchaPayload || undefined
       };
 
       const res = await fetch(`${this.resolvedApiBase}/api/comments/`, {
         method: 'POST',
         headers: this.getHeaders({ 'Content-Type': 'application/json' }),
         credentials: 'include',
-        body: JSON.stringify(payload),
+        body: JSON.stringify(payload)
       });
 
       if (res.ok) {
@@ -2011,6 +2529,8 @@ export class CommunityComments extends LitElement {
         this.replyGuestName = '';
         this.replyAltchaPayload = '';
         this.activeReplyParentId = null;
+        this.showReplyFormatting = false;
+        this.replyActiveTab = 'write';
         this.closeAuthPicker();
         await this.fetchComments();
       } else {
@@ -2036,8 +2556,8 @@ export class CommunityComments extends LitElement {
         body: JSON.stringify({
           thread_slug: this.resolvedThreadSlug,
           comment_id: commentId,
-          kind: kind,
-        }),
+          kind: kind
+        })
       });
       if (res.status === 429) {
         const data = await res.json().catch(() => ({}));
@@ -2207,14 +2727,11 @@ export class CommunityComments extends LitElement {
                   hidefooter
                   hidelogo
                   @statechange=${(e: CustomEvent) => {
-                    const payload =
-                      e.detail?.state === 'verified' ? e.detail?.payload || '' : '';
+                    const payload = e.detail?.state === 'verified' ? e.detail?.payload || '' : '';
                     if (isReply) {
-                      this.replyAltchaPayload =
-                        e.detail?.state === 'verified' ? payload : '';
+                      this.replyAltchaPayload = e.detail?.state === 'verified' ? payload : '';
                     } else {
-                      this.altchaPayload =
-                        e.detail?.state === 'verified' ? payload : '';
+                      this.altchaPayload = e.detail?.state === 'verified' ? payload : '';
                     }
                   }}
                 ></altcha-widget>
@@ -2234,7 +2751,6 @@ export class CommunityComments extends LitElement {
               </div>
             `
           : nothing}
-
         ${this.authPickerMode === 'email'
           ? html`
               <div class="auth-picker-panel">
@@ -2270,7 +2786,6 @@ export class CommunityComments extends LitElement {
               </div>
             `
           : nothing}
-
         ${this.blockedPopupUrl
           ? html`
               <div class="popup-blocked-banner">
@@ -2313,6 +2828,21 @@ export class CommunityComments extends LitElement {
 
     return html`
       <div class="page-reactions-row">
+        ${visible.map(({ kind, emoji }) => {
+          const count = counts[kind] || 0;
+          const isActive = active.includes(kind);
+          return html`
+            <button
+              type="button"
+              class="page-reaction-pill ${isActive ? 'active' : ''}"
+              @click=${() => this.toggleReaction(commentId, kind)}
+            >
+              <span aria-hidden="true">${emoji}</span>
+              <span>${count}</span>
+            </button>
+          `;
+        })}
+
         <div class="page-reaction-trigger-wrap">
           <button
             type="button"
@@ -2359,21 +2889,6 @@ export class CommunityComments extends LitElement {
               `
             : nothing}
         </div>
-
-        ${visible.map(({ kind, emoji }) => {
-          const count = counts[kind] || 0;
-          const isActive = active.includes(kind);
-          return html`
-            <button
-              type="button"
-              class="page-reaction-pill ${isActive ? 'active' : ''}"
-              @click=${() => this.toggleReaction(commentId, kind)}
-            >
-              <span aria-hidden="true">${emoji}</span>
-              <span>${count}</span>
-            </button>
-          `;
-        })}
       </div>
     `;
   }
@@ -2384,9 +2899,7 @@ export class CommunityComments extends LitElement {
 
     return html`
       <div class="page-reactions">
-        ${total > 0
-          ? html`<div class="page-reactions-summary">${this.reactionSummaryLabel(total)}</div>`
-          : nothing}
+        ${total > 0 ? html`<div class="page-reactions-summary">${this.reactionSummaryLabel(total)}</div>` : nothing}
         ${this.renderReactionControls(this.pageReactions, null)}
       </div>
     `;
@@ -2402,8 +2915,9 @@ export class CommunityComments extends LitElement {
         ${this.renderReactionControls(reactions, commentId)}
         ${allowReply && commentId !== null
           ? html`
+              <span class="reactions-sep" aria-hidden="true"></span>
               <button class="reply-action-btn" @click=${() => this.toggleReplyBox(commentId)}>
-                💬 ${this.t('replyBtn')}
+                ${this.t('replyBtn')}
               </button>
             `
           : nothing}
@@ -2416,25 +2930,55 @@ export class CommunityComments extends LitElement {
 
     return html`
       <div class="inline-reply-box">
-        <h6>💬 ${this.t('replyingTo')} <strong>${parentComment.author_name}</strong></h6>
-        <textarea
-          class="reply-textarea"
-          placeholder=${this.t('replyPlaceholder')}
-          .value=${this.replyBody}
-          @input=${(e: any) => (this.replyBody = e.target.value)}
-          @keydown=${(e: KeyboardEvent) => {
-            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-              this.requestPostReply(parentComment.id);
-            }
-          }}
-        ></textarea>
+        <h6>${this.t('replyingTo')} <strong>${parentComment.author_name}</strong></h6>
+
+        ${this.showReplyFormatting ? this.renderFormatToolbar('reply') : nothing}
+        ${this.replyActiveTab === 'write'
+          ? html`
+              <textarea
+                class="reply-textarea"
+                placeholder=${this.t('replyPlaceholder')}
+                .value=${this.replyBody}
+                @input=${(e: any) => (this.replyBody = e.target.value)}
+                @keydown=${(e: KeyboardEvent) => {
+                  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                    this.requestPostReply(parentComment.id);
+                  }
+                }}
+              ></textarea>
+            `
+          : html`
+              <div class="reply-preview">
+                ${this.replyBody
+                  ? html`<div class="comment-body" .innerHTML=${renderMarkdownPreview(this.replyBody)}></div>`
+                  : html`<span style="color: #94a3b8;">${this.t('previewEmpty')}</span>`}
+              </div>
+            `}
 
         <div class="reply-footer">
+          <div class="reply-footer-left">
+            <button
+              type="button"
+              class="format-toggle ${this.showReplyFormatting ? 'active' : ''}"
+              title=${this.t('formatToggleTitle')}
+              aria-label=${this.t('formatToggleTitle')}
+              aria-pressed=${this.showReplyFormatting}
+              @click=${() => this.toggleReplyFormatting()}
+            >
+              ${this.renderFormatIcon()}
+            </button>
+          </div>
+
           <div class="reply-actions">
-            <button class="cancel-btn" @click=${() => {
-              this.activeReplyParentId = null;
-              this.closeAuthPicker();
-            }}>
+            <button
+              class="cancel-btn"
+              @click=${() => {
+                this.activeReplyParentId = null;
+                this.showReplyFormatting = false;
+                this.replyActiveTab = 'write';
+                this.closeAuthPicker();
+              }}
+            >
               ${this.t('cancelBtn')}
             </button>
             ${this.currentUser
@@ -2461,78 +3005,156 @@ export class CommunityComments extends LitElement {
     `;
   }
 
-  render() {
-    if (this.isOffline) {
+  private renderPendingReview(comment: any) {
+    if (comment.status !== 'pending') return nothing;
+    return html`
+      <div class="pending-review-box">
+        <div class="pending-review-header">
+          <span>⏳ ${this.t('pendingReviewTitle')}</span>
+          ${comment.can_edit
+            ? html`
+                <span class="owner-actions">
+                  ${this.editingCommentId !== comment.id
+                    ? html`
+                        <button
+                          class="revise-btn"
+                          @click=${() => this.startEditingComment(comment.id, comment.raw_markdown)}
+                        >
+                          ✎ ${this.t('reviseBtn')}
+                        </button>
+                      `
+                    : nothing}
+                  ${this.renderDeleteButton(comment.id)}
+                </span>
+              `
+            : nothing}
+        </div>
+        <p class="pending-review-notice">${this.t('pendingReviewNotice')}</p>
+        ${comment.moderation_reason
+          ? html`
+              <div class="pending-review-reason">
+                <strong>${this.t('assessmentReasonLabel')}</strong> ${comment.moderation_reason}
+              </div>
+            `
+          : nothing}
+      </div>
+    `;
+  }
+
+  private renderCommentBody(comment: any) {
+    if (this.editingCommentId === comment.id) {
       return html`
-        <div class="status-card">
-          <p>${this.t('offlineMessage')}</p>
-          <button class="submit-btn" @click=${this.fetchComments}>${this.t('retry')}</button>
+        <div class="revision-editor">
+          <textarea
+            class="revision-textarea"
+            .value=${this.editingBody}
+            @input=${(e: any) => (this.editingBody = e.target.value)}
+          ></textarea>
+          <div class="revision-actions">
+            <button class="cancel-btn" @click=${this.cancelEditingComment}>${this.t('cancelRevisionBtn')}</button>
+            <button
+              class="submit-btn"
+              ?disabled=${!this.editingBody.trim() || this.isSavingRevision}
+              @click=${() => this.handleSaveRevision(comment.id)}
+            >
+              ${this.isSavingRevision ? this.t('savingRevisionBtn') : this.t('saveRevisionBtn')}
+            </button>
+          </div>
+        </div>
+      `;
+    }
+    return html`<div class="comment-body" .innerHTML=${comment.body_html}></div>`;
+  }
+
+  private renderCommentEntry(comment: any, allowReply: boolean) {
+    return html`
+      <div class="comment-row ${allowReply ? '' : 'is-reply'}" id="comment-${comment.id}">
+        ${this.renderAvatar(comment.author_name, allowReply ? 'md' : 'sm')}
+        <div class="comment-main">
+          <div class="comment-card">
+            <div class="comment-header">
+              <span class="comment-author">${comment.author_name}</span>
+              ${comment.is_team ? html`<span class="team-badge">${this.t('teamBadge')}</span>` : nothing}
+              <span class="comment-header-spacer"></span>
+              ${comment.edited_at ? html`<span class="comment-date">${this.t('editedLabel')}</span>` : nothing}
+              <span class="comment-date">${formatRelativeTime(comment.created_at, (k) => this.t(k))}</span>
+              ${comment.can_edit && comment.status !== 'pending'
+                ? html`<span class="owner-actions">${this.renderDeleteButton(comment.id)}</span>`
+                : nothing}
+            </div>
+            ${this.renderPendingReview(comment)} ${this.renderCommentBody(comment)}
+          </div>
+
+          ${comment.status === 'approved'
+            ? this.renderReactionsBar(comment.reactions, comment.id, allowReply)
+            : nothing}
+          ${allowReply ? this.renderInlineReplyBox(comment) : nothing}
+          ${allowReply && this.replyCount(comment) > 0
+            ? html`
+                <div class="replies-list">${comment.replies.map((r: any) => this.renderCommentEntry(r, false))}</div>
+              `
+            : nothing}
+        </div>
+      </div>
+    `;
+  }
+
+  private renderComposer() {
+    if (!this.editorExpanded) {
+      const draftPreview = this.commentBody.trim();
+      return html`
+        <div class="composer-slot">
+          <button type="button" class="composer-collapsed" @click=${() => this.expandEditor()}>
+            ${this.renderAvatar(this.composerAvatarName(), 'md')}
+            <span class="composer-collapsed-placeholder ${draftPreview ? 'has-draft' : ''}">
+              ${draftPreview || this.t('placeholder')}
+            </span>
+          </button>
         </div>
       `;
     }
 
     return html`
-      <div class="comments-widget">
-        <!-- Page Reactions (giscus-style) -->
-        ${this.renderPageReactions()}
-
-        <!-- Editor Area -->
+      <div class="composer-slot">
         <div class="editor-box">
-          <div class="editor-toolbar">
-            <div class="toolbar-buttons">
-              <button class="toolbar-btn" @click=${() => this.insertFormat(FORMATS.bold[0], FORMATS.bold[1], FORMATS.bold[2])} title="Bold"><strong>B</strong></button>
-              <button class="toolbar-btn" @click=${() => this.insertFormat(FORMATS.italic[0], FORMATS.italic[1], FORMATS.italic[2])} title="Italic"><em>I</em></button>
-              <button class="toolbar-btn" @click=${() => this.insertFormat(FORMATS.code[0], FORMATS.code[1], FORMATS.code[2])} title="Inline Code">&lt;/&gt;</button>
-              <button class="toolbar-btn" @click=${() => this.insertFormat(FORMATS.codeBlock[0], FORMATS.codeBlock[1], FORMATS.codeBlock[2])} title="Code Block">{ }</button>
-              <button class="toolbar-btn" @click=${() => this.insertFormat(FORMATS.link[0], FORMATS.link[1], FORMATS.link[2])} title="Link">🔗</button>
-              <button class="toolbar-btn" @click=${() => this.insertFormat(FORMATS.quote[0], FORMATS.quote[1], FORMATS.quote[2])} title="Quote">”</button>
-            </div>
-            <div class="tab-buttons">
-              <button
-                class="tab-btn ${this.activeTab === 'write' ? 'active' : ''}"
-                @click=${() => (this.activeTab = 'write')}
-              >
-                ${this.t('writeTab')}
-              </button>
-              <button
-                class="tab-btn ${this.activeTab === 'preview' ? 'active' : ''}"
-                @click=${() => (this.activeTab = 'preview')}
-              >
-                ${this.t('previewTab')}
-              </button>
-            </div>
+          <div class="editor-body">
+            ${this.showFormatting ? this.renderFormatToolbar('comment') : nothing}
+            ${this.activeTab === 'write'
+              ? html`
+                  <textarea
+                    class="editor-textarea"
+                    placeholder=${this.t('placeholder')}
+                    .value=${this.commentBody}
+                    @input=${(e: any) => this.saveDraft(e.target.value)}
+                    @keydown=${(e: KeyboardEvent) => {
+                      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                        this.requestPostComment();
+                      }
+                    }}
+                  ></textarea>
+                `
+              : html`
+                  <div class="editor-preview">
+                    ${this.commentBody
+                      ? html`<div class="comment-body" .innerHTML=${renderMarkdownPreview(this.commentBody)}></div>`
+                      : html`<span style="color: #94a3b8;">${this.t('previewEmpty')}</span>`}
+                  </div>
+                `}
           </div>
 
-          ${this.activeTab === 'write'
-            ? html`
-                <textarea
-                  class="editor-textarea"
-                  placeholder=${this.t('placeholder')}
-                  .value=${this.commentBody}
-                  @input=${(e: any) => this.saveDraft(e.target.value)}
-                  @keydown=${(e: KeyboardEvent) => {
-                    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-                      this.requestPostComment();
-                    }
-                  }}
-                ></textarea>
-              `
-            : html`
-                <div class="editor-preview">
-                  ${this.commentBody
-                    ? html`<div class="comment-body" .innerHTML=${renderMarkdownPreview(this.commentBody)}></div>`
-                    : html`<span style="color: #94a3b8;">${this.t('previewEmpty')}</span>`}
-                </div>
-              `}
-
           <div class="editor-footer">
-            <div class="editor-meta">
-              <span>${this.commentBody.length} / 5,000 ${this.t('charLimit')}</span>
-              <span>
-                <button class="coc-link" @click=${() => (this.showCocModal = true)}>
-                  📜 ${this.t('cocLink')}
-                </button>
-              </span>
+            <div class="editor-footer-left">
+              <button
+                type="button"
+                class="format-toggle ${this.showFormatting ? 'active' : ''}"
+                title=${this.t('formatToggleTitle')}
+                aria-label=${this.t('formatToggleTitle')}
+                aria-pressed=${this.showFormatting}
+                @click=${() => this.toggleFormatting()}
+              >
+                ${this.renderFormatIcon()}
+              </button>
+              <button class="coc-link" @click=${() => (this.showCocModal = true)}>${this.t('cocLink')}</button>
             </div>
 
             <div class="editor-submit">
@@ -2547,9 +3169,12 @@ export class CommunityComments extends LitElement {
                     </span>
                   `
                 : nothing}
+              <button type="button" class="pill-btn pill-btn-cancel" @click=${() => this.collapseEditor()}>
+                ${this.t('cancelBtn')}
+              </button>
               <div class="submit-wrap">
                 <button
-                  class="submit-btn"
+                  class="pill-btn pill-btn-primary"
                   ?disabled=${!this.commentBody.trim() || this.isSubmitting}
                   @click=${() => this.requestPostComment()}
                 >
@@ -2560,182 +3185,40 @@ export class CommunityComments extends LitElement {
             </div>
           </div>
         </div>
+      </div>
+    `;
+  }
 
-        <!-- Comments List -->
+  render() {
+    if (this.isOffline) {
+      return html`
+        <div class="status-card">
+          <p>${this.t('offlineMessage')}</p>
+          <button class="submit-btn" @click=${this.fetchComments}>${this.t('retry')}</button>
+        </div>
+      `;
+    }
+
+    return html`
+      <div class="comments-widget">
+        ${this.renderPageReactions()}
+
         <div class="comments-section">
           <div class="widget-header">
-            <h3>${this.t('comments')} (${this.comments.length})</h3>
+            <h3>${this.t('discussionTitle')}</h3>
+            <p class="widget-subtitle">${this.t('discussionSubtitle')}</p>
           </div>
-          <div class="comment-list">
-          ${this.comments.map(
-            (c) => html`
-              <div class="comment-card" id="comment-${c.id}">
-                <div class="comment-header">
-                  <span class="comment-author">${c.author_name}</span>
-                  ${c.is_team ? html`<span class="team-badge">${this.t('teamBadge')}</span>` : nothing}
-                  ${c.edited_at ? html`<span class="comment-date">${this.t('editedLabel')}</span>` : nothing}
-                  <span class="comment-date">• ${new Date(c.created_at).toLocaleDateString()}</span>
-                  ${c.can_edit && c.status !== 'pending'
-                    ? html`<span class="owner-actions">${this.renderDeleteButton(c.id)}</span>`
-                    : nothing}
-                </div>
 
-                ${c.status === 'pending'
-                  ? html`
-                      <div class="pending-review-box">
-                        <div class="pending-review-header">
-                          <span>⏳ ${this.t('pendingReviewTitle')}</span>
-                          ${c.can_edit
-                            ? html`
-                                <span class="owner-actions">
-                                  ${this.editingCommentId !== c.id
-                                    ? html`
-                                        <button
-                                          class="revise-btn"
-                                          @click=${() => this.startEditingComment(c.id, c.raw_markdown)}
-                                        >
-                                          ✎ ${this.t('reviseBtn')}
-                                        </button>
-                                      `
-                                    : nothing}
-                                  ${this.renderDeleteButton(c.id)}
-                                </span>
-                              `
-                            : nothing}
-                        </div>
-                        <p class="pending-review-notice">${this.t('pendingReviewNotice')}</p>
-                        ${c.moderation_reason
-                          ? html`
-                              <div class="pending-review-reason">
-                                <strong>${this.t('assessmentReasonLabel')}</strong> ${c.moderation_reason}
-                              </div>
-                            `
-                          : nothing}
-                      </div>
-                    `
-                  : nothing}
+          ${this.renderComposer()}
 
-                ${this.editingCommentId === c.id
-                  ? html`
-                      <div class="revision-editor">
-                        <textarea
-                          class="revision-textarea"
-                          .value=${this.editingBody}
-                          @input=${(e: any) => (this.editingBody = e.target.value)}
-                        ></textarea>
-                        <div class="revision-actions">
-                          <button class="cancel-btn" @click=${this.cancelEditingComment}>
-                            ${this.t('cancelRevisionBtn')}
-                          </button>
-                          <button
-                            class="submit-btn"
-                            ?disabled=${!this.editingBody.trim() || this.isSavingRevision}
-                            @click=${() => this.handleSaveRevision(c.id)}
-                          >
-                            ${this.isSavingRevision ? this.t('savingRevisionBtn') : this.t('saveRevisionBtn')}
-                          </button>
-                        </div>
-                      </div>
-                    `
-                  : html`<div class="comment-body" .innerHTML=${c.body_html}></div>`}
-
-                <!-- Top-Level Comment Reactions & Reply Button -->
-                ${c.status === 'approved' ? this.renderReactionsBar(c.reactions, c.id, true) : nothing}
-
-                <!-- Inline Reply Form for this comment -->
-                ${this.renderInlineReplyBox(c)}
-
-                <!-- 1-Level Replies -->
-                ${c.replies && c.replies.length > 0
-                  ? html`
-                      <div class="replies-list">
-                        ${c.replies.map(
-                          (r: any) => html`
-                            <div class="comment-card reply-card" id="comment-${r.id}">
-                              <div class="comment-header">
-                                <span class="comment-author">${r.author_name}</span>
-                                ${r.is_team ? html`<span class="team-badge">${this.t('teamBadge')}</span>` : nothing}
-                                <span class="comment-date">• ${new Date(r.created_at).toLocaleDateString()}</span>
-                                ${r.can_edit && r.status !== 'pending'
-                                  ? html`<span class="owner-actions">${this.renderDeleteButton(r.id)}</span>`
-                                  : nothing}
-                              </div>
-
-                              ${r.status === 'pending'
-                                ? html`
-                                    <div class="pending-review-box">
-                                      <div class="pending-review-header">
-                                        <span>⏳ ${this.t('pendingReviewTitle')}</span>
-                                        ${r.can_edit
-                                          ? html`
-                                              <span class="owner-actions">
-                                                ${this.editingCommentId !== r.id
-                                                  ? html`
-                                                      <button
-                                                        class="revise-btn"
-                                                        @click=${() => this.startEditingComment(r.id, r.raw_markdown)}
-                                                      >
-                                                        ✎ ${this.t('reviseBtn')}
-                                                      </button>
-                                                    `
-                                                  : nothing}
-                                                ${this.renderDeleteButton(r.id)}
-                                              </span>
-                                            `
-                                          : nothing}
-                                      </div>
-                                      <p class="pending-review-notice">${this.t('pendingReviewNotice')}</p>
-                                      ${r.moderation_reason
-                                        ? html`
-                                            <div class="pending-review-reason">
-                                              <strong>${this.t('assessmentReasonLabel')}</strong> ${r.moderation_reason}
-                                            </div>
-                                          `
-                                        : nothing}
-                                    </div>
-                                  `
-                                : nothing}
-
-                              ${this.editingCommentId === r.id
-                                ? html`
-                                    <div class="revision-editor">
-                                      <textarea
-                                        class="revision-textarea"
-                                        .value=${this.editingBody}
-                                        @input=${(e: any) => (this.editingBody = e.target.value)}
-                                      ></textarea>
-                                      <div class="revision-actions">
-                                        <button class="cancel-btn" @click=${this.cancelEditingComment}>
-                                          ${this.t('cancelRevisionBtn')}
-                                        </button>
-                                        <button
-                                          class="submit-btn"
-                                          ?disabled=${!this.editingBody.trim() || this.isSavingRevision}
-                                          @click=${() => this.handleSaveRevision(r.id)}
-                                        >
-                                          ${this.isSavingRevision ? this.t('savingRevisionBtn') : this.t('saveRevisionBtn')}
-                                        </button>
-                                      </div>
-                                    </div>
-                                  `
-                                : html`<div class="comment-body" .innerHTML=${r.body_html}></div>`}
-
-                              <!-- Reply-Level Reactions -->
-                              ${r.status === 'approved' ? this.renderReactionsBar(r.reactions, r.id, false) : nothing}
-                            </div>
-                          `
-                        )}
-                      </div>
-                    `
-                  : nothing}
-              </div>
-            `
-          )}
+          <div class="comments-meta">
+            <span class="comments-count">${this.commentCountLabel()}</span>
           </div>
+
+          <div class="comment-list">${this.comments.map((c) => this.renderCommentEntry(c, true))}</div>
         </div>
       </div>
 
-      <!-- Code of Conduct Modal -->
       ${this.renderCocModal()}
     `;
   }
