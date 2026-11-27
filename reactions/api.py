@@ -43,7 +43,7 @@ def toggle_reaction(request: HttpRequest, payload: ToggleReactionIn):
 
     site_host = request.get_host().split(":")[0]
     user = request.user if request.user.is_authenticated else None
-    primary_hash, anon_aliases = (("", []) if user else get_anon_identity(request, site_host))
+    primary_hash, anon_aliases = ("", []) if user else get_anon_identity(request, site_host)
 
     # Anti-flooding shelter: max 10 reaction operations per 10 seconds per visitor
     flood_identifier = primary_hash or (str(user.id) if user else "anon")
@@ -92,7 +92,7 @@ def get_page_reactions(request: HttpRequest, thread_slug: str):
 
     site_host = request.get_host().split(":")[0]
     user = request.user if request.user.is_authenticated else None
-    _primary, anon_aliases = (("", []) if user else get_anon_identity(request, site_host))
+    _primary, anon_aliases = ("", []) if user else get_anon_identity(request, site_host)
 
     qs = Reaction.objects.filter(site_host=site_host, thread_slug=thread_slug, comment__isnull=True)
     counts = qs.values("kind").annotate(count=Count("id"))
@@ -121,7 +121,7 @@ def get_batch_reactions(request: HttpRequest, thread_slug: str):
 
     site_host = request.get_host().split(":")[0]
     user = request.user if request.user.is_authenticated else None
-    _primary, anon_aliases = (("", []) if user else get_anon_identity(request, site_host))
+    _primary, anon_aliases = ("", []) if user else get_anon_identity(request, site_host)
 
     # Comments count per slug
     comment_counts = dict(

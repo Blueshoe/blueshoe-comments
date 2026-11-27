@@ -24,11 +24,7 @@ def get_anon_identity(request: HttpRequest, site_host: str) -> tuple[str, list[s
     still be found and removed.
     """
     vid = (request.headers.get("X-Visitor-Id") or request.COOKIES.get("community_vid", "") or "").strip()
-    ip = (
-        request.META.get("HTTP_X_FORWARDED_FOR", "").split(",")[0].strip()
-        or request.META.get("REMOTE_ADDR", "")
-        or ""
-    )
+    ip = request.META.get("HTTP_X_FORWARDED_FOR", "").split(",")[0].strip() or request.META.get("REMOTE_ADDR", "") or ""
     secret = getattr(settings, "SECRET_KEY", "")
 
     aliases: list[str] = []

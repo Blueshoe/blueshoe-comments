@@ -27,6 +27,9 @@
   "files": [
     "dist"
   ],
+  "engines": {
+    "node": "^22.22.3 || ^24.15.0 || >=26.0.0"
+  },
   "scripts": {
     "dev": "nuxi dev playground",
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",

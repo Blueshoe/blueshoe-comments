@@ -62,7 +62,7 @@ Static site generators (Astro, Sphinx, Hugo, Next) are fast, secure, and peacefu
 
 | Category | Tools & Libraries |
 | :--- | :--- |
-| **Language & Runtime** | Python 3.12, Node.js 20 |
+| **Language & Runtime** | Python 3.12, Node.js 22+ (Nuxt 4) |
 | **Package Tooling** | <a href="https://astral.sh/uv" target="_blank" rel="noopener noreferrer">Astral <code>uv</code></a> (blazing fast) |
 | **Server Engine** | <a href="https://django-hurricane.io/" target="_blank" rel="noopener noreferrer"><code>django-hurricane</code></a> (Granian / Rust ASGI) |
 | **API Framework** | <a href="https://django-ninja.dev/" target="_blank" rel="noopener noreferrer"><code>django-ninja</code></a> (Pydantic v2) |
