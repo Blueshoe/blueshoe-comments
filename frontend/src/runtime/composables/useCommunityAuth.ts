@@ -24,7 +24,7 @@ export function useCommunityAuth() {
         ? providersRes
         : (providersRes as { providers?: AuthProvider[] }).providers || []
       // Stable UI order — Django SocialApp queryset order can vary by site/admin.
-      const preferred = ['github', 'google', 'linkedin_oauth2', 'email_link']
+      const preferred = ['github', 'google', 'linkedin_oauth2', 'twitter_oauth2', 'email_link']
       providers.value = [...list].sort((a, b) => {
         const ia = preferred.indexOf(a.id)
         const ib = preferred.indexOf(b.id)
