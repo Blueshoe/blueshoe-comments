@@ -34,8 +34,8 @@
     "dev": "nuxi dev playground",
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
     "build:css": "sass src/runtime/assets/scss/index.scss dist/runtime/assets/css/community.css --style=compressed --no-source-map",
-    "prepack": "nuxt-module-build build && npm run build:css",
-    "build": "nuxt-module-build build && npm run build:css",
+    "prepack": "npm run build",
+    "build": "nuxt-module-build prepare && nuxt-module-build build && npm run build:css",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },

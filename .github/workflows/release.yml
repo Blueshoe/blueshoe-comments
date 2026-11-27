@@ -35,6 +35,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Prepare Nuxt module (generates .nuxt/tsconfig.json)
+        run: npm run dev:prepare
+
       - name: Build Nuxt module + CSS
         run: npm run build
 
