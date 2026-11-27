@@ -55,15 +55,21 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
 
     def pre_social_login(self, request: HttpRequest, sociallogin) -> None:
         """
-        If the provider does not provide an email address (such as Twitter / X free tier),
-        assign a deterministic, unique placeholder email so auto-signup succeeds immediately
-        without interrupting the login flow.
+        Use confirmed_email from X if available; otherwise assign a deterministic
+        placeholder email so auto-signup succeeds without interrupting the login flow.
         """
+        from allauth.account.models import EmailAddress
+
+        confirmed_email = sociallogin.account.extra_data.get("confirmed_email")
+        if confirmed_email and not sociallogin.email_addresses and not sociallogin.user.email:
+            sociallogin.user.email = confirmed_email
+            sociallogin.email_addresses = [EmailAddress(email=confirmed_email, verified=True, primary=True)]
+            return
+
         if not sociallogin.is_existing and not sociallogin.email_addresses and not sociallogin.user.email:
             uid = str(sociallogin.account.uid)
             handle = (sociallogin.account.extra_data.get("username") or uid).lower()
             placeholder = f"{handle}.{uid[:8]}@x.com"
-            from allauth.account.models import EmailAddress
 
             sociallogin.user.email = placeholder
             sociallogin.email_addresses = [EmailAddress(email=placeholder, verified=False, primary=True)]
