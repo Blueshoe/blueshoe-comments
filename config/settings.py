@@ -51,6 +51,7 @@ ALL_SOCIAL_PROVIDERS = [
 SOCIALACCOUNT_PROVIDERS = {
     "twitter_oauth2": {
         "SCOPE": [
+            "tweet.read",
             "users.read",
             "users.email",
             "offline.access",
