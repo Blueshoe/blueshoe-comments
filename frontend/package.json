@@ -1,7 +1,7 @@
 {
   "name": "@blueshoe/community-widget",
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Nuxt 4 module for the Blueshoe Community comment & reaction system",
   "author": "Blueshoe",
   "license": "MIT",
