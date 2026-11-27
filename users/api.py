@@ -7,7 +7,6 @@ from allauth.socialaccount.adapter import get_adapter
 from django.conf import settings
 from django.contrib.auth import get_user_model, login, logout
 from django.core.cache import cache
-from django.core.mail import send_mail
 from django.core.signing import BadSignature, SignatureExpired, TimestampSigner
 from django.db import transaction
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
@@ -178,11 +177,18 @@ def request_magic_link(request: HttpRequest, payload: MagicLinkRequestIn):
         f"This link expires in {expire_hours} hours and can only be used once.\n\n"
         f"If you did not request this link, you can safely ignore this email.\n"
     )
-    send_mail(
+    from users.mail import send_and_log_email
+    from users.models import EmailLog
+
+    site_host = request.get_host().split(":")[0]
+
+    send_and_log_email(
         subject=subject,
         message=message,
-        from_email=getattr(settings, "DEFAULT_FROM_EMAIL", "noreply@blueshoe.de"),
         recipient_list=[email],
+        trigger=EmailLog.Trigger.MAGIC_LINK,
+        site_host=site_host,
+        page_url=payload.next_url or "",
         fail_silently=False,
     )
 

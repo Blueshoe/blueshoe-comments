@@ -227,6 +227,29 @@ class TestUsersAPI:
             in location
         )
 
+    def test_twitter_oauth2_redirect_and_pkce(self, client):
+        site = Site.objects.get_current()
+        site.domain = "community.blueshoe.io"
+        site.save()
+
+        app, _ = SocialApp.objects.get_or_create(provider="twitter_oauth2", name="X", client_id="test_x_client_id")
+        app.sites.add(site)
+
+        res = client.get(
+            "/_allauth/browser/v1/auth/provider/redirect?provider=twitter_oauth2&callback_url=https://www.blueshoe.io/auth-callback.html&process=login",
+            HTTP_HOST="community.blueshoe.io",
+            HTTP_X_FORWARDED_PROTO="https",
+        )
+        assert res.status_code == 302
+        location = res.headers["Location"]
+        assert "x.com/i/oauth2/authorize" in location
+        assert "code_challenge=" in location
+        assert "code_challenge_method=S256" in location
+        assert (
+            "redirect_uri=https%3A%2F%2Fcommunity.blueshoe.io%2Faccounts%2Ftwitter_oauth2%2Flogin%2Fcallback%2F"
+            in location
+        )
+
     def test_magic_link_flow(self, client, mailoutbox):
         # 1. Providers endpoint includes email_link
         prov_res = client.get("/api/auth/providers/")
@@ -254,6 +277,17 @@ class TestUsersAPI:
         assert len(mailoutbox) == 1
         email_body = mailoutbox[0].body
         assert "Click the link below to sign in" in email_body
+
+        # Verify EmailLog audit record created
+        from users.models import EmailLog
+
+        log = EmailLog.objects.filter(recipient="reader@example.com").first()
+        assert log is not None
+        assert log.trigger == EmailLog.Trigger.MAGIC_LINK
+        assert log.site_host == "community.blueshoe.io"
+        assert log.page_url == "https://www.blueshoe.io/blog/post-1/"
+        assert log.status == EmailLog.Status.SENT
+        assert "Click the link below to sign in" in log.content_text
 
         # Extract verify URL and token from email
         import re

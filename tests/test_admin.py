@@ -143,3 +143,36 @@ class TestAdminModerationAndObservability:
 
         # Add permission is False
         assert admin_instance.has_add_permission(rf.get("/")) is False
+
+    def test_email_log_admin(self, rf):
+        from users.admin import EmailLogAdmin
+        from users.models import EmailLog
+
+        staff = User.objects.create_superuser(username="admin_mail", email="admin_mail@blueshoe.de")
+        req = rf.get("/")
+        req.user = staff
+
+        log = EmailLog.objects.create(
+            recipient="reader@test.com",
+            sender="noreply@blueshoe.de",
+            subject="Your Magic Login Link",
+            content_text="Hello world",
+            trigger=EmailLog.Trigger.MAGIC_LINK,
+            site_host="community.blueshoe.io",
+            page_url="https://www.blueshoe.io/blog/post-1/",
+            outgoing_backend="SMTP (localhost:587, TLS)",
+            status=EmailLog.Status.SENT,
+        )
+
+        admin_instance = EmailLogAdmin(EmailLog, AdminSite())
+
+        # Badges
+        assert "Magic Login Link" in admin_instance.trigger_badge(log)
+        assert "Sent" in admin_instance.status_badge(log)
+        assert "Your Magic Login Link" in admin_instance.subject_display(log)
+        assert "Hello world" in admin_instance.content_preview(log)
+
+        # Permissions: no add, no change, delete allowed for superuser
+        assert admin_instance.has_add_permission(req) is False
+        assert admin_instance.has_change_permission(req, log) is False
+        assert admin_instance.has_delete_permission(req, log) is True

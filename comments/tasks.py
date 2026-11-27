@@ -1,7 +1,5 @@
 import logging
 
-from django.conf import settings
-from django.core.mail import send_mail
 from django.tasks import task
 from django.utils.translation import gettext as _
 
@@ -38,12 +36,18 @@ def send_reply_notification_email_task(
         unsubscribe_url=unsubscribe_url,
     )
 
+    from users.mail import send_and_log_email
+    from users.models import EmailLog
+
     try:
-        send_mail(
+        send_and_log_email(
             subject=subject,
             message=message,
-            from_email=getattr(settings, "DEFAULT_FROM_EMAIL", "noreply@blueshoe.de"),
             recipient_list=[recipient_email],
+            trigger=EmailLog.Trigger.REPLY_NOTIFICATION,
+            site_host=parent_site_host,
+            page_url=comment_url,
+            fail_silently=False,
         )
     except Exception as e:
         logger.error(f"Failed to send async reply notification to {recipient_email}: {e}")
