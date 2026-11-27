@@ -37,11 +37,42 @@ class CustomAccountAdapter(DefaultAccountAdapter):
 
         return False
 
+    def is_login_by_code_required(self, login) -> bool:
+        return False
+
+    def get_login_redirect_url(self, request: HttpRequest) -> str:
+        url = request.session.get("next") or request.GET.get("next")
+        if url and self.is_safe_url(url):
+            return url
+        return getattr(settings, "LOGIN_REDIRECT_URL", "https://www.blueshoe.io/auth-callback.html")
+
 
 class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
     """
-    Robust multi-tenant social app lookup matching request host without MultipleObjectsReturned.
+    Robust multi-tenant social app lookup matching request host without MultipleObjectsReturned,
+    and automatic placeholder email assignment for providers without email (such as X / Twitter).
     """
+
+    def pre_social_login(self, request: HttpRequest, sociallogin) -> None:
+        """
+        If the provider does not provide an email address (such as Twitter / X free tier),
+        assign a deterministic, unique placeholder email so auto-signup succeeds immediately
+        without interrupting the login flow.
+        """
+        if not sociallogin.is_existing and not sociallogin.email_addresses and not sociallogin.user.email:
+            uid = str(sociallogin.account.uid)
+            handle = (sociallogin.account.extra_data.get("username") or uid).lower()
+            placeholder = f"{handle}.{uid[:8]}@x.com"
+            from allauth.account.models import EmailAddress
+
+            sociallogin.user.email = placeholder
+            sociallogin.email_addresses = [EmailAddress(email=placeholder, verified=False, primary=True)]
+
+    def populate_user(self, request: HttpRequest, sociallogin, data: dict):
+        user = super().populate_user(request, sociallogin, data)
+        if not user.first_name and data.get("name"):
+            user.first_name = data["name"][:30]
+        return user
 
     def get_app(self, request: HttpRequest, provider: str, client_id: str | None = None) -> SocialApp:
         if client_id:

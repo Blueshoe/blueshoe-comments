@@ -250,6 +250,45 @@ class TestUsersAPI:
             in location
         )
 
+    def test_twitter_oauth2_auto_signup_without_email(self, rf):
+        from allauth.socialaccount.adapter import get_adapter
+        from allauth.socialaccount.helpers import complete_social_login
+        from allauth.socialaccount.models import SocialAccount, SocialLogin
+        from allauth.socialaccount.providers.twitter_oauth2.provider import TwitterOAuth2Provider
+        from django.contrib.auth.middleware import AuthenticationMiddleware
+        from django.contrib.messages.middleware import MessageMiddleware
+        from django.contrib.sessions.middleware import SessionMiddleware
+
+        site = Site.objects.get_current()
+        app, _ = SocialApp.objects.get_or_create(provider="twitter_oauth2", name="X", client_id="test_x_client_id")
+        app.sites.add(site)
+
+        req = rf.get("/accounts/twitter_oauth2/login/callback/")
+        SessionMiddleware(lambda r: None).process_request(req)
+        AuthenticationMiddleware(lambda r: None).process_request(req)
+        MessageMiddleware(lambda r: None).process_request(req)
+        req.session.save()
+
+        adapter = get_adapter(req)
+        account = SocialAccount(
+            provider="twitter_oauth2",
+            uid="99887766",
+            extra_data={"id": "99887766", "username": "xcreator", "name": "X Creator"},
+        )
+        user = User()
+        login = SocialLogin(account=account, user=user)
+        adapter.populate_user(req, login, {"username": "xcreator", "name": "X Creator"})
+        adapter.pre_social_login(req, login)
+        login.provider = TwitterOAuth2Provider(req, app=app)
+
+        res = complete_social_login(req, login)
+        assert res.status_code == 302
+        assert "auth-callback.html" in res.headers["Location"]
+        assert req.user.is_authenticated is True
+        assert req.user.username == "xcreator"
+        assert req.user.get_full_name() == "X Creator"
+        assert "@x.com" in req.user.email
+
     def test_magic_link_flow(self, client, mailoutbox):
         # 1. Providers endpoint includes email_link
         prov_res = client.get("/api/auth/providers/")

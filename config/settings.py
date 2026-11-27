@@ -191,10 +191,12 @@ USE_X_FORWARDED_HOST = True
 
 # --- Allauth Headless Setup ---
 HEADLESS_ONLY = True
+LOGIN_REDIRECT_URL = "https://www.blueshoe.io/auth-callback.html"
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = env("ACCOUNT_DEFAULT_HTTP_PROTOCOL", default="https" if not DEBUG else "http")
 ACCOUNT_LOGIN_METHODS = {"email"}
 ACCOUNT_SIGNUP_FIELDS = ["email*"]
 ACCOUNT_EMAIL_VERIFICATION = "none"  # Social login primarily, bypass email verification for now or configure as needed
+SOCIALACCOUNT_AUTO_SIGNUP = True
 ACCOUNT_ADAPTER = "users.adapter.CustomAccountAdapter"
 SOCIALACCOUNT_ADAPTER = "users.adapter.CustomSocialAccountAdapter"
 
