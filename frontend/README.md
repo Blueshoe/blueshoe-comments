@@ -1,6 +1,8 @@
-# @blueshoe/nuxt-community
+# @blueshoe/community-widget
 
 Nuxt 4 module for the Blueshoe Community comment & reaction system.
+
+> **Breaking in 1.0.0:** This package is now a Nuxt 4 module (Vue components + composables), not the previous Lit web-component bundle.
 
 Designed for **Nuxt 4** and **Docus** apps with `nuxt generate` / static hosting. The **host app owns data fetching** (slug + composables); widgets are presentational and interactive after hydration.
 
@@ -9,14 +11,14 @@ Designed for **Nuxt 4** and **Docus** apps with `nuxt generate` / static hosting
 ## Install
 
 ```bash
-yarn add @blueshoe/nuxt-community
+yarn add @blueshoe/community-widget
 # or
-npm install @blueshoe/nuxt-community
+npm install @blueshoe/community-widget
 ```
 
 ### Lint (module repo)
 
-This package uses [`@nuxt/eslint`](https://eslint.nuxt.com) with [`@antfu/eslint-config`](https://github.com/antfu/eslint-config) (`stylistic` + formatters for SCSS/CSS and Markdown):
+  This package uses [`@nuxt/eslint`](https://eslint.nuxt.com) with [`@antfu/eslint-config`](https://github.com/antfu/eslint-config) (`stylistic` + formatters for SCSS/CSS and Markdown):
 
 ```bash
 npm run lint
@@ -32,7 +34,7 @@ npm run lint:fix
 ```ts
 // nuxt.config.ts
 export default defineNuxtConfig({
-  modules: ['@blueshoe/nuxt-community'],
+  modules: ['@blueshoe/community-widget'],
   community: {
     apiBase: 'https://community.example.com',
     // authCallback: true // default — copies auth-callback.html into public/
@@ -148,24 +150,24 @@ For doc index / ToC cards, use `useCommunityReactionBatch` only.
 
 ### Composables (auto-imported)
 
-| Composable                         | Purpose                                    |
-| ---------------------------------- | ------------------------------------------ |
-| `useCommunityComments(slug)`       | Load / mutate comments (`useAsyncData`)    |
-| `useCommunityReactions(slug)`      | Single-thread reactions + `toggleReaction` |
-| `useCommunityReactionBatch(slugs)` | ToC/teaser counts without `active`         |
-| `useCommunityAuth()`               | Session, providers, OAuth / magic link     |
-| `useCommunityConfig()`             | `apiBase`                                  |
-| `useCommunityTheme()`              | Theme from `app.config`                    |
-| `useCommentDraft(slug)`            | `localStorage` drafts (client)             |
+  | Composable                         | Purpose                                    |
+  | ---------------------------------- | ------------------------------------------ |
+  | `useCommunityComments(slug)`       | Load / mutate comments (`useAsyncData`)    |
+  | `useCommunityReactions(slug)`      | Single-thread reactions + `toggleReaction` |
+  | `useCommunityReactionBatch(slugs)` | ToC/teaser counts without `active`         |
+  | `useCommunityAuth()`               | Session, providers, OAuth / magic link     |
+  | `useCommunityConfig()`             | `apiBase`                                  |
+  | `useCommunityTheme()`              | Theme from `app.config`                    |
+  | `useCommentDraft(slug)`            | `localStorage` drafts (client)             |
 
 ### Components (auto-imported)
 
-| Component            | Props                                             |
-| -------------------- | ------------------------------------------------- |
-| `CommunityComments`  | `thread-slug`, `comments` (initial/SSG data)      |
-| `CommunityReactions` | `thread-slug`, `reactions` (`{ counts, active }`) |
+  | Component            | Props                                             |
+  | -------------------- | ------------------------------------------------- |
+  | `CommunityComments`  | `thread-slug`, `comments` (initial/SSG data)      |
+  | `CommunityReactions` | `thread-slug`, `reactions` (`{ counts, active }`) |
 
-No teaser widget — ToC UI stays in the host app.
+  No teaser widget — ToC UI stays in the host app.
 
 ### Types (shape)
 
@@ -195,9 +197,9 @@ If first-party cookies are awkward cross-subdomain, add a Nitro proxy in the **h
 
 ## Notes
 
-- Generate freezes public counts/HTML until the next build or a client `refresh()`.
-- `active` reactions are visitor-specific — only for the interactive post widget, never for ToC batch data.
-- Peer dependency: `nuxt ^4`.
+  - Generate freezes public counts/HTML until the next build or a client `refresh()`.
+  - `active` reactions are visitor-specific — only for the interactive post widget, never for ToC batch data.
+  - Peer dependency: `nuxt ^4`.
 
 ---
 

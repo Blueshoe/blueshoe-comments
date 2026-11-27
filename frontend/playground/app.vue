@@ -1,5 +1,5 @@
 <template>
   <div>
-    <p>@blueshoe/nuxt-community playground</p>
+    <p>@blueshoe/community-widget playground</p>
   </div>
 </template>

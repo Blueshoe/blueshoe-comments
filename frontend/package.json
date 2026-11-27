@@ -1,5 +1,5 @@
 {
-  "name": "@blueshoe/nuxt-community",
+  "name": "@blueshoe/community-widget",
   "type": "module",
   "version": "1.0.0",
   "description": "Nuxt 4 module for the Blueshoe Community comment & reaction system",
@@ -55,6 +55,7 @@
     "@nuxt/module-builder": "^1.0.0",
     "@nuxt/schema": "^4.0.0",
     "@types/dompurify": "^3.2.0",
+    "@types/node": "^26.6.11",
     "eslint": "^9.0.0",
     "eslint-plugin-format": "^1.0.0",
     "nuxt": "^4.0.0",

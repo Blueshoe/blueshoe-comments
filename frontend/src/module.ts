@@ -32,7 +32,7 @@ const defaultTheme: CommunityThemeConfig = {
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
-    name: '@blueshoe/nuxt-community',
+    name: '@blueshoe/community-widget',
     configKey: 'community',
     compatibility: {
       nuxt: '>=4.0.0',

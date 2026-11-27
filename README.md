@@ -52,7 +52,7 @@ Static site generators (Astro, Sphinx, Hugo, Next) are fast, secure, and peacefu
   - Custom middleware dynamically assigns cookies (`sessionid`, `csrftoken`, `community_vid`) to root domains (e.g. `.blueshoe.de`), avoiding third-party cookie blocks in Chrome & Safari.
   - Regular readers enjoy **180-day sliding sessions**; staff sessions are safely capped at 12 hours.
 
-### ☕ Nuxt Frontend Module (`@blueshoe/nuxt-community`)
+### ☕ Nuxt Frontend Module (`@blueshoe/community-widget`)
   - Nuxt 4 module with Vue components, typed composables, and SSG-friendly data loading.
   - Host apps fetch by slug (`useCommunityComments`, `useCommunityReactionBatch`); widgets stay presentational for `nuxt generate`.
 
@@ -132,7 +132,7 @@ docker compose up -d
 
 ---
 
-## 🎨 Frontend Module (`@blueshoe/nuxt-community`)
+## 🎨 Frontend Module (`@blueshoe/community-widget`)
 
   The Nuxt 4 module lives in `/frontend`. See [frontend/README.md](frontend/README.md) for full integration steps.
 
@@ -147,7 +147,7 @@ npm run build
 ```ts
 // nuxt.config.ts
 export default defineNuxtConfig({
-  modules: ['@blueshoe/nuxt-community'],
+  modules: ['@blueshoe/community-widget'],
   community: { apiBase: 'https://community.example.com' },
 })
 ```
