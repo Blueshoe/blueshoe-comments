@@ -1,7 +1,11 @@
-.community-root .status-card {
-  padding: 1.5rem;
-  border: 1px solid var(--community-accent, #3b82f6);
+.community-root .widget-alert {
+  margin: 0;
+  padding: 0.55rem 0.85rem;
   border-radius: var(--community-radius, 8px);
+  border: 1px solid color-mix(in srgb, var(--community-accent, #0284c7) 22%, #e2e8f0);
+  background: color-mix(in srgb, var(--community-accent, #0284c7) 8%, #ffffff);
+  color: #475569;
+  font-size: 0.9rem;
+  line-height: 1.45;
   text-align: center;
-  background: #f8fafc;
 }

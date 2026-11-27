@@ -56,22 +56,30 @@ async function onToggle(kind: ReactionKind) {
     console.error('Failed to toggle reaction', err)
   }
 }
+
+const isOffline = computed(() => !!error.value && !pending.value)
 </script>
 
 <template>
   <div class="community-root" data-community-theme>
     <div class="page-reactions">
-      <div v-if="total > 0" class="page-reactions-summary">
-        {{ summaryLabel }}
-      </div>
-      <p v-if="error && !pending" class="widget-subtitle">
+      <p
+        v-if="isOffline"
+        class="widget-alert"
+        role="status"
+      >
         {{ t('offlineMessage') }}
       </p>
-      <ReactionBar
-        :reactions="local"
-        :add-label="t('addReaction')"
-        @toggle="onToggle"
-      />
+      <template v-else>
+        <div v-if="total > 0" class="page-reactions-summary">
+          {{ summaryLabel }}
+        </div>
+        <ReactionBar
+          :reactions="local"
+          :add-label="t('addReaction')"
+          @toggle="onToggle"
+        />
+      </template>
     </div>
   </div>
 </template>

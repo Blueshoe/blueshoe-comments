@@ -14,7 +14,6 @@ import CommentList from './comments/CommentList.vue'
 import MarkdownEditor from './editor/MarkdownEditor.vue'
 import Avatar from './shared/Avatar.vue'
 import CocModal from './shared/CocModal.vue'
-import OfflineState from './shared/OfflineState.vue'
 
 const props = withDefaults(defineProps<{
   threadSlug: string
@@ -341,15 +340,9 @@ function onReply(comment: CommunityComment) {
 </script>
 
 <template>
-  <section class="community-root" data-community-theme>
-    <OfflineState
-      v-if="isOffline"
-      :message="t('offlineMessage')"
-      :retry-label="t('retry')"
-      @retry="syncFromServer"
-    />
-
-    <div v-else class="comments-widget">
+  <!-- Offline UI lives in CommunityReactions (single subtle alert). -->
+  <section v-if="!isOffline" class="community-root" data-community-theme>
+    <div class="comments-widget">
       <div class="comments-section">
         <div class="widget-header">
           <h3>{{ t('discussionTitle') }}</h3>
