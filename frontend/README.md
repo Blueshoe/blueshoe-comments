@@ -18,7 +18,7 @@ npm install @blueshoe/community-widget
 
 ### Lint (module repo)
 
-  This package uses [`@nuxt/eslint`](https://eslint.nuxt.com) with [`@antfu/eslint-config`](https://github.com/antfu/eslint-config) (`stylistic` + formatters for SCSS/CSS and Markdown):
+This package uses [`@nuxt/eslint`](https://eslint.nuxt.com) with [`@antfu/eslint-config`](https://github.com/antfu/eslint-config) (`stylistic` + formatters for SCSS/CSS and Markdown):
 
 ```bash
 npm run lint
@@ -150,24 +150,24 @@ For doc index / ToC cards, use `useCommunityReactionBatch` only.
 
 ### Composables (auto-imported)
 
-  | Composable                         | Purpose                                    |
-  | ---------------------------------- | ------------------------------------------ |
-  | `useCommunityComments(slug)`       | Load / mutate comments (`useAsyncData`)    |
-  | `useCommunityReactions(slug)`      | Single-thread reactions + `toggleReaction` |
-  | `useCommunityReactionBatch(slugs)` | ToC/teaser counts without `active`         |
-  | `useCommunityAuth()`               | Session, providers, OAuth / magic link     |
-  | `useCommunityConfig()`             | `apiBase`                                  |
-  | `useCommunityTheme()`              | Theme from `app.config`                    |
-  | `useCommentDraft(slug)`            | `localStorage` drafts (client)             |
+| Composable                         | Purpose                                    |
+| ---------------------------------- | ------------------------------------------ |
+| `useCommunityComments(slug)`       | Load / mutate comments (`useAsyncData`)    |
+| `useCommunityReactions(slug)`      | Single-thread reactions + `toggleReaction` |
+| `useCommunityReactionBatch(slugs)` | ToC/teaser counts without `active`         |
+| `useCommunityAuth()`               | Session, providers, OAuth / magic link     |
+| `useCommunityConfig()`             | `apiBase`                                  |
+| `useCommunityTheme()`              | Theme from `app.config`                    |
+| `useCommentDraft(slug)`            | `localStorage` drafts (client)             |
 
 ### Components (auto-imported)
 
-  | Component            | Props                                             |
-  | -------------------- | ------------------------------------------------- |
-  | `CommunityComments`  | `thread-slug`, `comments` (initial/SSG data)      |
-  | `CommunityReactions` | `thread-slug`, `reactions` (`{ counts, active }`) |
+| Component            | Props                                             |
+| -------------------- | ------------------------------------------------- |
+| `CommunityComments`  | `thread-slug`, `comments` (initial/SSG data)      |
+| `CommunityReactions` | `thread-slug`, `reactions` (`{ counts, active }`) |
 
-  No teaser widget — ToC UI stays in the host app.
+No teaser widget — ToC UI stays in the host app.
 
 ### Types (shape)
 
@@ -197,9 +197,9 @@ If first-party cookies are awkward cross-subdomain, add a Nitro proxy in the **h
 
 ## Notes
 
-  - Generate freezes public counts/HTML until the next build or a client `refresh()`.
-  - `active` reactions are visitor-specific — only for the interactive post widget, never for ToC batch data.
-  - Peer dependency: `nuxt ^4`.
+- Generate freezes public counts/HTML until the next build or a client `refresh()`.
+- `active` reactions are visitor-specific — only for the interactive post widget, never for ToC batch data.
+- Peer dependency: `nuxt ^4`.
 
 ---
 
