@@ -48,6 +48,24 @@ ALL_SOCIAL_PROVIDERS = [
     if _name not in _EXCLUDED_PROVIDERS
 ]
 
+SOCIALACCOUNT_PROVIDERS = {
+    "twitter_oauth2": {
+        "SCOPE": [
+            "tweet.read",
+            "users.read",
+            "users.email",
+            "offline.access",
+        ],
+        "USER_FIELDS": [
+            "id",
+            "name",
+            "username",
+            "profile_image_url",
+            "confirmed_email",
+        ],
+    }
+}
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
