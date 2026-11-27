@@ -56,7 +56,7 @@ SOCIALACCOUNT_PROVIDERS = {
             "users.email",
             "offline.access",
         ],
-        "USER_FIELDS": [
+        "FIELDS": [
             "id",
             "name",
             "username",
