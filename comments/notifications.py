@@ -74,16 +74,15 @@ def send_moderation_pending_email(comment):
         f"Best regards,\n"
         f"The Blueshoe Community Editorial Team\n"
     )
-    from django.conf import settings
-    from django.core.mail import send_mail
+    from users.mail import send_and_log_email
+    from users.models import EmailLog
 
-    try:
-        return send_mail(
-            subject=subject,
-            message=message,
-            from_email=getattr(settings, "DEFAULT_FROM_EMAIL", "noreply@blueshoe.de"),
-            recipient_list=[comment.author.email],
-            fail_silently=True,
-        )
-    except Exception:
-        return None
+    return send_and_log_email(
+        subject=subject,
+        message=message,
+        recipient_list=[comment.author.email],
+        trigger=EmailLog.Trigger.COMMENT_PENDING_REVIEW,
+        site_host=comment.site_host or "",
+        page_url=live_url,
+        fail_silently=True,
+    )

@@ -388,6 +388,15 @@ class TestCommentsAPI:
         assert "requires review or revision" in mailoutbox[0].subject
         assert "Contains suspected promotional link" in mailoutbox[0].body
 
+        from users.models import EmailLog
+
+        log = EmailLog.objects.filter(recipient="charlie@test.com").first()
+        assert log is not None
+        assert log.trigger == EmailLog.Trigger.COMMENT_PENDING_REVIEW
+        assert log.site_host == "blueshoe.de"
+        assert log.status == EmailLog.Status.SENT
+        assert "Contains suspected promotional link" in log.content_text
+
         # 2. Anonymous visitor calls GET /api/comments/ -> does NOT see pending comment
         client.logout()
         anon_res = client.get("/api/comments/?thread_slug=editorial-test", HTTP_HOST="blueshoe.de")
