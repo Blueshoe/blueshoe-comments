@@ -134,6 +134,41 @@ class TestReactionsAPI:
         assert res2.json() == {"action": "removed"}
         assert Reaction.objects.filter(thread_slug="article-toggle", kind="like").count() == 0
 
+    def test_visitor_identity_stable_across_ip_change(self, client):
+        """Same X-Visitor-Id must share active state even if REMOTE_ADDR changes."""
+        vid = "stable-visitor-across-ip"
+        host = {"HTTP_HOST": "blueshoe.de", "HTTP_X_VISITOR_ID": vid}
+
+        res_add = client.post(
+            "/api/reactions/",
+            data={"thread_slug": "ip-stable", "kind": "love"},
+            content_type="application/json",
+            REMOTE_ADDR="1.1.1.1",
+            **host,
+        )
+        assert res_add.status_code == 200
+        assert res_add.json() == {"action": "added"}
+
+        res_get = client.get(
+            "/api/reactions/?thread_slug=ip-stable",
+            REMOTE_ADDR="8.8.8.8",
+            **host,
+        )
+        assert res_get.status_code == 200
+        assert res_get.json()["active"] == ["love"]
+        assert res_get.json()["counts"]["love"] == 1
+
+        res_remove = client.post(
+            "/api/reactions/",
+            data={"thread_slug": "ip-stable", "kind": "love"},
+            content_type="application/json",
+            REMOTE_ADDR="8.8.8.8",
+            **host,
+        )
+        assert res_remove.status_code == 200
+        assert res_remove.json() == {"action": "removed"}
+        assert Reaction.objects.filter(thread_slug="ip-stable", kind="love").count() == 0
+
     def test_reaction_anti_flooding_shelter(self, client):
         headers = {"HTTP_X_VISITOR_ID": "spammer-uuid-99999", "HTTP_HOST": "blueshoe.de"}
         # 10 reactions within short window succeed

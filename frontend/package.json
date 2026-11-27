@@ -1,49 +1,67 @@
 {
-  "name": "@blueshoe/community-widget",
-  "version": "0.5.2",
+  "name": "@blueshoe/nuxt-community",
   "type": "module",
-  "description": "API-First Blueshoe Community-System Web Components",
-  "main": "./dist/community-widget.umd.cjs",
-  "module": "./dist/community-widget.js",
-  "exports": {
-    ".": {
-      "import": "./dist/community-widget.js",
-      "require": "./dist/community-widget.umd.cjs"
-    }
-  },
-  "files": [
-    "dist",
-    "bin",
-    "auth-callback.html",
-    "README.md"
-  ],
-  "bin": {
-    "blueshoe-community-init": "bin/init.js"
-  },
+  "version": "1.0.0",
+  "description": "Nuxt 4 module for the Blueshoe Community comment & reaction system",
+  "author": "Blueshoe",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Blueshoe/blueshoe-comments.git",
     "directory": "frontend"
   },
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/"
+  "exports": {
+    ".": {
+      "types": "./dist/types.d.mts",
+      "import": "./dist/module.mjs"
+    }
   },
+  "main": "./dist/module.mjs",
+  "typesVersions": {
+    "*": {
+      ".": [
+        "./dist/types.d.mts"
+      ]
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "dev": "nuxi dev playground",
+    "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
+    "build:css": "sass src/runtime/assets/scss/index.scss dist/runtime/assets/css/community.css --style=compressed --no-source-map",
+    "prepack": "nuxt-module-build build && npm run build:css",
+    "build": "nuxt-module-build build && npm run build:css",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "peerDependencies": {
+    "nuxt": "^4.0.0"
   },
   "dependencies": {
+    "@nuxt/kit": "^4.0.0",
     "altcha": "^3.6.0",
+    "defu": "^6.1.4",
     "dompurify": "^3.5.0",
-    "lit": "^3.1.2",
     "marked": "^18.2.1"
   },
   "devDependencies": {
-    "typescript": "^7.0.2",
-    "vite": "^8.3.8"
+    "@antfu/eslint-config": "^4.0.0",
+    "@nuxt/eslint": "^1.0.0",
+    "@nuxt/module-builder": "^1.0.0",
+    "@nuxt/schema": "^4.0.0",
+    "@types/dompurify": "^3.2.0",
+    "eslint": "^9.0.0",
+    "eslint-plugin-format": "^1.0.0",
+    "nuxt": "^4.0.0",
+    "sass": "^1.89.0",
+    "typescript": "^5.8.0",
+    "vue": "^3.5.0",
+    "vue-tsc": "^3.3.14"
   },
-  "author": "Blueshoe",
-  "license": "MIT"
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
 }

@@ -1,0 +1,301 @@
+/* Comment List */
+.community-root .comment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.community-root .comment-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.community-root .comment-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.community-root .comment-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 0 var(--community-radius, 8px) var(--community-radius, 8px) var(--community-radius, 8px);
+  padding: 0.9rem 1rem;
+  background: #ffffff;
+}
+
+.community-root .comment-row.is-reply .comment-card {
+  background: #f8fafc;
+  border-color: #e8eef5;
+}
+
+.community-root .comment-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.45rem;
+  font-size: 0.9rem;
+  flex-wrap: wrap;
+}
+
+.community-root .comment-author {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.community-root .comment-header-spacer {
+  flex: 1;
+  min-width: 0.5rem;
+}
+
+.community-root .team-badge {
+  background: var(--community-accent, #3b82f6);
+  color: #ffffff;
+  padding: 1px 6px;
+  border-radius: var(--community-radius, 8px);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.community-root .comment-date {
+  color: #94a3b8;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.community-root .comment-body {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+.community-root .comment-body p {
+  margin: 0.4rem 0;
+}
+
+.community-root .comment-body p:first-child {
+  margin-top: 0;
+}
+
+.community-root .comment-body p:last-child {
+  margin-bottom: 0;
+}
+
+.community-root .comment-body pre {
+  background: #0f172a;
+  color: #f8fafc;
+  padding: 0.85rem 1.1rem;
+  border-radius: var(--community-radius, 8px);
+  overflow-x: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  margin: 0.65rem 0;
+  white-space: pre;
+  tab-size: 4;
+  border: 1px solid #1e293b;
+}
+
+.community-root .comment-body pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+  font-family: inherit;
+  white-space: pre;
+}
+
+.community-root .comment-body code {
+  background: #f1f5f9;
+  color: #0f172a;
+  padding: 2px 6px;
+  border-radius: var(--community-radius, 8px);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  font-size: 0.88em;
+  border: 1px solid #e2e8f0;
+  white-space: pre-wrap;
+}
+
+.community-root .comment-body blockquote {
+  border-left: 3px solid #cbd5e1;
+  padding-left: 0.75rem;
+  margin: 0.5rem 0;
+  color: #64748b;
+  font-style: italic;
+}
+
+.community-root .comment-body ul,
+.community-root .comment-body ol {
+  margin: 0.4rem 0;
+  padding-left: 1.4rem;
+}
+
+.community-root .comment-body li {
+  margin: 0.2rem 0;
+}
+
+.community-root .comment-body a {
+  color: var(--community-accent, #3b82f6);
+  text-decoration: underline;
+}
+
+.community-root .comment-body a:hover {
+  color: #1d4ed8;
+}
+
+/* Comment Reactions Bar */
+.community-root .reactions-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.15rem;
+  flex-wrap: wrap;
+}
+
+.community-root .reactions-bar .page-reactions-row {
+  justify-content: flex-start;
+  gap: 0.35rem;
+}
+
+.community-root .reactions-sep {
+  width: 1px;
+  height: 16px;
+  background: #d1d5db;
+  margin: 0 0.15rem;
+  flex-shrink: 0;
+}
+
+.community-root .reply-action-btn {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 0.2rem;
+  border-radius: 0;
+  transition: color 0.15s;
+}
+
+.community-root .reply-action-btn:hover {
+  background: transparent;
+  color: var(--community-accent, #2563eb);
+}
+
+/* 1-Level Replies Container */
+.community-root .replies-list {
+  margin-top: 0.5rem;
+  margin-left: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Inline Reply Form */
+.community-root .inline-reply-box {
+  margin-top: 0.15rem;
+  padding: 0;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0 var(--community-radius, 8px) var(--community-radius, 8px) var(--community-radius, 8px);
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+  animation: replyFadeIn 0.15s ease-out;
+}
+
+@keyframes replyFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.community-root .inline-reply-box h6 {
+  margin: 0;
+  padding: 0.65rem 0.85rem 0;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.community-root .inline-reply-box .editor-toolbar {
+  border-radius: 0;
+  margin-top: 0.45rem;
+}
+
+.community-root .reply-textarea {
+  width: 100%;
+  min-height: 90px;
+  padding: 0.75rem 0.85rem;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-size: 0.9rem;
+  resize: vertical;
+  background: #ffffff;
+}
+
+.community-root .reply-preview {
+  min-height: 90px;
+  padding: 0.75rem 0.85rem;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  background: #ffffff;
+}
+
+.community-root .reply-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  padding: 0.45rem 0.65rem;
+  border-top: 1px solid #e5e7eb;
+  border-radius: 0 0 var(--community-radius, 8px) var(--community-radius, 8px);
+  background: #ffffff;
+  overflow: visible;
+  position: relative;
+  z-index: 2;
+}
+
+.community-root .reply-footer-left {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.community-root .reply-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
+.community-root .cancel-btn {
+  background: #e5e7eb;
+  border: none;
+  border-radius: var(--community-radius, 8px);
+  padding: 0.45rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #111827;
+}
+
+.community-root .cancel-btn:hover {
+  background: #d1d5db;
+  color: #111827;
+}

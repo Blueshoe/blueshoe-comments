@@ -1,0 +1,29 @@
+// Widget shell + light Tailwind preflight overrides inside .community-root
+.community-root {
+  display: block;
+  // Fallback without commas — Lightning CSS drops `var(--x, a, b)` in font-family.
+  font-family: var(--community-font, inherit);
+  color: var(--community-color, #1e293b);
+  background: var(--community-bg, #ffffff);
+  border-radius: var(--community-radius, 8px);
+  box-sizing: border-box;
+  line-height: 1.5;
+}
+
+.community-root *,
+.community-root *::before,
+.community-root *::after {
+  box-sizing: border-box;
+}
+
+.community-root h3,
+.community-root h4,
+.community-root h5,
+.community-root h6,
+.community-root p {
+  margin: 0;
+}
+
+.community-root button {
+  font: inherit;
+}

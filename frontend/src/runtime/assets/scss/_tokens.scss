@@ -1,0 +1,25 @@
+// Design tokens — overridden at runtime via appConfig.community.theme
+:root {
+  --community-accent: var(--ui-primary, #0284c7);
+  --community-bg: var(--ui-bg, #ffffff);
+  --community-color: var(--ui-text, #1e293b);
+  --community-radius: 8px;
+  --community-font: inherit;
+  --community-border: #e2e8f0;
+  --community-muted: #64748b;
+  --community-heading: #0f172a;
+  --community-surface: #f8fafc;
+  --community-surface-hover: #f1f5f9;
+}
+
+.dark,
+html.dark {
+  --community-accent: var(--community-accent-dark, var(--ui-primary, #38bdf8));
+  --community-bg: var(--community-bg-dark, var(--ui-bg, #0f172a));
+  --community-color: var(--community-color-dark, var(--ui-text, #e2e8f0));
+  --community-border: #334155;
+  --community-muted: #94a3b8;
+  --community-heading: #f8fafc;
+  --community-surface: #1e293b;
+  --community-surface-hover: #334155;
+}

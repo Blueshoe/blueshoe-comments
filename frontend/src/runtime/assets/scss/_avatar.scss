@@ -1,0 +1,30 @@
+.community-root .avatar {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: #ffffff;
+  font-weight: 700;
+  line-height: 1;
+  user-select: none;
+  letter-spacing: 0.02em;
+}
+
+.community-root .avatar-sm {
+  width: 28px;
+  height: 28px;
+  font-size: 0.7rem;
+}
+
+.community-root .avatar-md {
+  width: 36px;
+  height: 36px;
+  font-size: 0.8rem;
+}
+
+.community-root .avatar-lg {
+  width: 40px;
+  height: 40px;
+  font-size: 0.85rem;
+}

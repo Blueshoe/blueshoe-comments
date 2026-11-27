@@ -40,7 +40,7 @@ jobs:
           DEBUG: "False"
 
   frontend-quality:
-    name: Frontend Build & Typecheck
+    name: Frontend Lint & Build
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -59,10 +59,17 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build Web Component bundle
+      - name: Prepare Nuxt module & playground (eslint flat config)
+        run: npm run dev:prepare
+
+      - name: ESLint
+        run: npm run lint
+
+      - name: Build Nuxt module
         run: npm run build
 
       - name: Verify build artifacts exist
         run: |
-          test -f dist/community-widget.js
-          test -f dist/community-widget.umd.cjs
+          test -f dist/module.mjs
+          test -f dist/types.d.mts
+          test -f dist/runtime/assets/css/community.css

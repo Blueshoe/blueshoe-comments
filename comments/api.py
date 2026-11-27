@@ -93,14 +93,9 @@ def _get_author_name(comment: Comment) -> str:
     return guest or "Guest"
 
 
-def _get_anon_hash(request: HttpRequest, site_host: str) -> str:
-    vid = request.headers.get("X-Visitor-Id") or request.COOKIES.get("community_vid", "")
-    ip = request.META.get("HTTP_X_FORWARDED_FOR", "").split(",")[0].strip() or request.META.get("REMOTE_ADDR", "")
-    raw = f"{site_host}:{ip}:{vid}:{ALTCHA_HMAC_KEY}"
-    return hashlib.sha256(raw.encode()).hexdigest()
-
-
 def _build_reaction_map(comment_ids: list[int], request: HttpRequest, site_host: str) -> dict[int, dict]:
+    from reactions.anon import get_anon_identity
+
     reaction_map: dict[int, dict] = {cid: {"counts": {}, "active": []} for cid in comment_ids}
     if not comment_ids:
         return reaction_map
@@ -118,8 +113,8 @@ def _build_reaction_map(comment_ids: list[int], request: HttpRequest, site_host:
     if request.user.is_authenticated:
         active_qs = qs.filter(user=request.user).values_list("comment_id", "kind")
     else:
-        anon_hash = _get_anon_hash(request, site_host)
-        active_qs = qs.filter(anon_hash=anon_hash).values_list("comment_id", "kind")
+        _primary, aliases = get_anon_identity(request, site_host)
+        active_qs = qs.filter(anon_hash__in=aliases).values_list("comment_id", "kind")
 
     for cid, kind in active_qs:
         reaction_map[cid]["active"].append(kind)

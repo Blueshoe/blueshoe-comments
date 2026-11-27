@@ -17,44 +17,44 @@ Static site generators (Astro, Sphinx, Hugo, Next) are fast, secure, and peacefu
 ## ⚡ Superpowers & Highlights
 
 ### 🌪️ Powered by `django-hurricane`
-Forget slow WSGI setups. We run on <a href="https://django-hurricane.io/" target="_blank" rel="noopener noreferrer"><strong>Django Hurricane</strong></a>, Blueshoe’s own cloud-native Granian-powered ASGI runner.
-- High-performance asynchronous execution.
-- Built-in zero-downtime Kubernetes & container probes: `/alive`, `/ready`, `/startup`, and Prometheus `/metrics`.
-- Auto-runs migrations on container startup (`--check-migrations-apply`).
+  Forget slow WSGI setups. We run on <a href="https://django-hurricane.io/" target="_blank" rel="noopener noreferrer"><strong>Django Hurricane</strong></a>, Blueshoe’s own cloud-native Granian-powered ASGI runner.
+  - High-performance asynchronous execution.
+  - Built-in zero-downtime Kubernetes & container probes: `/alive`, `/ready`, `/startup`, and Prometheus `/metrics`.
+  - Auto-runs migrations on container startup (`--check-migrations-apply`).
 
 ### 🥷 Typed & Fast with `django-ninja`
-No DRF bloatware here! Built with <a href="https://django-ninja.dev/" target="_blank" rel="noopener noreferrer"><strong>Django Ninja</strong></a> and Pydantic schemas:
-- Fully typed request/response models.
-- Interactive, eye-candy API documentation at <a href="/docs" target="_blank" rel="noopener noreferrer"><strong><code>/docs</code></strong></a> powered by **Scalar** (with a Swagger fallback at <a href="/api/docs" target="_blank" rel="noopener noreferrer"><code>/api/docs</code></a>).
+  No DRF bloatware here! Built with <a href="https://django-ninja.dev/" target="_blank" rel="noopener noreferrer"><strong>Django Ninja</strong></a> and Pydantic schemas:
+  - Fully typed request/response models.
+  - Interactive, eye-candy API documentation at <a href="/docs" target="_blank" rel="noopener noreferrer"><strong><code>/docs</code></strong></a> powered by **Scalar** (with a Swagger fallback at <a href="/api/docs" target="_blank" rel="noopener noreferrer"><code>/api/docs</code></a>).
 
 ### 🛡️ Smart Content Guardrails & Review Queue
-- Every single comment (from guests or logged-in users) is screened through real-time moderation guardrails.
-- **Clean?** Instant publish (`approved`)! 🎉
-- **Spam or abusive content?** Flagged, held back in a dedicated Django Admin review queue, and triggers an alert webhook for moderators.
-- **Privacy First:** User identifiers (IP, email, or user IDs) are never exposed.
+  - Every single comment (from guests or logged-in users) is screened through real-time moderation guardrails.
+  - **Clean?** Instant publish (`approved`)! 🎉
+  - **Spam or abusive content?** Flagged, held back in a dedicated Django Admin review queue, and triggers an alert webhook for moderators.
+  - **Privacy First:** User identifiers (IP, email, or user IDs) are never exposed.
 
 ### 🛡️ Troll & Bot Kryptonite
-- **Invisible Honeypot:** Dummy fields catch dumb bots before spending server resources.
-- **ALTCHA Proof-of-Work:** Privacy-friendly WASM CAPTCHAs for guest commenters without annoying "click all traffic lights" puzzles.
-- **Replay Protection:** One-time cryptographic challenge nonces cached with SHA-256 hashes.
+  - **Invisible Honeypot:** Dummy fields catch dumb bots before spending server resources.
+  - **ALTCHA Proof-of-Work:** Privacy-friendly WASM CAPTCHAs for guest commenters without annoying "click all traffic lights" puzzles.
+  - **Replay Protection:** One-time cryptographic challenge nonces cached with SHA-256 hashes.
 
 ### 🚀 Dual Positive-Only Reactions
-- React to whole articles/pages (`/article-slug/`) or to individual comments.
-- **Strictly positive vibes only:** 👍 `like`, ❤️ `love`, 🚀 `rocket`, 🎉 `celebrate`, 💡 `insightful`. (No toxic downvote mobs allowed!).
-- Ultra-efficient teaser batch endpoint: load reactions and comment counts for up to 100 articles in **one single API call** (`GET /api/reactions/batch/`).
+  - React to whole articles/pages (`/article-slug/`) or to individual comments.
+  - **Strictly positive vibes only:** 👍 `like`, ❤️ `love`, 🚀 `rocket`, 🎉 `celebrate`, 💡 `insightful`. (No toxic downvote mobs allowed!).
+  - Ultra-efficient teaser batch endpoint: load reactions and comment counts for up to 100 articles in **one single API call** (`GET /api/reactions/batch/`).
 
 ### ✉️ Async Notification Emails via Django Tasks
-- Built with the official **Django Tasks Framework** (`django.tasks`).
-- Dispatches emails asynchronously via your SMTP gateway without blocking HTTP request workers.
-- Includes direct deep-links to the exact comment (`https://blueshoe.de/blog/post-1/#comment-42`) and cryptographic 1-click unsubscribe links.
+  - Built with the official **Django Tasks Framework** (`django.tasks`).
+  - Dispatches emails asynchronously via your SMTP gateway without blocking HTTP request workers.
+  - Includes direct deep-links to the exact comment (`https://blueshoe.de/blog/post-1/#comment-42`) and cryptographic 1-click unsubscribe links.
 
 ### 🍪 Multi-Domain & First-Party Cookies
-- Custom middleware dynamically assigns cookies (`sessionid`, `csrftoken`, `community_vid`) to root domains (e.g. `.blueshoe.de`), avoiding third-party cookie blocks in Chrome & Safari.
-- Regular readers enjoy **180-day sliding sessions**; staff sessions are safely capped at 12 hours.
+  - Custom middleware dynamically assigns cookies (`sessionid`, `csrftoken`, `community_vid`) to root domains (e.g. `.blueshoe.de`), avoiding third-party cookie blocks in Chrome & Safari.
+  - Regular readers enjoy **180-day sliding sessions**; staff sessions are safely capped at 12 hours.
 
-### ☕ Resilient Frontend Widget (`@blueshoe/community-widget`)
-- Standalone Web Component built with **Lit** and **TypeScript**.
-- **Graceful degradation:** If the backend ever takes a coffee break ☕ or a hurricane sweeps through the server, teaser badges silently hide, while comment sections show a humorous status card with zero text loss (drafts stay safe in `localStorage`!).
+### ☕ Nuxt Frontend Module (`@blueshoe/nuxt-community`)
+  - Nuxt 4 module with Vue components, typed composables, and SSG-friendly data loading.
+  - Host apps fetch by slug (`useCommunityComments`, `useCommunityReactionBatch`); widgets stay presentational for `nuxt generate`.
 
 ---
 
@@ -69,14 +69,14 @@ No DRF bloatware here! Built with <a href="https://django-ninja.dev/" target="_b
 | **Database & Cache** | PostgreSQL 15, Redis / Local Cache |
 | **Bot Protection** | ALTCHA (WASM Proof-of-Work), Honeypot |
 | **Markdown & HTML** | `mistune` 3, `nh3` (strict HTML sanitizer, `nofollow ugc`) |
-| **Frontend Widget** | Lit, Vite (Library Mode), Web Components |
+| **Frontend Module** | Nuxt 4 module, Vue 3, SCSS, typed composables |
 | **Deployment** | Docker Compose, Container Orchestration |
 
 ---
 
 ## 🚀 Quickstart (Local Development)
 
-We manage everything using <a href="https://astral.sh/uv" target="_blank" rel="noopener noreferrer">Astral's <code>uv</code></a>. If you don't have it yet:
+  We manage everything using <a href="https://astral.sh/uv" target="_blank" rel="noopener noreferrer">Astral's <code>uv</code></a>. If you don't have it yet:
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
@@ -101,12 +101,12 @@ uv run python manage.py migrate
 uv run python manage.py serve
 ```
 
-Available endpoints:
-- 📖 **Interactive API Docs:** <a href="/docs" target="_blank" rel="noopener noreferrer"><code>/docs</code></a>
-- ⚙️ **Django Admin:** <a href="/admin/" target="_blank" rel="noopener noreferrer"><code>/admin/</code></a>
-- 💓 **Hurricane Liveness Probe:** <a href="/alive" target="_blank" rel="noopener noreferrer"><code>/alive</code></a>
-- 🩺 **Hurricane Readiness Probe:** <a href="/ready" target="_blank" rel="noopener noreferrer"><code>/ready</code></a>
-- 📊 **Prometheus Metrics:** <a href="/metrics" target="_blank" rel="noopener noreferrer"><code>/metrics</code></a>
+  Available endpoints:
+  - 📖 **Interactive API Docs:** <a href="/docs" target="_blank" rel="noopener noreferrer"><code>/docs</code></a>
+  - ⚙️ **Django Admin:** <a href="/admin/" target="_blank" rel="noopener noreferrer"><code>/admin/</code></a>
+  - 💓 **Hurricane Liveness Probe:** <a href="/alive" target="_blank" rel="noopener noreferrer"><code>/alive</code></a>
+  - 🩺 **Hurricane Readiness Probe:** <a href="/ready" target="_blank" rel="noopener noreferrer"><code>/ready</code></a>
+  - 📊 **Prometheus Metrics:** <a href="/metrics" target="_blank" rel="noopener noreferrer"><code>/metrics</code></a>
 
 ---
 
@@ -132,38 +132,40 @@ docker compose up -d
 
 ---
 
-## 🎨 Frontend Widget (`@blueshoe/community-widget`)
+## 🎨 Frontend Module (`@blueshoe/nuxt-community`)
 
-The frontend is located in `/frontend` and builds into a standalone ES module with zero runtime CDN requirements.
+  The Nuxt 4 module lives in `/frontend`. See [frontend/README.md](frontend/README.md) for full integration steps.
 
-### Build Widget
+### Build Module
 ```bash
 cd frontend
 npm install
 npm run build
 ```
 
-### Embedding on Any Website
-```html
-<!-- Load the widget -->
-<script type="module" src="https://community.blueshoe.de/static/community-widget.js"></script>
-
-<!-- Add reactions to your article header -->
-<community-reactions thread-slug="my-awesome-blog-post"></community-reactions>
-
-<!-- Add comments & markdown editor to your article footer -->
-<community-comments thread-slug="my-awesome-blog-post"></community-comments>
+### Quick use in a Nuxt 4 app
+```ts
+// nuxt.config.ts
+export default defineNuxtConfig({
+  modules: ['@blueshoe/nuxt-community'],
+  community: { apiBase: 'https://community.example.com' },
+})
 ```
 
-### Theming via CSS Custom Properties
-```css
-:root {
-  --community-accent: #007bff;
-  --community-bg: #ffffff;
-  --community-radius: 8px;
-  --community-font: 'Inter', system-ui, sans-serif;
-}
+```vue
+<script setup lang="ts">
+const slug = route.params.slug as string
+const { data: comments } = await useCommunityComments(slug)
+const { data: reactions } = await useCommunityReactions(slug)
+</script>
+
+<template>
+  <CommunityReactions :thread-slug="slug" :reactions="reactions ?? { counts: {}, active: [] }" />
+  <CommunityComments :thread-slug="slug" :comments="comments ?? []" />
+</template>
 ```
+
+  Theme via `app.config.ts` (`community.theme`) — see the frontend README.
 
 ---
 
@@ -184,7 +186,7 @@ uv run ruff format --check .
 
 ## 🤖 Dependabot & Automerge
 
-Dependabot is configured in `.github/dependabot.yml` to keep Python dependencies, npm packages, and GitHub Actions up to date weekly. When CI checks pass, Dependabot pull requests are automatically approved and merged!
+  Dependabot is configured in `.github/dependabot.yml` to keep Python dependencies, npm packages, and GitHub Actions up to date weekly. When CI checks pass, Dependabot pull requests are automatically approved and merged!
 
 ---
 
@@ -200,4 +202,4 @@ This software includes and enforces a comprehensive set of community guidelines 
 
 ## 📜 License
 
-Created with ❤️ by <a href="https://blueshoe.de" target="_blank" rel="noopener noreferrer"><strong>Blueshoe</strong></a>. Licensed under the MIT License.
+  Created with ❤️ by <a href="https://blueshoe.de" target="_blank" rel="noopener noreferrer"><strong>Blueshoe</strong></a>. Licensed under the MIT License.

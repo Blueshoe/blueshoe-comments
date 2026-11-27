@@ -1,0 +1,52 @@
+.community-root .comments-widget {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.community-root .comments-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.community-root .composer-slot {
+  margin: 0.5rem 0 1.75rem;
+}
+
+.community-root .widget-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.community-root .widget-header h3 {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.01em;
+}
+
+.community-root .widget-subtitle {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #64748b;
+  line-height: 1.45;
+}
+
+.community-root .comments-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0.15rem 0 0.25rem;
+}
+
+.community-root .comments-count {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #0f172a;
+}

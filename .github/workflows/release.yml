@@ -11,8 +11,8 @@ permissions:
   id-token: write # Required for npm Trusted Publishing (OIDC) and Sigstore Provenance
 
 jobs:
-  release-widget:
-    name: Build & Publish Frontend Widget
+  release-module:
+    name: Build & Publish Nuxt Module
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -32,8 +32,17 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build standalone ES-Module & UMD bundle
+      - name: Build Nuxt module + CSS
         run: npm run build
+
+      - name: Verify build artifacts
+        run: |
+          test -f dist/module.mjs
+          test -f dist/types.d.mts
+          test -f dist/runtime/assets/css/community.css
+          test -s dist/runtime/composables/useCommunityComments.d.ts
+          test -s dist/runtime/composables/useCommunityReactions.d.ts
+          test -s dist/runtime/composables/useCommunityReactionBatch.d.ts
 
       - name: Upgrade npm to latest for Trusted Publishing
         run: npm install -g npm@latest
@@ -49,8 +58,9 @@ jobs:
           prerelease: false
           generate_release_notes: true
           files: |
-            frontend/dist/community-widget.js
-            frontend/dist/community-widget.umd.cjs
-            frontend/auth-callback.html
+            frontend/dist/module.mjs
+            frontend/dist/types.d.mts
+            frontend/dist/runtime/assets/css/community.css
+            frontend/dist/runtime/public/auth-callback.html
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -30,36 +30,36 @@ All comments are subject to automated real-time AI moderation (via Google Gemini
 
 ### Comments Will Be Removed If They:
 1. **Contain hate speech, discrimination, or prejudice based on:**
-   - Race, ethnicity, or national origin
-   - Gender identity or expression
-   - Sexual orientation
-   - Religious beliefs or lack thereof
-   - Disability or health status
-   - Age
-   - Socioeconomic status
+  - Race, ethnicity, or national origin
+  - Gender identity or expression
+  - Sexual orientation
+  - Religious beliefs or lack thereof
+  - Disability or health status
+  - Age
+  - Socioeconomic status
 
 2. **Include harassment or personal attacks:**
-   - Name-calling or personal insults
-   - Deliberate intimidation or threats
-   - Stalking or persistent unwanted attention
-   - Revealing private information about others (doxxing)
+  - Name-calling or personal insults
+  - Deliberate intimidation or threats
+  - Stalking or persistent unwanted attention
+  - Revealing private information about others (doxxing)
 
 3. **Promote harmful content:**
-   - Misinformation or deliberately misleading content
-   - Conspiracy theories that target specific groups
-   - Instructions for causing harm to self or others
-   - Promotion of dangerous or illegal activities
+  - Misinformation or deliberately misleading content
+  - Conspiracy theories that target specific groups
+  - Instructions for causing harm to self or others
+  - Promotion of dangerous or illegal activities
 
 4. **Disrupt meaningful discussion:**
-   - Spam or commercial solicitation
-   - Off-topic comments that derail conversation
-   - Flooding or excessive posting
-   - Trolling or intentionally provocative behavior
+  - Spam or commercial solicitation
+  - Off-topic comments that derail conversation
+  - Flooding or excessive posting
+  - Trolling or intentionally provocative behavior
 
 5. **Violate intellectual property rights:**
-   - Unauthorized copying of copyrighted material
-   - Plagiarism
-   - Impersonation of others
+  - Unauthorized copying of copyrighted material
+  - Plagiarism
+  - Impersonation of others
 
 ### Additional Moderation Actions
 - First-time violations typically result in comment removal and a warning

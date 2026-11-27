@@ -1,0 +1,269 @@
+.community-root .revision-editor {
+  margin-top: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.community-root .revision-textarea {
+  width: 100%;
+  min-height: 85px;
+  padding: 0.6rem;
+  border: 1px solid #cbd5e1;
+  border-radius: var(--community-radius, 8px);
+  font-family: inherit;
+  font-size: 0.9rem;
+  background: #ffffff;
+  resize: vertical;
+}
+
+.community-root .revision-textarea:focus {
+  outline: none;
+  border-color: var(--community-accent, #3b82f6);
+}
+
+.community-root .revision-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+/* Editor */
+.community-root .editor-box {
+  border: 1px solid #d1d5db;
+  border-radius: var(--community-radius, 8px);
+  overflow: visible;
+  background: #ffffff;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.community-root .editor-box:focus-within {
+  border-color: #9ca3af;
+  box-shadow: 0 0 0 1px #e5e7eb;
+}
+
+/* Clip toolbar + content to rounded corners; footer stays visible for auth popover. */
+.community-root .editor-body {
+  overflow: hidden;
+  border-radius: var(--community-radius, 8px) var(--community-radius, 8px) 0 0;
+  background: #ffffff;
+}
+
+.community-root .editor-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.45rem 0.65rem;
+  background: #f8fafc;
+  border-bottom: 1px solid #e5e7eb;
+  border-radius: 0;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.community-root .toolbar-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem;
+}
+
+.community-root .toolbar-btn {
+  background: transparent;
+  border: none;
+  border-radius: var(--community-radius, 8px);
+  padding: 0.35rem 0.5rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: #374151;
+  min-width: 30px;
+}
+
+.community-root .toolbar-btn:hover {
+  background: #e5e7eb;
+}
+
+.community-root .mode-switch-btn {
+  background: none;
+  border: none;
+  padding: 0.25rem 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--community-accent, #2563eb);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.community-root .mode-switch-btn:hover {
+  text-decoration: underline;
+}
+
+.community-root .editor-textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 0.85rem 1rem;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-size: 0.95rem;
+  resize: vertical;
+  background: #ffffff;
+  color: #111827;
+}
+
+.community-root .editor-textarea::placeholder {
+  color: #9ca3af;
+}
+
+.community-root .editor-preview {
+  min-height: 120px;
+  padding: 0.85rem 1rem;
+  background: #ffffff;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.community-root .editor-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.45rem 0.65rem 0.45rem 0.55rem;
+  background: #f8fafc;
+  border-top: 1px solid #e5e7eb;
+  border-radius: 0 0 var(--community-radius, 8px) var(--community-radius, 8px);
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  overflow: visible;
+  position: relative;
+  z-index: 2;
+}
+
+.community-root .editor-footer-left {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.community-root .format-toggle {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: var(--community-radius, 8px);
+  border: 1px solid transparent;
+  background: transparent;
+  color: #4b5563;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    color 0.15s;
+}
+
+.community-root .format-toggle svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+.community-root .format-toggle:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.community-root .format-toggle.active {
+  background: #e5e7eb;
+  border-color: #d1d5db;
+  color: #111827;
+}
+
+.community-root .editor-footer-left .coc-link {
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: #6b7280;
+}
+
+.community-root .editor-footer-left .coc-link:hover {
+  color: var(--community-accent, #2563eb);
+  text-decoration: underline;
+}
+
+.community-root .pill-btn {
+  border: none;
+  border-radius: var(--community-radius, 8px);
+  padding: 0.45rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    opacity 0.15s;
+}
+
+.community-root .pill-btn-cancel {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.community-root .pill-btn-cancel:hover {
+  background: #d1d5db;
+}
+
+.community-root .pill-btn-primary {
+  background: var(--community-accent, #2563eb);
+  color: #ffffff;
+}
+
+.community-root .pill-btn-primary:hover {
+  background: #1d4ed8;
+}
+
+.community-root .pill-btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.community-root .name-input {
+  padding: 0.35rem 0.6rem;
+  border: 1px solid #cbd5e1;
+  border-radius: var(--community-radius, 8px);
+  font-size: 0.85rem;
+}
+
+.community-root .coc-link {
+  color: var(--community-accent, #3b82f6);
+  text-decoration: underline;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 600;
+}
+
+.community-root .submit-btn {
+  background: var(--community-accent, #3b82f6);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--community-radius, 8px);
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.community-root .submit-btn:hover {
+  background: #1d4ed8;
+}
+
+.community-root .submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

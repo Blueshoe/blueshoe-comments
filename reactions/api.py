@@ -1,6 +1,3 @@
-import hashlib
-
-from django.conf import settings
 from django.core.cache import cache
 from django.db.models import Count
 from django.http import HttpRequest
@@ -9,6 +6,7 @@ from ninja.responses import Response
 
 from comments.models import Comment
 
+from .anon import get_anon_hash, get_anon_identity
 from .models import Reaction
 
 router = Router(tags=["Reactions"])
@@ -33,13 +31,6 @@ class TeaserBatchItemOut(Schema):
     active_reactions: list[str] = []
 
 
-def get_anon_hash(request: HttpRequest, site_host: str) -> str:
-    vid = request.headers.get("X-Visitor-Id") or request.COOKIES.get("community_vid", "")
-    ip = request.META.get("HTTP_X_FORWARDED_FOR", "").split(",")[0].strip() or request.META.get("REMOTE_ADDR", "")
-    raw = f"{site_host}:{ip}:{vid}:{getattr(settings, 'SECRET_KEY', '')}"
-    return hashlib.sha256(raw.encode()).hexdigest()
-
-
 @router.post("/reactions/", response={200: dict, 400: dict, 429: dict})
 def toggle_reaction(request: HttpRequest, payload: ToggleReactionIn):
     if payload.kind not in ALLOWED_KINDS:
@@ -52,10 +43,10 @@ def toggle_reaction(request: HttpRequest, payload: ToggleReactionIn):
 
     site_host = request.get_host().split(":")[0]
     user = request.user if request.user.is_authenticated else None
-    anon_hash = "" if user else get_anon_hash(request, site_host)
+    primary_hash, anon_aliases = (("", []) if user else get_anon_identity(request, site_host))
 
     # Anti-flooding shelter: max 10 reaction operations per 10 seconds per visitor
-    flood_identifier = anon_hash or (str(user.id) if user else "anon")
+    flood_identifier = primary_hash or (str(user.id) if user else "anon")
     flood_key = f"reaction_flood:{flood_identifier}"
     recent_count = cache.get(flood_key, 0)
     if recent_count >= 10:
@@ -73,16 +64,22 @@ def toggle_reaction(request: HttpRequest, payload: ToggleReactionIn):
     }
 
     if user:
-        filter_kwargs["user"] = user
+        existing_qs = Reaction.objects.filter(**filter_kwargs, user=user)
     else:
-        filter_kwargs["anon_hash"] = anon_hash
+        # Match primary + legacy IP-bound hashes so duplicates from the old
+        # identity scheme are cleaned up in one toggle.
+        existing_qs = Reaction.objects.filter(**filter_kwargs, anon_hash__in=anon_aliases)
 
-    existing = Reaction.objects.filter(**filter_kwargs).first()
-    if existing:
-        existing.delete()
+    if existing_qs.exists():
+        existing_qs.delete()
         action = "removed"
     else:
-        Reaction.objects.create(**filter_kwargs)
+        create_kwargs = {**filter_kwargs}
+        if user:
+            create_kwargs["user"] = user
+        else:
+            create_kwargs["anon_hash"] = primary_hash or get_anon_hash(request, site_host)
+        Reaction.objects.create(**create_kwargs)
         action = "added"
 
     return {"action": action}
@@ -95,7 +92,7 @@ def get_page_reactions(request: HttpRequest, thread_slug: str):
 
     site_host = request.get_host().split(":")[0]
     user = request.user if request.user.is_authenticated else None
-    anon_hash = "" if user else get_anon_hash(request, site_host)
+    _primary, anon_aliases = (("", []) if user else get_anon_identity(request, site_host))
 
     qs = Reaction.objects.filter(site_host=site_host, thread_slug=thread_slug, comment__isnull=True)
     counts = qs.values("kind").annotate(count=Count("id"))
@@ -104,7 +101,7 @@ def get_page_reactions(request: HttpRequest, thread_slug: str):
     if user:
         active = list(qs.filter(user=user).values_list("kind", flat=True))
     else:
-        active = list(qs.filter(anon_hash=anon_hash).values_list("kind", flat=True))
+        active = list(qs.filter(anon_hash__in=anon_aliases).values_list("kind", flat=True))
 
     schema = ReactionSummarySchema(counts=counts_dict, active=active)
     response = Response(schema.model_dump(mode="json"), status=200)
@@ -124,7 +121,7 @@ def get_batch_reactions(request: HttpRequest, thread_slug: str):
 
     site_host = request.get_host().split(":")[0]
     user = request.user if request.user.is_authenticated else None
-    anon_hash = "" if user else get_anon_hash(request, site_host)
+    _primary, anon_aliases = (("", []) if user else get_anon_identity(request, site_host))
 
     # Comments count per slug
     comment_counts = dict(
@@ -148,7 +145,7 @@ def get_batch_reactions(request: HttpRequest, thread_slug: str):
         ).values_list("thread_slug", "kind")
     else:
         active_reactions = Reaction.objects.filter(
-            site_host=site_host, thread_slug__in=slugs, comment__isnull=True, anon_hash=anon_hash
+            site_host=site_host, thread_slug__in=slugs, comment__isnull=True, anon_hash__in=anon_aliases
         ).values_list("thread_slug", "kind")
 
     # Aggregate result
