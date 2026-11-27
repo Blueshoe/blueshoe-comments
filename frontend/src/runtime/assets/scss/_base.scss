@@ -27,10 +27,11 @@
   font: inherit;
 }
 
-/* CTA / action buttons — theme.buttonFont / buttonFontWeight when set. */
+/* CTA / action buttons — theme.buttonFont / buttonFontWeight when set.
+   No `var(..., inherit)` fallback: lightningcss minify rejects inherit as var fallback. */
 .community-root .pill-btn,
 .community-root .submit-btn,
 .community-root .community-auth__submit {
-  font-family: var(--community-button-font, inherit);
-  font-weight: var(--community-button-font-weight, 600);
+  font-family: var(--community-button-font);
+  font-weight: var(--community-button-font-weight);
 }

@@ -21,17 +21,18 @@ function applyThemeVars(theme: CommunityAppConfig['theme'] | undefined) {
   set('--community-button-font', theme.buttonFont)
   set('--community-button-font-weight', theme.buttonFontWeight)
 
-  // Dark overrides applied when .dark is present via CSS using the same vars
-  // plus optional dark-specific custom properties for apps that want them.
+  // Dark overrides — always set button-*dark so CSS can use var() without `inherit` fallback
+  // (lightningcss minify rejects `var(--x, inherit)`).
+  set('--community-button-font-dark', theme.dark?.buttonFont || theme.buttonFont || 'inherit')
+  set(
+    '--community-button-font-weight-dark',
+    theme.dark?.buttonFontWeight ?? theme.buttonFontWeight ?? 600,
+  )
+
   if (theme.dark) {
     set('--community-accent-dark', theme.dark.accent || theme.accent)
     set('--community-bg-dark', theme.dark.bg || theme.bg)
     set('--community-color-dark', theme.dark.color || theme.color)
-    set('--community-button-font-dark', theme.dark.buttonFont || theme.buttonFont)
-    set(
-      '--community-button-font-weight-dark',
-      theme.dark.buttonFontWeight ?? theme.buttonFontWeight,
-    )
   }
 }
 
