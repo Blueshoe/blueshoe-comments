@@ -5,6 +5,9 @@
   --community-color: var(--ui-text, #1e293b);
   --community-radius: 8px;
   --community-font: inherit;
+  /* CTA buttons; theme.buttonFont / buttonFontWeight override these. */
+  --community-button-font: inherit;
+  --community-button-font-weight: 600;
   --community-border: #e2e8f0;
   --community-muted: #64748b;
   --community-heading: #0f172a;
@@ -17,6 +20,8 @@ html.dark {
   --community-accent: var(--community-accent-dark, var(--ui-primary, #38bdf8));
   --community-bg: var(--community-bg-dark, var(--ui-bg, #0f172a));
   --community-color: var(--community-color-dark, var(--ui-text, #e2e8f0));
+  --community-button-font: var(--community-button-font-dark, inherit);
+  --community-button-font-weight: var(--community-button-font-weight-dark, 600);
   --community-border: #334155;
   --community-muted: #94a3b8;
   --community-heading: #f8fafc;

@@ -65,6 +65,9 @@ export default defineAppConfig({
       radius: '8px',
       // Optional. Default is `inherit` so the widget uses the host app font.
       font: '\'Source Sans 3\', system-ui, sans-serif',
+      // Optional. CTA buttons only; defaults to the body font when unset.
+      buttonFont: '\'Oswald\', system-ui, sans-serif',
+      buttonFontWeight: 500,
       dark: {
         bg: '#0f172a',
         color: '#e2e8f0',
@@ -74,7 +77,7 @@ export default defineAppConfig({
 })
 ```
 
-If unset, colors fall back to Nuxt UI CSS variables when present (`--ui-primary`, `--ui-bg`, `--ui-text`), and **font inherits** from the surrounding page.
+If unset, colors fall back to Nuxt UI CSS variables when present (`--ui-primary`, `--ui-bg`, `--ui-text`), and **font inherits** from the surrounding page. `buttonFont` / `buttonFontWeight` only affect CTA buttons (`submit-btn` / `pill-btn`); leave them unset to keep the body font.
 
 ### 3. Blog index / ToC — batch data, your UI
 

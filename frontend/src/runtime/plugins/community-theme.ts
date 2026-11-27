@@ -7,9 +7,10 @@ function applyThemeVars(theme: CommunityAppConfig['theme'] | undefined) {
     return
 
   const root = document.documentElement
-  const set = (name: string, value?: string) => {
-    if (value)
-      root.style.setProperty(name, value)
+  const set = (name: string, value?: string | number) => {
+    if (value === undefined || value === null || value === '')
+      return
+    root.style.setProperty(name, String(value))
   }
 
   set('--community-accent', theme.accent)
@@ -17,6 +18,8 @@ function applyThemeVars(theme: CommunityAppConfig['theme'] | undefined) {
   set('--community-color', theme.color)
   set('--community-radius', theme.radius)
   set('--community-font', theme.font)
+  set('--community-button-font', theme.buttonFont)
+  set('--community-button-font-weight', theme.buttonFontWeight)
 
   // Dark overrides applied when .dark is present via CSS using the same vars
   // plus optional dark-specific custom properties for apps that want them.
@@ -24,6 +27,11 @@ function applyThemeVars(theme: CommunityAppConfig['theme'] | undefined) {
     set('--community-accent-dark', theme.dark.accent || theme.accent)
     set('--community-bg-dark', theme.dark.bg || theme.bg)
     set('--community-color-dark', theme.dark.color || theme.color)
+    set('--community-button-font-dark', theme.dark.buttonFont || theme.buttonFont)
+    set(
+      '--community-button-font-weight-dark',
+      theme.dark.buttonFontWeight ?? theme.buttonFontWeight,
+    )
   }
 }
 

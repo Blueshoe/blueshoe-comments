@@ -4,6 +4,10 @@ export interface CommunityThemeDark {
   color?: string
   radius?: string
   font?: string
+  /** Optional CTA/button font; defaults to the widget body font when unset. */
+  buttonFont?: string
+  /** Optional CTA/button font-weight (e.g. `500` or `bold`). */
+  buttonFontWeight?: string | number
 }
 
 export interface CommunityThemeConfig {
@@ -12,6 +16,10 @@ export interface CommunityThemeConfig {
   color?: string
   radius?: string
   font?: string
+  /** Optional CTA/button font; defaults to the widget body font when unset. */
+  buttonFont?: string
+  /** Optional CTA/button font-weight (e.g. `500` or `bold`). */
+  buttonFontWeight?: string | number
   dark?: CommunityThemeDark
 }
 

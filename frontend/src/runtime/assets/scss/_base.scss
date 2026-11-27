@@ -26,3 +26,11 @@
 .community-root button {
   font: inherit;
 }
+
+/* CTA / action buttons — theme.buttonFont / buttonFontWeight when set. */
+.community-root .pill-btn,
+.community-root .submit-btn,
+.community-root .community-auth__submit {
+  font-family: var(--community-button-font, inherit);
+  font-weight: var(--community-button-font-weight, 600);
+}

@@ -200,7 +200,7 @@
   border-radius: var(--community-radius, 8px);
   padding: 0.45rem 1rem;
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: var(--community-button-font-weight, 600);
   cursor: pointer;
   transition:
     background 0.15s,
@@ -255,7 +255,7 @@
   border-radius: var(--community-radius, 8px);
   padding: 0.5rem 1rem;
   font-size: 0.9rem;
-  font-weight: 600;
+  font-weight: var(--community-button-font-weight, 600);
   cursor: pointer;
   transition: background 0.15s;
 }

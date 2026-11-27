@@ -16,6 +16,8 @@ export function useCommunityTheme() {
           color: dark.color || t.color,
           radius: dark.radius || t.radius,
           font: dark.font || t.font,
+          buttonFont: dark.buttonFont || t.buttonFont,
+          buttonFontWeight: dark.buttonFontWeight ?? t.buttonFontWeight,
         }
       : t
 
@@ -30,6 +32,10 @@ export function useCommunityTheme() {
       vars['--community-radius'] = source.radius
     if (source.font)
       vars['--community-font'] = source.font
+    if (source.buttonFont)
+      vars['--community-button-font'] = source.buttonFont
+    if (source.buttonFontWeight !== undefined && source.buttonFontWeight !== null && source.buttonFontWeight !== '')
+      vars['--community-button-font-weight'] = String(source.buttonFontWeight)
     return vars
   }
 
