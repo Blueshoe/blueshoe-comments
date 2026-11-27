@@ -194,6 +194,7 @@
   text-decoration: underline;
 }
 
+/* Action buttons use theme radius — not capsule pills (those are reactions only). */
 .community-root .pill-btn {
   border: none;
   border-radius: var(--community-radius, 8px);
@@ -216,12 +217,12 @@
 }
 
 .community-root .pill-btn-primary {
-  background: var(--community-accent, #2563eb);
+  background: var(--community-accent, #0284c7);
   color: #ffffff;
 }
 
 .community-root .pill-btn-primary:hover {
-  background: #1d4ed8;
+  background: color-mix(in srgb, var(--community-accent, #0284c7) 82%, #0f172a);
 }
 
 .community-root .pill-btn-primary:disabled {
@@ -248,7 +249,7 @@
 }
 
 .community-root .submit-btn {
-  background: var(--community-accent, #3b82f6);
+  background: var(--community-accent, #0284c7);
   color: #ffffff;
   border: none;
   border-radius: var(--community-radius, 8px);
@@ -260,7 +261,7 @@
 }
 
 .community-root .submit-btn:hover {
-  background: #1d4ed8;
+  background: color-mix(in srgb, var(--community-accent, #0284c7) 82%, #0f172a);
 }
 
 .community-root .submit-btn:disabled {

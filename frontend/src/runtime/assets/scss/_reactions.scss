@@ -52,9 +52,9 @@
 
 .community-root .page-reaction-trigger:hover,
 .community-root .page-reaction-trigger[aria-expanded='true'] {
-  border-color: var(--community-accent, #3b82f6);
-  color: var(--community-accent, #3b82f6);
-  background: #e0f2fe;
+  border-color: var(--community-accent, #0284c7);
+  color: var(--community-accent, #0284c7);
+  background: color-mix(in srgb, var(--community-accent, #0284c7) 12%, #ffffff);
 }
 
 .community-root .page-reaction-trigger svg {
@@ -63,33 +63,37 @@
   display: block;
 }
 
+/* Always capsule pills — theme radius is for action buttons / inputs, not reactions. */
 .community-root .page-reaction-pill {
   gap: 0.3rem;
-  border-radius: var(--community-radius, 8px);
-  border: 1px solid #e5e7eb;
-  padding: 0 10px;
+  border-radius: 9999px;
+  border: 1px solid #e2e8f0;
+  padding: 0 0.7rem;
   font-size: 0.85rem;
-  color: #475569;
+  color: #64748b;
   line-height: 1;
-  background: #f3f4f6;
+  background: #f1f5f9;
   font-weight: 500;
 }
 
 .community-root .page-reaction-pill:hover {
-  border-color: #d1d5db;
-  background: #eef0f2;
+  border-color: #cbd5e1;
+  background: #e2e8f0;
+  color: #475569;
 }
 
+/* Active = light tint of theme accent (--community-accent from appConfig.theme). */
 .community-root .page-reaction-pill.active {
-  border-color: color-mix(in srgb, var(--community-accent, #2563eb) 35%, #ffffff);
-  background: color-mix(in srgb, var(--community-accent, #2563eb) 10%, #ffffff);
-  color: color-mix(in srgb, var(--community-accent, #2563eb) 82%, #0f172a);
-  font-weight: 600;
+  border-color: color-mix(in srgb, var(--community-accent, #0284c7) 45%, #ffffff);
+  background: color-mix(in srgb, var(--community-accent, #0284c7) 16%, #ffffff);
+  color: var(--community-accent, #0284c7);
+  font-weight: 700;
 }
 
 .community-root .page-reaction-pill.active:hover {
-  border-color: color-mix(in srgb, var(--community-accent, #2563eb) 45%, #ffffff);
-  background: color-mix(in srgb, var(--community-accent, #2563eb) 14%, #ffffff);
+  border-color: color-mix(in srgb, var(--community-accent, #0284c7) 60%, #ffffff);
+  background: color-mix(in srgb, var(--community-accent, #0284c7) 24%, #ffffff);
+  color: var(--community-accent, #0284c7);
 }
 
 .community-root .page-reaction-picker {
@@ -146,12 +150,12 @@
 }
 
 .community-root .page-reaction-option.active {
-  background: color-mix(in srgb, var(--community-accent, #2563eb) 10%, #ffffff);
-  border-color: color-mix(in srgb, var(--community-accent, #2563eb) 35%, #ffffff);
+  background: color-mix(in srgb, var(--community-accent, #0284c7) 12%, #ffffff);
+  border-color: color-mix(in srgb, var(--community-accent, #0284c7) 35%, #ffffff);
   box-shadow: none;
 }
 
 .community-root .page-reaction-option.active:hover {
-  background: color-mix(in srgb, var(--community-accent, #2563eb) 14%, #ffffff);
-  border-color: color-mix(in srgb, var(--community-accent, #2563eb) 45%, #ffffff);
+  background: color-mix(in srgb, var(--community-accent, #0284c7) 18%, #ffffff);
+  border-color: color-mix(in srgb, var(--community-accent, #0284c7) 48%, #ffffff);
 }
